@@ -26,7 +26,7 @@
             android:layout_marginLeft="12dp"
             android:orientation="vertical">
 
-            <com.example.hotel.custom.MyTextView
+            <com.dronam.manora.custom.MyTextView
                 android:id="@+id/tv_foodName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:textColor="#262628"
                 android:textSize="14.4sp" />
 
-            <com.example.hotel.custom.MyTextView
+            <com.dronam.manora.custom.MyTextView
                 android:id="@+id/tv_foodPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

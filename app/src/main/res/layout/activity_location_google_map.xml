@@ -25,7 +25,7 @@
         android:layout_marginRight="20dp"
         android:orientation="vertical">
 
-        <com.example.hotel.custom.MyTextView
+        <com.dronam.manora.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_set_delivery_location"
@@ -42,7 +42,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp">
 
-            <com.example.hotel.custom.MyEditText
+            <com.dronam.manora.custom.MyEditText
                 android:id="@+id/et_searchAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"></androidx.recyclerview.widget.RecyclerView>
 
-        <!--        <com.example.hotel.custom.MyTextView-->
+        <!--        <dronamhotel.custom.MyTextView-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="wrap_content"-->
         <!--            android:layout_marginTop="22dp"-->

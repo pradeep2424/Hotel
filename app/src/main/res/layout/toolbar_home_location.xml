@@ -22,7 +22,7 @@
             android:layout_height="18dp"
             android:src="@mipmap/ic_places" />
 
-        <com.example.hotel.custom.MyTextView
+        <com.dronam.manora.custom.MyTextView
             android:id="@+id/tv_toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
     <!--            android:layout_height="18dp"-->
     <!--            android:src="@mipmap/ic_places" />-->
 
-    <!--        <com.example.hotel.custom.MyTextView-->
+    <!--        <dronamhotel.custom.MyTextView-->
     <!--            android:layout_width="wrap_content"-->
     <!--            android:layout_height="wrap_content"-->
     <!--            android:layout_marginLeft="15dp"-->

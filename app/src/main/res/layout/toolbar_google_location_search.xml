@@ -17,7 +17,7 @@
             android:src="@drawable/ic_arrow_back_white"
             android:tint="@color/main_text" />
 
-<!--        <com.example.hotel.custom.MyTextView-->
+<!--        <dronamhotel.custom.MyTextView-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_marginLeft="10dp"-->

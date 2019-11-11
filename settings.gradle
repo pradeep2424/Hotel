@@ -1,2 +1,2 @@
-include ':app', ':vanillaplacepicker', ':libraryPingPlacePicker', ':placepicker'
+include ':app', ':vanillaplacepicker', ':placepicker'
 rootProject.name='Hotel'

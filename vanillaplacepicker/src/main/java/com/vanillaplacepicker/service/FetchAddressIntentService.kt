@@ -55,7 +55,7 @@ class FetchAddressIntentService : IntentService("FetchAddressIntentService") {
             return
         }
 
-        // Errors could still arise from using the Geocoder (for example, if there is no
+        // Errors could still arise from using the Geocoder (for dronam, if there is no
         // connectivity, or if the Geocoder is given illegal location data). Or, the Geocoder may
         // simply not have an address for a location. In all these cases, we communicate with the
         // receiver using a resultCode indicating failure. If an address is found, we use a
@@ -107,11 +107,11 @@ class FetchAddressIntentService : IntentService("FetchAddressIntentService") {
             // join them, and send them to the thread. The {@link android.location.address}
             // class provides other options for fetching address details that you may prefer
             // to use. Here are some examples:
-            // getLocality() ("Mountain View", for example)
-            // getAdminArea() ("CA", for example)
-            // getPostalCode() ("94043", for example)
-            // getCountryCode() ("US", for example)
-            // getCountryName() ("United States", for example)
+            // getLocality() ("Mountain View", for dronam)
+            // getAdminArea() ("CA", for dronam)
+            // getPostalCode() ("94043", for dronam)
+            // getCountryCode() ("US", for dronam)
+            // getCountryName() ("United States", for dronam)
             val addressFragments = with(address) {
                 (0..maxAddressLineIndex).map { getAddressLine(it) }
             }

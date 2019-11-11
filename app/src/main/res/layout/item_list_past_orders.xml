@@ -50,7 +50,7 @@
                         android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_restaurantName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                             android:textColor="#262628"
                             android:textSize="16sp" />
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_restaurantAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                                 android:progressTint="@color/colorAccent"
                                 android:rating="4" />
 
-                            <com.example.hotel.custom.MyTextView
+                            <com.dronam.manora.custom.MyTextView
                                 android:id="@+id/tv_restaurantReview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                                 android:layout_marginLeft="2dp"
                                 android:src="@drawable/ic_green_tick" />
 
-                            <com.example.hotel.custom.MyTextView
+                            <com.dronam.manora.custom.MyTextView
                                 android:id="@+id/tv_deliveredText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                                 android:src="@drawable/ic_orders"
                                 android:tint="@color/dark_red" />
 
-                            <com.example.hotel.custom.MyTextView
+                            <com.dronam.manora.custom.MyTextView
                                 android:id="@+id/tv_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:background="@drawable/dotted_line_rect_parot"
                         android:orientation="horizontal">
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -193,7 +193,7 @@
                     <!--                        android:paddingRight="30dp"-->
                     <!--                        android:paddingBottom="8dp">-->
 
-                    <!--                        <com.example.hotel.custom.MyTextView-->
+                    <!--                        <dronamhotel.custom.MyTextView-->
                     <!--                            android:layout_width="wrap_content"-->
                     <!--                            android:layout_height="wrap_content"-->
                     <!--                            android:layout_gravity="center"-->
@@ -203,7 +203,7 @@
 
                     <!--                    </LinearLayout>-->
 
-                    <!--                    <com.example.hotel.custom.MyTextView-->
+                    <!--                    <dronamhotel.custom.MyTextView-->
                     <!--                        android:id="@+id/tv_price"-->
                     <!--                        android:layout_width="0dp"-->
                     <!--                        android:layout_height="wrap_content"-->
@@ -245,7 +245,7 @@
                             android:layout_marginLeft="2dp"
                             android:src="@drawable/ic_green_tick" />
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_itemText0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -270,7 +270,7 @@
                             android:layout_marginLeft="2dp"
                             android:src="@drawable/ic_green_tick" />
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_itemText1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -295,7 +295,7 @@
                             android:layout_marginLeft="2dp"
                             android:src="@drawable/ic_green_tick" />
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_itemText2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -320,7 +320,7 @@
                             android:layout_marginLeft="2dp"
                             android:src="@drawable/ic_green_tick" />
 
-                        <com.example.hotel.custom.MyTextView
+                        <com.dronam.manora.custom.MyTextView
                             android:id="@+id/tv_itemText3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -365,7 +365,7 @@
                                 android:paddingRight="30dp"
                                 android:paddingBottom="8dp">
 
-                                <com.example.hotel.custom.MyTextView
+                                <com.dronam.manora.custom.MyTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -394,7 +394,7 @@
                                 android:paddingBottom="8dp">
 
 
-                                <com.example.hotel.custom.MyTextView
+                                <com.dronam.manora.custom.MyTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -420,7 +420,7 @@
                     <!--                        android:paddingRight="30dp"-->
                     <!--                        android:paddingBottom="8dp">-->
 
-                    <!--                        <com.example.hotel.custom.MyTextView-->
+                    <!--                        <dronamhotel.custom.MyTextView-->
                     <!--                            android:layout_width="wrap_content"-->
                     <!--                            android:layout_height="wrap_content"-->
                     <!--                            android:layout_gravity="center"-->
@@ -430,7 +430,7 @@
 
                     <!--                    </LinearLayout>-->
 
-                    <!--                    <com.example.hotel.custom.MyTextView-->
+                    <!--                    <dronamhotel.custom.MyTextView-->
                     <!--                        android:id="@+id/tv_price"-->
                     <!--                        android:layout_width="0dp"-->
                     <!--                        android:layout_height="wrap_content"-->
@@ -456,7 +456,7 @@
                 <!--                    android:paddingRight="30dp"-->
                 <!--                    android:paddingBottom="8dp">-->
 
-                <!--                    <com.example.hotel.custom.MyTextView-->
+                <!--                    <dronamhotel.custom.MyTextView-->
                 <!--                        android:layout_width="wrap_content"-->
                 <!--                        android:layout_height="wrap_content"-->
                 <!--                        android:layout_gravity="center"-->
@@ -467,7 +467,7 @@
                 <!--                </LinearLayout>-->
 
 
-                <!--                <com.example.hotel.custom.MyTextView-->
+                <!--                <dronamhotel.custom.MyTextView-->
                 <!--                    android:id="@+id/tv_price"-->
                 <!--                    android:layout_width="0dp"-->
                 <!--                    android:layout_height="wrap_content"-->
@@ -536,7 +536,7 @@
     <!--                        android:layout_marginLeft="12dp"-->
     <!--                        android:orientation="vertical">-->
 
-    <!--                        <com.example.hotel.custom.MyTextView-->
+    <!--                        <dronamhotel.custom.MyTextView-->
     <!--                            android:id="@+id/tv_restaurantName"-->
     <!--                            android:layout_width="match_parent"-->
     <!--                            android:layout_height="wrap_content"-->
@@ -544,7 +544,7 @@
     <!--                            android:textColor="#262628"-->
     <!--                            android:textSize="14.4sp" />-->
 
-    <!--                        <com.example.hotel.custom.MyTextView-->
+    <!--                        <dronamhotel.custom.MyTextView-->
     <!--                            android:id="@+id/tv_restaurantAddress"-->
     <!--                            android:layout_width="match_parent"-->
     <!--                            android:layout_height="wrap_content"-->
@@ -569,7 +569,7 @@
     <!--                                android:progressTint="@color/colorAccent"-->
     <!--                                android:rating="4" />-->
 
-    <!--                            <com.example.hotel.custom.MyTextView-->
+    <!--                            <dronamhotel.custom.MyTextView-->
     <!--                                android:id="@+id/tv_restaurantReview"-->
     <!--                                android:layout_width="wrap_content"-->
     <!--                                android:layout_height="wrap_content"-->
@@ -598,7 +598,7 @@
     <!--                        android:src="@drawable/ic_orders"-->
     <!--                        android:tint="#d22532" />-->
 
-    <!--                    <com.example.hotel.custom.MyTextView-->
+    <!--                    <dronamhotel.custom.MyTextView-->
     <!--                        android:id="@+id/tv_date"-->
     <!--                        android:layout_width="wrap_content"-->
     <!--                        android:layout_height="wrap_content"-->
@@ -608,7 +608,7 @@
     <!--                        android:textColor="#4a4a4a"-->
     <!--                        android:textSize="12sp" />-->
 
-    <!--                    <com.example.hotel.custom.MyTextView-->
+    <!--                    <dronamhotel.custom.MyTextView-->
     <!--                        android:id="@+id/tv_price"-->
     <!--                        android:layout_width="0dp"-->
     <!--                        android:layout_height="wrap_content"-->
