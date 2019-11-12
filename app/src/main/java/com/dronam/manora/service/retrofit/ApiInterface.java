@@ -29,6 +29,12 @@ public interface ApiInterface {
     @GET("getRestaurantDetails/{Zip}")
     Call<ResponseBody> getRestaurantDetails(@Path("Zip") String zipCode);
 
+    @GET("ProductDetails/{Zip}")
+    Call<ResponseBody> getProductDetailsData(@Path("Usertypeid") String userTypeID,
+                                             @Path("ClientID") String clientID,
+                                             @Path("foodtypeid") String foodTypeID,
+                                             @Path("CategoryID") String categoryID);
+
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
 
