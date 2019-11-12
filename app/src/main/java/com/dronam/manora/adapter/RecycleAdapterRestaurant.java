@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,11 +21,11 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
     Context context;
     private OnRecyclerViewClickListener clickListener;
 
-    ArrayList<RestaurantObject> restaurantObjects;
+    ArrayList<RestaurantObject> listRestaurants;
 
-    public RecycleAdapterRestaurant(Context context, ArrayList<RestaurantObject> restaurantObjects) {
+    public RecycleAdapterRestaurant(Context context, ArrayList<RestaurantObject> listRestaurants) {
         this.context = context;
-        this.restaurantObjects = restaurantObjects;
+        this.listRestaurants = listRestaurants;
     }
 
     public void setClickListener(OnRecyclerViewClickListener clickListener) {
@@ -30,12 +33,21 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView ivRestaurantImage;
+        TextView tvRestaurantName;
+        TextView tvRestaurantAddress;
+        TextView tvRestaurantReviews;
+        RatingBar ratingBarReviews;
 
-        ImageView imageView;
         public ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = itemView.findViewById(R.id.iv_cover);
+             ivRestaurantImage = itemView.findViewById(R.id.iv_restaurantImage);
+             tvRestaurantName = itemView.findViewById(R.id.tv_restaurantName);
+             tvRestaurantAddress = itemView.findViewById(R.id.tv_restaurantAddress);
+             tvRestaurantReviews = itemView.findViewById(R.id.tv_restaurantReviews);
+             ratingBarReviews = itemView.findViewById(R.id.ratingBar_restaurantReviews);
+
             itemView.setOnClickListener(this);
         }
 
@@ -55,15 +67,18 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecycleAdapterRestaurant.ViewHolder holder, int position) {
-//        holder.imageView.setImageResource(restaurantObjects.get(position).getImage1());
+        RestaurantObject restaurantObj =  listRestaurants.get(position);
 
-                Glide.with(context)
-                .load(restaurantObjects.get(position).getImage1())
-                .into(holder.imageView);
+        holder.tvRestaurantName.setText(restaurantObj.getRestaurantName());
+//        holder.tvRestaurantAddress.setText();
+//        holder.tvRestaurantReviews.setText();
+//        holder.ratingBarReviews.setRating();
+
+         Glide.with(context).load(restaurantObj.getLogo()).into(holder.ivRestaurantImage);
     }
 
     @Override
     public int getItemCount() {
-        return restaurantObjects.size();
+        return listRestaurants.size();
     }
 }

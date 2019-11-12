@@ -108,10 +108,10 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         componentEvents();
         setupRecyclerViewUserLikeDish();
         setupRecyclerViewCuisine();
-        setupRecyclerViewRestaurant();
+//        setupRecyclerViewRestaurant();
         setupViewPagerBanner();
 
-        getRestaurantDetails();
+        getRestaurantData();
 
 
         return rootView;
@@ -233,7 +233,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     }
 
     private void setupRecyclerViewRestaurant() {
-        getRestaurantData();
+//        getRestaurantData();
 
         adapterRestaurant = new RecycleAdapterRestaurant(getActivity(), listRestaurantObject);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -243,13 +243,13 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         adapterRestaurant.setClickListener(this);
     }
 
-    private void getRestaurantData() {
-        listRestaurantObject = new ArrayList<>();
-        for (int i = 0; i < image2.length; i++) {
-            RestaurantObject restaurantObject = new RestaurantObject(image2[i]);
-            listRestaurantObject.add(restaurantObject);
-        }
-    }
+//    private void getRestaurantData() {
+//        listRestaurantObject = new ArrayList<>();
+//        for (int i = 0; i < image2.length; i++) {
+//            RestaurantObject restaurantObject = new RestaurantObject(image2[i]);
+//            listRestaurantObject.add(restaurantObject);
+//        }
+//    }
 
     private void setupViewPagerBanner() {
         pagerAdapterForBanner = new PagerAdapterBanner(getFragmentManager());
@@ -273,113 +273,53 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         snackbar.show();
     }
 
-    private void getRestaurantDetails() {
+    private void getRestaurantData() {
         if (InternetConnection.checkConnection(getActivity())) {
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
 //            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.getRestaurantDetails("123456");
+            Call<ResponseBody> call = apiService.getRestaurantDetails("416004");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                     try {
                         int statusCode = response.code();
-                        if (response.isSuccessful()) {
 
+                        if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
                             JSONObject jsonObj = new JSONObject(responseString);
-                            String status = jsonObj.optString("ClientId");
+                            String categoryID = jsonObj.optString("CategoryId");
+                            String categoryName = jsonObj.optString("CategoryName");
+                            String clientID = jsonObj.optString("ClientId");
+                            String restaurantName = jsonObj.optString("RestaurantName");
+                            String foodTypeID = jsonObj.optString("FoodTypeId");
+                            String foodTypeName = jsonObj.optString("FoodTypeName");
+                            String logo = jsonObj.optString("Logo");
+                            String taxID = jsonObj.optString("TaxId");
+                            String taxable = jsonObj.optString("Taxable");
+                            String includeTax = jsonObj.optString("IncludeTax");
 
-                            String name = jsonObj.optString("RestaurantName");
-                            String gender = jsonObj.optString("FoodTypeId");
-                            String email = jsonObj.optString("Email");
-                            String mobile = jsonObj.optString("Mobile");
-                            String telephone = jsonObj.optString("Telephone");
-                            String facebookId = jsonObj.optString("FacebookId");
+                            RestaurantObject restaurantObject = new RestaurantObject();
+                            restaurantObject.setCategoryID(categoryID);
+                            restaurantObject.setCategoryName(categoryName);
+                            restaurantObject.setClientID(clientID);
+                            restaurantObject.setRestaurantName(restaurantName);
+                            restaurantObject.setFoodTypeID(foodTypeID);
+                            restaurantObject.setFoodTypeName(foodTypeName);
+                            restaurantObject.setLogo(logo);
+                            restaurantObject.setTaxID(taxID);
+                            restaurantObject.setTaxable(taxable);
+                            restaurantObject.setIncludeTax(includeTax);
 
-                            String userID = jsonObj.optString("UserID");
-                            String username = jsonObj.optString("Username");
-                            String userPhoto = jsonObj.optString("UserPhoto");
-                            String userRole = jsonObj.optString("UserRole");
-                            String userType = jsonObj.optString("UserType");
-
-                            String address = jsonObj.optString("Address");
-                            String area = jsonObj.optString("Area");
-                            String cityName = jsonObj.optString("CityName");
-                            String stateName = jsonObj.optString("StateName");
-                            String zipCode = jsonObj.optString("ZipCode");
-
-                            UserDetails userDetails = new UserDetails();
-                            userDetails.setName(name);
-                            userDetails.setGender(gender);
-                            userDetails.setEmail(email);
-                            userDetails.setMobile(mobile);
-                            userDetails.setTelephone(telephone);
-                            userDetails.setFacebookId(facebookId);
-                            userDetails.setUserID(userID);
-                            userDetails.setUsername(username);
-                            userDetails.setUserPhoto(userPhoto);
-                            userDetails.setUserRole(userRole);
-                            userDetails.setUserType(userType);
-                            userDetails.setAddress(address);
-                            userDetails.setArea(area);
-                            userDetails.setCityName(cityName);
-                            userDetails.setStateName(stateName);
-                            userDetails.setZipCode(zipCode);
-                            Application.userDetails = userDetails;
-
-//                            if (status.equalsIgnoreCase("Success")) {
-//                                FirebaseUser user = mAuth.getCurrentUser();
-//
-//                                String accessToken = jsonObj.getString("AccessToken");
-//                                int accountType = jsonObj.getInt("AccountType");
-//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
-//                                String corpID = jsonObj.getString("CorpID");
-//                                String emailID = jsonObj.getString("EmailID");
-//                                String firstName = jsonObj.getString("FirstName");
-//                                String lastName = jsonObj.getString("LastName");
-//
-//                                String hibernate = jsonObj.getString("Hibernate");
-//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
-//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
-//                                msgHeader = jsonObj.getString("MessageHeader");
-//                                message = jsonObj.getString("Message");
-//
-//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
-//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
-//
-//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
-//
-//                                String msg = jsonObj.getString("Message");
-//                                String msgHeader = jsonObj.getString("MessageHeader");
-//
-//                                prefs.edit().clear().apply();
-//                                signOutFirebaseAccounts();
-//
-//
-//                                if (msgHeader.trim().equalsIgnoreCase("")) {
-//                                    showSnackbarErrorMsg(msg);
-//                                    callSignUpPage();
-//                                } else {
-//                                    accountBlockedDialog(msgHeader, msg);
-//                                }
-//
-//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
-//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
-//
-//                            } else if (status.equalsIgnoreCase("Error")) {
-//                                String msg = jsonObj.getString("Message");
-//                                showSnackbarErrorMsg(msg);
-//
-//                            } else {
-//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
-//                            }
+                            listRestaurantObject.add(restaurantObject);
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
+
+                        setupRecyclerViewRestaurant();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -405,7 +345,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            getRestaurantDetails();
+                            getRestaurantData();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
