@@ -24,10 +24,14 @@
 
         <activity
             android:name="com.dronam.manora.activities.LocationGoogleMapActivity"
-            android:theme="@style/NoActionBarShowStatusBar" /> <!-- <activity -->
-        <!-- android:name=".main.SplashActivity" -->
+            android:theme="@style/NoActionBarShowStatusBar" />
+
         <activity
             android:name="com.dronam.manora.signUp.GetStartedActivity"
+            android:theme="@style/NoActionBarShowStatusBar"/>
+
+        <activity
+            android:name=".main.SplashActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
