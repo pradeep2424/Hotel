@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.dronam.manora.R;
 import com.dronam.manora.listeners.OnRecyclerViewClickListener;
 import com.dronam.manora.model.RestaurantObject;
+
 import java.util.ArrayList;
 
 public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapterRestaurant.ViewHolder> {
@@ -42,11 +43,11 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
         public ViewHolder(View itemView) {
             super(itemView);
 
-             ivRestaurantImage = itemView.findViewById(R.id.iv_restaurantImage);
-             tvRestaurantName = itemView.findViewById(R.id.tv_restaurantName);
-             tvRestaurantAddress = itemView.findViewById(R.id.tv_restaurantAddress);
-             tvRestaurantReviews = itemView.findViewById(R.id.tv_restaurantReviews);
-             ratingBarReviews = itemView.findViewById(R.id.ratingBar_restaurantReviews);
+            ivRestaurantImage = itemView.findViewById(R.id.iv_restaurantImage);
+            tvRestaurantName = itemView.findViewById(R.id.tv_restaurantName);
+            tvRestaurantAddress = itemView.findViewById(R.id.tv_restaurantAddress);
+            tvRestaurantReviews = itemView.findViewById(R.id.tv_restaurantReviews);
+            ratingBarReviews = itemView.findViewById(R.id.ratingBar_restaurantReviews);
 
             itemView.setOnClickListener(this);
         }
@@ -61,20 +62,25 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
 
     @Override
     public RecycleAdapterRestaurant.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_restaurant,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_restaurant, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecycleAdapterRestaurant.ViewHolder holder, int position) {
-        RestaurantObject restaurantObj =  listRestaurants.get(position);
+        RestaurantObject restaurantObj = listRestaurants.get(position);
+
+        float rating = 0;
+        if (restaurantObj.getRating() != null && restaurantObj.getRating().length() > 0) {
+            rating = Float.parseFloat(restaurantObj.getRating());
+        }
 
         holder.tvRestaurantName.setText(restaurantObj.getRestaurantName());
-//        holder.tvRestaurantAddress.setText();
-//        holder.tvRestaurantReviews.setText();
-//        holder.ratingBarReviews.setRating();
+        holder.tvRestaurantAddress.setText(restaurantObj.getRestaurantAddress());
+        holder.tvRestaurantReviews.setText("238 reviews");
+        holder.ratingBarReviews.setRating(rating);
 
-         Glide.with(context).load(restaurantObj.getLogo()).into(holder.ivRestaurantImage);
+        Glide.with(context).load(restaurantObj.getLogo()).into(holder.ivRestaurantImage);
     }
 
     @Override

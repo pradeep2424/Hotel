@@ -21,6 +21,7 @@ import com.dronam.manora.service.retrofit.RetroClient;
 import com.dronam.manora.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     private RecyclerView rvMenu;
     private RecycleAdapterRestaurantMenu adapterRestaurantMenu;
-    private ArrayList<DishObject> listMenuProducts;
+    private ArrayList<DishObject> listDishProducts;
+
+    RestaurantObject restaurantObject;
 
 //    private FoodPagerAdapter loginPagerAdapter;
 //    private ViewPager viewPager;
@@ -52,6 +55,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_details);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            restaurantObject = (RestaurantObject) bundle.getSerializable("RestaurantObject");
+        }
 
         initComponents();
         setupRecyclerViewPhotos();
@@ -81,13 +89,19 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         listPhotos = new ArrayList<>();
 
         for (int i = 0; i < foodImage.length; i++) {
-            DishObject dishObject = new DishObject(foodImage[i], "", "", "");
+            DishObject dishObject = new DishObject();
+            dishObject.setDishImage(String.valueOf(foodImage[i]));
             listPhotos.add(dishObject);
         }
+
+//        for (int i = 0; i < foodImage.length; i++) {
+//            DishObject dishObject = new DishObject(foodImage[i], "", "", "");
+//            listPhotos.add(dishObject);
+//        }
     }
 
     private void setupRecyclerViewProducts() {
-        adapterRestaurantMenu = new RecycleAdapterRestaurantMenu(this, listMenuProducts);
+        adapterRestaurantMenu = new RecycleAdapterRestaurantMenu(this, listDishProducts);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvMenu.setLayoutManager(layoutManager);
         rvMenu.setItemAnimator(new DefaultItemAnimator());
@@ -106,9 +120,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
 
+            String userTypeID = "";
+            String restaurantID = restaurantObject.getRestaurantID();
+            String foodTypeID = restaurantObject.getFoodTypeID();
+            String categoryID = restaurantObject.getCategoryID();
+
             ApiInterface apiService = RetroClient.getApiService(this);
-//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.getProductDetailsData("416004", "416004", "416004", "416004");
+            Call<ResponseBody> call = apiService.getProductDetailsData(userTypeID, restaurantID, foodTypeID, categoryID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -118,29 +136,27 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
+                            listDishProducts = new ArrayList<>();
 
-                            JSONObject jsonObj = new JSONObject(responseString);
-                            String categoryID = jsonObj.optString("CategoryId");
-                            String categoryName = jsonObj.optString("CategoryName");
-                            String clientID = jsonObj.optString("ClientId");
-                            String restaurantName = jsonObj.optString("RestaurantName");
-                            String foodTypeID = jsonObj.optString("FoodTypeId");
-                            String foodTypeName = jsonObj.optString("FoodTypeName");
-                            String logo = jsonObj.optString("Logo");
-                            String taxID = jsonObj.optString("TaxId");
-                            String taxable = jsonObj.optString("Taxable");
-                            String includeTax = jsonObj.optString("IncludeTax");
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                            DishObject dishObject = new DishObject();
-                            dishObject.setCategoryID(categoryID);
-                            dishObject.setCategoryName(categoryName);
-                            dishObject.setClientID(clientID);
-                            dishObject.setRestaurantName(restaurantName);
-                            dishObject.setFoodTypeID(foodTypeID);
-                            dishObject.setFoodTypeName(foodTypeName);
-                            dishObject.setLogo(logo);
+                                String dishID = jsonObj.optString("ProductId");
+                                String dishName = jsonObj.optString("ProductName");
+                                String dishDescription = jsonObj.optString("ProductDesc");
+                                String dishImage = jsonObj.optString("ProductImage");
+                                String dishPrice = jsonObj.optString("Price");
 
-//                            listMenuProducts.add(restaurantObject);
+                                DishObject dishObject = new DishObject();
+                                dishObject.setDishID(dishID);
+                                dishObject.setDishName(dishName);
+                                dishObject.setDishDescription(dishDescription);
+                                dishObject.setDishImage(dishImage);
+                                dishObject.setDishPrice(dishPrice);
+
+                                listDishProducts.add(dishObject);
+                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -172,7 +188,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            getRestaurantData();
+                            getProductDetailsData();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))

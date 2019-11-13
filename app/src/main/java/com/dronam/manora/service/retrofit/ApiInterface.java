@@ -29,7 +29,7 @@ public interface ApiInterface {
     @GET("getRestaurantDetails/{Zip}")
     Call<ResponseBody> getRestaurantDetails(@Path("Zip") String zipCode);
 
-    @GET("ProductDetails/{Zip}")
+    @GET("getProductDetails/{Usertypeid}/{ClientID}/{foodtypeid}/{CategoryID}")
     Call<ResponseBody> getProductDetailsData(@Path("Usertypeid") String userTypeID,
                                              @Path("ClientID") String clientID,
                                              @Path("foodtypeid") String foodTypeID,

@@ -29,13 +29,12 @@ import com.dronam.manora.listeners.OnRecyclerViewClickListener;
 import com.dronam.manora.model.CuisineObject;
 import com.dronam.manora.model.DishObject;
 import com.dronam.manora.model.RestaurantObject;
-import com.dronam.manora.model.UserDetails;
 import com.dronam.manora.service.retrofit.ApiInterface;
 import com.dronam.manora.service.retrofit.RetroClient;
-import com.dronam.manora.utils.Application;
 import com.dronam.manora.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String cuisineName[] = {"Thai Cusine", "Maxican", "Desert", "South Indian", "Italian"};
     String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
-    private ArrayList<RestaurantObject> listRestaurantObject = new ArrayList<>();
+    private ArrayList<RestaurantObject> listRestaurantObject;
     private TextView tvSeeMoreRestaurants;
     private RecyclerView rvRestaurants;
     private RecycleAdapterRestaurant adapterRestaurant;
@@ -119,7 +118,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     private void initComponents() {
         viewToolbarLocation = rootView.findViewById(R.id.view_toolbarLocation);
-        llToolbarLocation  = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
+        llToolbarLocation = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
         tvToolbarTitle = viewToolbarLocation.findViewById(R.id.tv_toolbarTitle);
 
         rvDishUserLikes = (RecyclerView) rootView.findViewById(R.id.recyclerView_dishUserLike);
@@ -208,7 +207,11 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private void getUserLikeDishData() {
         listDishObject = new ArrayList<>();
         for (int i = 0; i < image.length; i++) {
-            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
+//            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
+            DishObject dishObject = new DishObject();
+            dishObject.setDishName(dish_name[i]);
+            dishObject.setDishImage(String.valueOf(image[i]));
+            dishObject.setDishCategory(dish_type[i]);
             listDishObject.add(dishObject);
         }
     }
@@ -258,7 +261,10 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     @Override
     public void onClick(View view, int position) {
+        RestaurantObject restaurantObject = listRestaurantObject.get(position);
+
         Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
+        intent.putExtra("RestaurantObject", restaurantObject);
         startActivity(intent);
     }
 
@@ -288,32 +294,53 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
+                            listRestaurantObject = new ArrayList<>();
 
-                            JSONObject jsonObj = new JSONObject(responseString);
-                            String categoryID = jsonObj.optString("CategoryId");
-                            String categoryName = jsonObj.optString("CategoryName");
-                            String clientID = jsonObj.optString("ClientId");
-                            String restaurantName = jsonObj.optString("RestaurantName");
-                            String foodTypeID = jsonObj.optString("FoodTypeId");
-                            String foodTypeName = jsonObj.optString("FoodTypeName");
-                            String logo = jsonObj.optString("Logo");
-                            String taxID = jsonObj.optString("TaxId");
-                            String taxable = jsonObj.optString("Taxable");
-                            String includeTax = jsonObj.optString("IncludeTax");
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                            RestaurantObject restaurantObject = new RestaurantObject();
-                            restaurantObject.setCategoryID(categoryID);
-                            restaurantObject.setCategoryName(categoryName);
-                            restaurantObject.setClientID(clientID);
-                            restaurantObject.setRestaurantName(restaurantName);
-                            restaurantObject.setFoodTypeID(foodTypeID);
-                            restaurantObject.setFoodTypeName(foodTypeName);
-                            restaurantObject.setLogo(logo);
-                            restaurantObject.setTaxID(taxID);
-                            restaurantObject.setTaxable(taxable);
-                            restaurantObject.setIncludeTax(includeTax);
+                                String categoryID = jsonObj.optString("CategoryId");
+                                String categoryName = jsonObj.optString("CategoryName");
+                                String restaurantID = jsonObj.optString("ClientId");
+                                String restaurantName = jsonObj.optString("RestaurantName");
+                                String restaurantAddress = jsonObj.optString("ClientAddress");
+                                String openTime = jsonObj.optString("OpentTime");
+                                String closeTime = jsonObj.optString("CloseTime");
+                                String contact = jsonObj.optString("Contact");
+                                String description = jsonObj.optString("Description");
+                                String longitude = jsonObj.optString("Langitude");
+                                String latitude = jsonObj.optString("Latitude");
+                                String rating = jsonObj.optString("Rating");
+                                String foodTypeID = jsonObj.optString("FoodTypeId");
+                                String foodTypeName = jsonObj.optString("FoodTypeName");
+                                String logo = jsonObj.optString("Logo");
+                                String taxID = jsonObj.optString("TaxId");
+                                String taxable = jsonObj.optString("Taxable");
+                                String includeTax = jsonObj.optString("IncludeTax");
 
-                            listRestaurantObject.add(restaurantObject);
+                                RestaurantObject restaurantObject = new RestaurantObject();
+                                restaurantObject.setCategoryID(categoryID);
+                                restaurantObject.setCategoryName(categoryName);
+                                restaurantObject.setRestaurantID(restaurantID);
+                                restaurantObject.setRestaurantName(restaurantName);
+                                restaurantObject.setRestaurantAddress(restaurantAddress);
+                                restaurantObject.setOpenTime(openTime);
+                                restaurantObject.setCloseTime(closeTime);
+                                restaurantObject.setContact(contact);
+                                restaurantObject.setDescription(description);
+                                restaurantObject.setLongitude(longitude);
+                                restaurantObject.setLatitude(latitude);
+                                restaurantObject.setRating(rating);
+                                restaurantObject.setFoodTypeID(foodTypeID);
+                                restaurantObject.setFoodTypeName(foodTypeName);
+                                restaurantObject.setLogo(logo);
+                                restaurantObject.setTaxID(taxID);
+                                restaurantObject.setTaxable(taxable);
+                                restaurantObject.setIncludeTax(includeTax);
+
+                                listRestaurantObject.add(restaurantObject);
+                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -359,7 +386,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         if (requestCode == REQUEST_CODE_LOCATION) {
             if (resultCode == Activity.RESULT_OK && data != null) {
 
-                }
+            }
 
         } else if (requestCode == REQUEST_CODE_SEE_MORE_CUISINE) {
             if (resultCode == Activity.RESULT_OK && data != null) {

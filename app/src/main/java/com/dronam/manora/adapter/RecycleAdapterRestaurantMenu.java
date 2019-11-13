@@ -23,7 +23,6 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         this.modelArrayList = modelArrayList;
     }
 
-
     @Override
     public RecycleAdapterRestaurantMenu.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_restaurant_menu,parent,false);

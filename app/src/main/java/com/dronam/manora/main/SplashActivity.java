@@ -14,6 +14,7 @@ import com.dronam.manora.R;
 import com.dronam.manora.model.UserDetails;
 import com.dronam.manora.service.retrofit.ApiInterface;
 import com.dronam.manora.service.retrofit.RetroClient;
+import com.dronam.manora.signUp.GetStartedActivity;
 import com.dronam.manora.signUp.LoginActivity;
 import com.dronam.manora.utils.Application;
 import com.dronam.manora.utils.InternetConnection;
@@ -52,7 +53,7 @@ public class SplashActivity extends AppCompatActivity {
     private void loadNextPage() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SplashActivity.this, GetStartedActivity.class);
                 startActivity(intent);
                 finish();
             }
