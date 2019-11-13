@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String cuisineName[] = {"Thai Cusine", "Maxican", "Desert", "South Indian", "Italian"};
     String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
-    private ArrayList<RestaurantObject> listRestaurantObject;
+    private ArrayList<RestaurantObject> listRestaurantObject = new ArrayList<>();
     private TextView tvSeeMoreRestaurants;
     private RecyclerView rvRestaurants;
     private RecycleAdapterRestaurant adapterRestaurant;
