@@ -27,7 +27,7 @@
                 android:src="@drawable/ic_arrow_back_white"
                 android:tint="@color/black"/>
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="13dp"
@@ -39,7 +39,7 @@
 
         </LinearLayout>
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
@@ -78,7 +78,7 @@
                         android:src="@mipmap/paytm" />
 
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
@@ -88,7 +88,7 @@
                         android:textColor="@color/main_dark_text"
                         android:textSize="13.5sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/link_account"
@@ -114,7 +114,7 @@
                         android:layout_height="40dp"
                         android:src="@mipmap/phonepe" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
@@ -124,7 +124,7 @@
                         android:textColor="@color/main_dark_text"
                         android:textSize="13sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/link_account"
@@ -150,7 +150,7 @@
                         android:layout_height="40dp"
                         android:src="@mipmap/amazon" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
@@ -160,7 +160,7 @@
                         android:textColor="@color/main_dark_text"
                         android:textSize="13sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -187,7 +187,7 @@
                         android:layout_height="40dp"
                         android:src="@mipmap/freecharge" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
@@ -197,7 +197,7 @@
                         android:textColor="@color/main_dark_text"
                         android:textSize="13sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pay_now"
@@ -223,7 +223,7 @@
                         android:layout_height="40dp"
                         android:src="@mipmap/mobikwik" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
@@ -233,7 +233,7 @@
                         android:textColor="@color/main_dark_text"
                         android:textSize="13sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pay_now"
@@ -271,14 +271,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/add_card"
                         android:textColor="@color/main_dark_text"
                         android:textSize="14sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -347,14 +347,14 @@
                     android:layout_marginLeft="14.5dp"
                     android:orientation="vertical">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pay_on_delivery"
                         android:textColor="@color/main_dark_text"
                         android:textSize="12.7sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/pay_exact_change"

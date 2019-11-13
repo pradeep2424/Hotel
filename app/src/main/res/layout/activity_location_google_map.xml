@@ -25,7 +25,7 @@
         android:layout_marginRight="20dp"
         android:orientation="vertical">
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_set_delivery_location"
@@ -42,7 +42,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp">
 
-            <com.dronam.manora.custom.MyEditText
+            <com.miracle.dronam.custom.MyEditText
                 android:id="@+id/et_searchAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1071960779750",
+    "firebase_url": "https://miraclemanorafooddeliver-81cad.firebaseio.com",
+    "project_id": "miraclemanorafooddeliver-81cad",
+    "storage_bucket": "miraclemanorafooddeliver-81cad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071960779750:android:a90cfb723b7f772ce6c427",
+        "android_client_info": {
+          "package_name": "com.miracle.dronam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071960779750-badihr58u34it680qqejpr8m2t1b3kkv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miracle.dronam",
+            "certificate_hash": "34fab2417ffcc87b05842e2cc291042ecc74c907"
+          }
+        },
+        {
+          "client_id": "1071960779750-juoolkts6utngcb8rbphaeutvl900f1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPSj8j7qeVRvGPkOfAEN67942x2IkOt1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071960779750-juoolkts6utngcb8rbphaeutvl900f1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

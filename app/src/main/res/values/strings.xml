@@ -1,6 +1,7 @@
 <resources>
-<!--        <string name="google_maps_key">AIzaSyDFNnP_L1EQ2Sd4QHSRFH6gfn_XnwoSwFw</string>-->
-    <string name="google_maps_key">AIzaSyBvvnoJmlhkTU07hc3nYMMpxgwxxoR66TA</string>
+    <!-- PJ Account   <string name="google_maps_key">AIzaSyBvvnoJmlhkTU07hc3nYMMpxgwxxoR66TA</string>-->
+    <!--  Miracle Account-->
+    <string name="google_maps_key">AIzaSyCaZqLDdAW2AYeDZ0YC41zc13E11xWxheg</string>
 
     <string name="app_name">Hotel</string>
     <string name="powered_by">Powered by</string>

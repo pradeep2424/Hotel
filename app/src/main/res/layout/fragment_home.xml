@@ -122,7 +122,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -130,7 +130,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:id="@+id/tv_seeMoreDish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -181,7 +181,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:id="@+id/tv_seeMoreCuisine"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -225,7 +225,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -233,7 +233,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:id="@+id/tv_seeMoreRestaurant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -276,14 +276,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/powered_by"
                     android:textColor="@color/light_gray_hint"
                     android:textSize="12sp" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2.5dp"

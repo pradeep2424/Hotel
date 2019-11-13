@@ -17,7 +17,7 @@
             android:layout_marginLeft="15.4dp"
             android:src="@mipmap/profile_settings" />
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:id="@+id/tv_title"
             android:layout_width="310dp"
             android:layout_height="wrap_content"

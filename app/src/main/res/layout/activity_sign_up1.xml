@@ -20,7 +20,7 @@
             android:layout_marginTop="85dp"
             android:orientation="horizontal">
 
-            <com.dronam.manora.custom.MyTextViewBold
+            <com.miracle.dronam.custom.MyTextViewBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dronam"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="5dp"
                 android:background="#ffffff" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -47,7 +47,7 @@
         </LinearLayout>
 
 
-        <com.dronam.manora.custom.MyEditText
+        <com.miracle.dronam.custom.MyEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
@@ -69,7 +69,7 @@
             android:background="#33ffffff" />
 
 
-        <com.dronam.manora.custom.MyEditText
+        <com.miracle.dronam.custom.MyEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
@@ -90,7 +90,7 @@
             android:layout_marginRight="35dp"
             android:background="#33ffffff" />
 
-        <com.dronam.manora.custom.MyEditText
+        <com.miracle.dronam.custom.MyEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
@@ -111,7 +111,7 @@
             android:layout_marginRight="35dp"
             android:background="#33ffffff" />
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:id="@+id/tv_signUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/facebook_176" />
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
@@ -166,14 +166,14 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/already_have_account"
             android:textColor="#ffffff"
             android:textSize="14sp" />
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

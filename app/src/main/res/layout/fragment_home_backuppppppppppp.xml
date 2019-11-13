@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.dronam.manora.utils.StickyScrollView
+    <com.miracle.dronam.utils.StickyScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
@@ -85,7 +85,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -93,7 +93,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="See all"
@@ -135,7 +135,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -143,7 +143,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="See all"
@@ -186,7 +186,7 @@
                     android:layout_marginRight="13dp"
                     android:orientation="horizontal">
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -194,7 +194,7 @@
                         android:textColor="#373737"
                         android:textSize="19sp" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="See all"
@@ -236,14 +236,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/powered_by"
                     android:textColor="@color/light_gray_hint"
                     android:textSize="12sp" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2.5dp"
@@ -255,7 +255,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </com.dronam.manora.utils.StickyScrollView>
+    </com.miracle.dronam.utils.StickyScrollView>
 </LinearLayout>
 
     <!--    <?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->

@@ -22,7 +22,7 @@
             android:src="@drawable/ic_search"
             android:tint="@color/light_gray_hint"/>
 
-        <com.dronam.manora.custom.MyEditText
+        <com.miracle.dronam.custom.MyEditText
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

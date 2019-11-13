@@ -5,7 +5,7 @@
     android:background="#00000000">
 
 
-    <com.dronam.manora.custom.MyTextView
+    <com.miracle.dronam.custom.MyTextView
         android:id="@+id/tv_editProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

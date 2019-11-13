@@ -28,7 +28,7 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/temp_img5" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_restaurantName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="14dp" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_restaurantAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                     android:rating="4"
                     android:stepSize="0.1" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:id="@+id/tv_restaurantReviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

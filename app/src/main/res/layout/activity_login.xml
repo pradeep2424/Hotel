@@ -45,7 +45,7 @@
             android:layout_marginRight="30dp"
             android:orientation="vertical">
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/main"
@@ -69,7 +69,7 @@
                     android:paddingLeft="10dp"
                     android:src="@mipmap/username" />
 
-                <com.dronam.manora.custom.MyEditText
+                <com.miracle.dronam.custom.MyEditText
                     android:id="@+id/et_username"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -99,7 +99,7 @@
                     android:paddingLeft="10dp"
                     android:src="@mipmap/password" />
 
-                <com.dronam.manora.custom.MyEditText
+                <com.miracle.dronam.custom.MyEditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -113,7 +113,7 @@
                     android:textSize="13dp" />
             </LinearLayout>
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_login"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -135,7 +135,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_createAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                 android:text="@string/create_account"
                 android:textColor="#FFF" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_needHelp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

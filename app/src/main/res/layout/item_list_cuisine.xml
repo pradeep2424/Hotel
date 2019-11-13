@@ -26,7 +26,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/food1" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_cuisine_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:textColor="#373737"
                 android:textSize="17sp" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:textColor="#373737"
                 android:textSize="13sp" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

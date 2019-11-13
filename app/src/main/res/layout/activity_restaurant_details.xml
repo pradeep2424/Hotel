@@ -56,14 +56,14 @@
                 android:orientation="vertical"
                 android:paddingLeft="13.4dp">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cocobolo Poolside Bar + Grill"
                     android:textColor="#262628"
                     android:textSize="19.2dp" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -86,7 +86,7 @@
                         android:progressTint="#f05421"
                         android:rating="4" />
 
-                    <com.dronam.manora.custom.MyTextView
+                    <com.miracle.dronam.custom.MyTextView
                         android:id="@+id/Reviews_Id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="OPEN IN"
@@ -117,7 +117,7 @@
                             android:textSize="14.4sp" />
 
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -146,7 +146,7 @@
                             android:padding="1dp"
                             android:src="@mipmap/phone" />
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
@@ -174,7 +174,7 @@
 
                 android:paddingTop="15dp">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="13.4dp"
@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="197.7dp" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -209,7 +209,7 @@
                 android:textColor="#c1c5c6"
                 android:textSize="16.7sp" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -243,7 +243,7 @@ tristique senectus et netus et."
                 android:paddingLeft="13.4dp"
                 android:paddingTop="16dp">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -251,7 +251,7 @@ tristique senectus et netus et."
                     android:textColor="#c2c4ca"
                     android:textSize="14.4sp" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
@@ -298,7 +298,7 @@ tristique senectus et netus et."
                 android:paddingLeft="13.4dp"
                 android:paddingTop="25dp">
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -306,7 +306,7 @@ tristique senectus et netus et."
                     android:textColor="#c2c4ca"
                     android:textSize="14.4sp" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"

@@ -18,7 +18,7 @@
         android:layout_marginTop="90dp"
         android:orientation="horizontal">
 
-        <com.dronam.manora.custom.MyTextViewBold
+        <com.miracle.dronam.custom.MyTextViewBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dronam"
@@ -34,7 +34,7 @@
             android:layout_marginTop="5dp"
             android:background="#ffffff" />
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -68,7 +68,7 @@
         android:layout_margin="35dp"
         android:orientation="vertical">
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:id="@+id/tv_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
             android:layout_marginTop="50dp"
             android:orientation="vertical">
 
-            <com.dronam.manora.custom.MyEditText
+            <com.miracle.dronam.custom.MyEditText
                 android:id="@+id/et_mobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.dronam.manora.custom.MyEditText
+                <com.miracle.dronam.custom.MyEditText
                     android:id="@+id/et_fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.dronam.manora.custom.MyEditText
+                <com.miracle.dronam.custom.MyEditText
                     android:id="@+id/et_lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
             android:orientation="vertical"
             android:padding="14dp">
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

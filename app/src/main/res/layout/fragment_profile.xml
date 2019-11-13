@@ -51,21 +51,21 @@
                         android:layout_marginLeft="16dp"
                         android:orientation="vertical">
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pradeep Jadhav"
                             android:textColor="@color/white"
                             android:textSize="23sp" />
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="xyz@gmail.com"
                             android:textColor="@color/white"
                             android:textSize="14.4sp" />
 
-                        <com.dronam.manora.custom.MyTextView
+                        <com.miracle.dronam.custom.MyTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="9876543210"
@@ -90,7 +90,7 @@
                     android:layout_marginLeft="16dp"
                     android:src="@mipmap/profile_favorite_restaurants" />
 
-                <com.dronam.manora.custom.MyTextView
+                <com.miracle.dronam.custom.MyTextView
                     android:id="@+id/tv1"
                     android:layout_width="310dp"
                     android:layout_height="wrap_content"

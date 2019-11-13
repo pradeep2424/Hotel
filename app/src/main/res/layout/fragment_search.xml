@@ -32,7 +32,7 @@
                 android:src="@drawable/temp_men"
                 app:civ_border_color="#FF000000" />
 
-            <com.dronam.manora.custom.MyTextView
+            <com.miracle.dronam.custom.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
@@ -41,7 +41,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
@@ -65,7 +65,7 @@
                 android:src="@drawable/ic_search"
                 android:tint="#d0d0d0" />
 
-            <com.dronam.manora.custom.MyEditText
+            <com.miracle.dronam.custom.MyEditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -84,7 +84,7 @@
                 android:tint="#d22532" />
         </LinearLayout>
 
-        <com.dronam.manora.custom.MyTextView
+        <com.miracle.dronam.custom.MyTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
