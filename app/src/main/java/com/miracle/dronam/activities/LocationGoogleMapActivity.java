@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,12 +20,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.PlacesAutoCompleteAdapter;
 import com.miracle.dronam.main.MainActivity;
@@ -60,6 +55,8 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     private RecyclerView recyclerView;
     private EditText etSearchText;
 
+    double latitude = 0;
+    double longitude = 0;
 
     private final int REQUEST_PERMISSION_LOCATION = 1001;
     private final int REQUEST_CODE_MAP = 101;
@@ -88,11 +85,8 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
         viewCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isLocationPermissionGranted()) {
+                if (requestLocationPermission()) {
                     openGoogleMaps(0, 0);
-
-                } else {
-                    requestLocationPermission();
                 }
             }
         });
@@ -145,15 +139,11 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 
     @Override
     public void click(Place place) {
-        if (isLocationPermissionGranted()) {
-            Toast.makeText(this, place.getAddress() + ", " + place.getLatLng().latitude + place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, place.getAddress() + ", " + place.getLatLng().latitude + place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
 
-            double latitude = place.getLatLng().latitude;
-            double longitude = place.getLatLng().longitude;
-            openGoogleMaps(latitude, longitude);
-        } else {
-            requestLocationPermission();
-        }
+        latitude = place.getLatLng().latitude;
+        longitude = place.getLatLng().longitude;
+        openGoogleMaps(latitude, longitude);
     }
 
 //    private void searchLocationOnMap() {
@@ -204,32 +194,34 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
         startActivityForResult(intent, REQUEST_CODE_MAP);
     }
 
-    private void requestLocationPermission() {
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.CAMERA)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
+    private boolean requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                    }
+            int permissionCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
+            List<String> listPermissionsNeeded = new ArrayList<>();
+            if (permissionCamera != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
 
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
-
+            if (!listPermissionsNeeded.isEmpty()) {
+                requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_PERMISSION_LOCATION);
+                return false;
+            }
+        }
+        return true;
 
     }
 
-    private boolean isLocationPermissionGranted() {
-        int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        return (permissionLocation == PackageManager.PERMISSION_GRANTED);
+    private void showDialogOK(DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.location_permission_title))
+                .setMessage(getResources().getString(R.string.location_permission_text))
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", okListener)
+                .setCancelable(false)
+                .create()
+                .show();
     }
 
     @Override
@@ -274,6 +266,62 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_LOCATION:
+
+                Map<String, Integer> perms1 = new HashMap<>();
+                perms1.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
+//                perms1.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+//                perms1.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
+
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        perms1.put(permissions[i], grantResults[i]);
+                    }
+
+                    // Check for both permissions
+//                    if (perms1.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+////                            && perms1.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+////                            && perms1.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+                    if (perms1.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        openGoogleMaps(latitude, longitude);
+
+                    } else {
+
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                            showDialogOK(new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            requestLocationPermission();
+
+                                            break;
+                                        case DialogInterface.BUTTON_NEGATIVE:
+
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                        //permission is denied (and never ask again is  checked)
+                        //shouldShowRequestPermissionRationale will return false
+                        else {
+                            Toast.makeText(this, "Go to settings and enable app permissions",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                break;
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

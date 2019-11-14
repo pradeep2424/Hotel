@@ -28,6 +28,10 @@
     <string name="email_address">Email Address</string>
     <string name="sign_up">Sign Up</string>
 
+    <string name="location_permission_title">Location Permission Denied</string>
+    <string name="location_permission_text">We use this permission to detect your current location and display restaurants near you.
+    \nGrant this permission now!!!</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_search">Search</string>
     <string name="menu_orders">Orders</string>
@@ -39,7 +43,6 @@
     <string name="toolbar_location">Brose Near By Place</string>
     <string name="toolbar_set_delivery_location">Set you delivery location</string>
     <string name="location_search_box_text">Search for area or street...</string>
-
 
     <string name="get_started_with_mobile">Get started with your mobile number</string>
     <string name="join_family">Join the Dronam family and wait no more, \nwhen you are hungry.</string>

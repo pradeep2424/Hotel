@@ -18,6 +18,7 @@ import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -120,7 +121,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
 
-            String userTypeID = "";
+            String userTypeID = Application.userDetails.getUserType();
             String restaurantID = restaurantObject.getRestaurantID();
             String foodTypeID = restaurantObject.getFoodTypeID();
             String categoryID = restaurantObject.getCategoryID();
