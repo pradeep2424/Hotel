@@ -2,9 +2,14 @@ package com.miracle.dronam.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -22,6 +27,9 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +43,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+//        printHashKey();
+
         init();
         getUserDetails();
         getAreaDetails();
@@ -43,6 +53,23 @@ public class SplashActivity extends AppCompatActivity {
 
         loadNextPage();
     }
+
+//    public void printHashKey() {
+//        try {
+//            PackageInfo info = getApplicationContext().getPackageManager().getPackageInfo(
+//                    getApplicationContext().getPackageName(), PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String hashKey = new String(Base64.encode(md.digest(), 0));
+//                Log.i("*****", "printHashKey() Hash Key : " + hashKey);
+//            }
+//        } catch (NoSuchAlgorithmException e) {
+//            Log.e("*****", "printHashKey()", e);
+//        } catch (Exception e) {
+//            Log.e("*****", "printHashKey()", e);
+//        }
+//    }
 
     private void init()
     {
@@ -111,7 +138,7 @@ public class SplashActivity extends AppCompatActivity {
                             String zipCode = jsonObj.optString("ZipCode");
 
                             UserDetails userDetails = new UserDetails();
-                            userDetails.setName(name);
+                            userDetails.setFullName(name);
                             userDetails.setGender(gender);
                             userDetails.setEmail(email);
                             userDetails.setMobile(mobile);

@@ -3,7 +3,9 @@ package com.miracle.dronam.model;
 public class UserDetails {
     String userID;
     String username;
-    String name;
+    String firstName;
+    String lastName;
+    String fullName;
     String gender;
     String userType;
     String userRole;
@@ -21,6 +23,21 @@ public class UserDetails {
     String status;
     String password;
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getStatus() {
         return status;
@@ -94,12 +111,12 @@ public class UserDetails {
         this.mobile = mobile;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String name) {
+        this.fullName = name;
     }
 
     public String getStateName() {

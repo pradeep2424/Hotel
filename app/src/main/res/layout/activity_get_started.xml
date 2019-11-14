@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_rootLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -155,6 +156,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/ll_google"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="25dp"
@@ -182,6 +184,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_facebook"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"

@@ -11,16 +11,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
+import com.miracle.dronam.model.UserDetails;
+import com.miracle.dronam.utils.Application;
 
 public class GetStartedMobileNumberActivity extends AppCompatActivity {
-//    View view;
+    //    View view;
     View viewToolbar;
     ImageView ivBack;
 
     LinearLayout llConfirm;
     EditText etMobileNumber;
-    EditText fName;
-    EditText lName;
+    EditText etFName;
+    EditText etLName;
 
 
     @Override
@@ -30,6 +32,7 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
 
         init();
         componentEvents();
+        setNameData();
     }
 
     private void init() {
@@ -38,8 +41,8 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
 
         llConfirm = findViewById(R.id.ll_confirm);
         etMobileNumber = findViewById(R.id.et_mobileNumber);
-        fName = findViewById(R.id.et_fname);
-        lName = findViewById(R.id.et_lname);
+        etFName = findViewById(R.id.et_fname);
+        etLName = findViewById(R.id.et_lname);
 
 //        tvTitle = (TextView) findViewById(R.id.tv_title);
 //        tvLogin = (TextView) findViewById(R.id.tv_login);
@@ -53,6 +56,7 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         llConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent it = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
                 startActivity(it);
                 finish();
@@ -67,5 +71,28 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setNameData() {
+        UserDetails userDetails = Application.userDetails;
+        if (userDetails.getFirstName() != null) {
+            etFName.setText(userDetails.getFirstName());
+        }
+
+        if (userDetails.getLastName() != null) {
+            etLName.setText(userDetails.getLastName());
+        }
+    }
+
+    private void saveUserData() {
+        String fname = etFName.getText().toString().trim();
+        String lname = etLName.getText().toString().trim();
+        String mobileNo = etMobileNumber.getText().toString().trim();
+        String fullName = fname.concat(" ").concat(lname);
+
+        Application.userDetails.setFirstName(fname);
+        Application.userDetails.setLastName(lname);
+        Application.userDetails.setFullName(fullName);
+        Application.userDetails.setMobile(mobileNo);
     }
 }

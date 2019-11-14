@@ -2,10 +2,16 @@ package com.miracle.dronam.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +19,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.PlacesAutoCompleteAdapter;
 import com.miracle.dronam.main.MainActivity;
@@ -24,6 +36,11 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sucho.placepicker.AddressData;
 import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.PlacePicker;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 //import com.vanillaplacepicker.data.VanillaAddress;
 //import com.vanillaplacepicker.presentation.builder.VanillaPlacePicker;
 //import com.vanillaplacepicker.utils.KeyUtils;
@@ -38,13 +55,14 @@ import com.sucho.placepicker.PlacePicker;
 
 
 public class LocationGoogleMapActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener {
-    private final int REQUEST_CODE_SEARCH_PLACE = 100;
-    private final int REQUEST_CODE_MAP = 101;
-
     private View viewCurrentLocation;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
     private RecyclerView recyclerView;
     private EditText etSearchText;
+
+
+    private final int REQUEST_PERMISSION_LOCATION = 1001;
+    private final int REQUEST_CODE_MAP = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +72,7 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
         init();
         setupSearchLocation();
         componentEvents();
+
 //        searchLocationOnMap();
 //        openGoogleMaps(23.057582, 72.534458);
     }
@@ -65,12 +84,16 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
         etSearchText.addTextChangedListener(filterTextWatcher);
     }
 
-    private void componentEvents()
-    {
+    private void componentEvents() {
         viewCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openGoogleMaps(0, 0);
+                if (isLocationPermissionGranted()) {
+                    openGoogleMaps(0, 0);
+
+                } else {
+                    requestLocationPermission();
+                }
             }
         });
     }
@@ -122,11 +145,15 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 
     @Override
     public void click(Place place) {
-        Toast.makeText(this, place.getAddress() + ", " + place.getLatLng().latitude + place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+        if (isLocationPermissionGranted()) {
+            Toast.makeText(this, place.getAddress() + ", " + place.getLatLng().latitude + place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
 
-        double latitude = place.getLatLng().latitude;
-        double longitude = place.getLatLng().longitude;
-        openGoogleMaps(latitude, longitude);
+            double latitude = place.getLatLng().latitude;
+            double longitude = place.getLatLng().longitude;
+            openGoogleMaps(latitude, longitude);
+        } else {
+            requestLocationPermission();
+        }
     }
 
 //    private void searchLocationOnMap() {
@@ -175,6 +202,34 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 //                .onlyCoordinates(true)  //Get only Coordinates from Place Picker
                 .build(LocationGoogleMapActivity.this);
         startActivityForResult(intent, REQUEST_CODE_MAP);
+    }
+
+    private void requestLocationPermission() {
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();
+
+
+    }
+
+    private boolean isLocationPermissionGranted() {
+        int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        return (permissionLocation == PackageManager.PERMISSION_GRANTED);
     }
 
     @Override
