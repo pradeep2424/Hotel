@@ -57,8 +57,10 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent it = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
-                startActivity(it);
+//                Intent it = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
+                Intent intent = new Intent(GetStartedMobileNumberActivity.this, GetStartedVerifyOTPActivity.class);
+                intent.putExtra("mobile", etMobileNumber.getText().toString().trim());
+                startActivity(intent);
                 finish();
             }
         });

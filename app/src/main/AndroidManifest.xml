@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.miracle.dronam">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -10,28 +9,28 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
     <application
-        android:name="com.miracle.dronam.utils.Application"
+        android:name=".utils.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.miracle.dronam.activities.LocationGoogleMapActivity"
+            android:name=".signUp.GetStartedVerifyOTPActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
 
         <activity
-            android:name="com.miracle.dronam.signUp.GetStartedActivity"
+            android:name=".activities.LocationGoogleMapActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
 
         <activity
-            android:name="com.miracle.dronam.main.SplashActivity"
+            android:name=".signUp.GetStartedActivity"
+            android:theme="@style/NoActionBarShowStatusBar" />
+        <activity
+            android:name=".main.SplashActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,26 +39,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.miracle.dronam.signUp.GetStartedMobileNumberActivity"
+            android:name=".signUp.GetStartedMobileNumberActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
         <activity
-            android:name="com.miracle.dronam.signUp.LoginActivity"
+            android:name=".signUp.LoginActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
         <activity
-            android:name="com.miracle.dronam.signUp.SignUpActivity"
+            android:name=".signUp.SignUpActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
         <activity
-            android:name="com.miracle.dronam.main.MainActivity"
+            android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarShowStatusBar" />
-        <activity android:name="com.miracle.dronam.activities.SeeMoreActivity" />
+        <activity android:name=".activities.SeeMoreActivity" />
         <activity
-            android:name="com.miracle.dronam.activities.RestaurantDetailsActivity"
+            android:name=".activities.RestaurantDetailsActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
         <activity
-            android:name="com.miracle.dronam.activities.PaymentMethodsActivity"
+            android:name=".activities.PaymentMethodsActivity"
             android:theme="@style/NoActionBarShowStatusBar" />
-
         <!--
            The API key for Google Maps-based APIs is defined as a string resource.
            (See the file "res/values/google_maps_api.xml").
@@ -67,11 +65,10 @@
            You need a different API key for each encryption key, including the release key that is used to
            sign the APK for publishing.
            You can define the keys for the debug and release targets in src/debug/ and src/release/.
-      -->
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -80,7 +77,6 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -93,8 +89,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@
 
     <color name="colorAccent">#FF5722</color>
 
+    <color name="deep_orange">#ff3d00</color>
     <color name="dark_orange">#f05421</color>
     <color name="light_orange">#FF9E80</color>
     <color name="orange">#FF9800</color>
@@ -28,6 +29,9 @@
 
     <color name="divider_dark">#e2e2e2</color>
     <color name="smokegray">#f2f2f2</color>
+
+    <color name="otp_border">#c7c7cc</color>
+    <color name="success_green">#33cc33</color>
 
     <color name="view_light">#f5f5f5</color>
     <color name="transparent">#60000000</color>
