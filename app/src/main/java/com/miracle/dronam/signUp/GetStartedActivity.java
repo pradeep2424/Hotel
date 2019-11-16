@@ -118,8 +118,7 @@ public class GetStartedActivity extends AppCompatActivity {
         });
     }
 
-    private void loadMobileNumberActivity()
-    {
+    private void loadMobileNumberActivity() {
         Intent it = new Intent(GetStartedActivity.this, GetStartedMobileNumberActivity.class);
         startActivity(it);
         finish();

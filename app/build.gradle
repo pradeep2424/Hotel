@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
 
     implementation 'com.github.aabhasr1:otpview:1.1.2'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
 
 //    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
 

@@ -1,5 +1,6 @@
 package com.miracle.dronam.utils;
 
+import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.sucho.placepicker.AddressData;
 
@@ -11,6 +12,7 @@ public class Application extends android.app.Application {
     private static Application mInstance;
 
     public static UserDetails userDetails = new UserDetails();
+    public static SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
     public static AddressData locationAddressData;
 
     public Application getInstance() {

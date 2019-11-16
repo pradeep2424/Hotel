@@ -15,7 +15,8 @@
     <color name="sing_up_text">#6f7279</color>
 
     <color name="menu_active">#f15421</color>
-    <color name="menu_inactive">#d3d3d3</color>
+    <color name="menu_inactive">#c7c7cc</color>
+<!--    <color name="menu_inactive">#d3d3d3</color>-->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="indigo_500">#3F51B5</color>
@@ -30,7 +31,7 @@
     <color name="divider_dark">#e2e2e2</color>
     <color name="smokegray">#f2f2f2</color>
 
-    <color name="otp_border">#c7c7cc</color>
+<!--    <color name="otp_border">#c7c7cc</color>-->
     <color name="success_green">#33cc33</color>
 
     <color name="view_light">#f5f5f5</color>

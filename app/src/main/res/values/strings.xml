@@ -38,6 +38,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_search">Search</string>
+    <string name="menu_cart">Cart</string>
     <string name="menu_orders">Orders</string>
     <string name="menu_profile">Profile</string>
 
@@ -58,10 +59,13 @@
     <string name="terms_and_privacy">By continuing, you agree to our \n
     <a href="https://www.dronam.com/privacy">Privacy Policy</a> &amp; <a href="https://www.dronam.com/#">Terms of Use</a></string>
 
-
     <string name="search_main_title">What can we \nserve you today?</string>
     <string name="search_box_text">Search for restaurants or dish...</string>
     <string name="search_button">SEARCH</string>
+
+    <string name="cart_empty_title">Oops! Your cart is empty</string>
+    <string name="cart_empty_text">Looks like you haven\'t added anything to your cart yet</string>
+    <string name="browse_menu">Browse Menu</string>
 
     <string name="profile_favourite_restaurants">Favourite Restaurant</string>
     <string name="profile_payment_methods">Payment Methods</string>

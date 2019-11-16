@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.miracle.dronam.R;
+import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
@@ -127,6 +128,7 @@ public class SplashActivity extends AppCompatActivity {
 
                             String userID = jsonObj.optString("UserID");
                             String username = jsonObj.optString("Username");
+                            String password = jsonObj.optString("Pass");
                             String userPhoto = jsonObj.optString("UserPhoto");
                             String userRole = jsonObj.optString("UserRole");
                             String userType = jsonObj.optString("UserType");
@@ -137,6 +139,13 @@ public class SplashActivity extends AppCompatActivity {
                             String stateName = jsonObj.optString("StateName");
                             String zipCode = jsonObj.optString("ZipCode");
 
+                            String url = jsonObj.optString("URL");
+                            String smsUsername = jsonObj.optString("SMSUsername");
+                            String smsPass = jsonObj.optString("SMSPass");
+                            String channel = jsonObj.optString("channel");
+                            String sendSMS = jsonObj.optString("SendSMS");
+                            String senderID = jsonObj.optString("SenderID");
+
                             UserDetails userDetails = new UserDetails();
                             userDetails.setFullName(name);
                             userDetails.setGender(gender);
@@ -146,6 +155,7 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setFacebookId(facebookId);
                             userDetails.setUserID(userID);
                             userDetails.setUsername(username);
+                            userDetails.setPassword(password);
                             userDetails.setUserPhoto(userPhoto);
                             userDetails.setUserRole(userRole);
                             userDetails.setUserType(userType);
@@ -155,6 +165,15 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setStateName(stateName);
                             userDetails.setZipCode(zipCode);
                             Application.userDetails = userDetails;
+
+                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
+                            smsGatewayObject.setUrl(url);
+                            smsGatewayObject.setSmsUsername(smsUsername);
+                            smsGatewayObject.setSmsPass(smsPass);
+                            smsGatewayObject.setChannel(channel);
+                            smsGatewayObject.setSendSMS(sendSMS);
+                            smsGatewayObject.setSenderID(senderID);
+                            Application.smsGatewayObject = smsGatewayObject;
 
 //                            if (status.equalsIgnoreCase("Success")) {
 //                                FirebaseUser user = mAuth.getCurrentUser();

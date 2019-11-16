@@ -1,6 +1,8 @@
 package com.miracle.dronam.model;
 
-public class UserDetails {
+import java.io.Serializable;
+
+public class UserDetails implements Serializable {
     String userID;
     String username;
     String firstName;

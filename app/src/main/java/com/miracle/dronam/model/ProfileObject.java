@@ -1,10 +1,9 @@
 package com.miracle.dronam.model;
 
-/**
- * Created by Vaibhav on 25-Jul-18.
- */
+import java.io.Serializable;
 
-public class ProfileObject {
+
+public class ProfileObject implements Serializable {
 
     String title;
     Integer icon;

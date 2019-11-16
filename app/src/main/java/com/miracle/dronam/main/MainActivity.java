@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.miracle.dronam.R;
+import com.miracle.dronam.bottomMenu.CartFragment;
 import com.miracle.dronam.bottomMenu.HomeFragment;
 import com.miracle.dronam.bottomMenu.ProfileFragment;
 import com.miracle.dronam.bottomMenu.SearchFragment;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.tab_search:
                         replaceFragment(new SearchFragment());
+                        break;
+
+                    case R.id.tab_cart:
+                        replaceFragment(new CartFragment());
                         break;
 
                     case R.id.tab_orders:

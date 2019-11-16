@@ -16,6 +16,13 @@
 
         <tab
             activeColor="@color/menu_active"
+            icon="@drawable/ic_cart_bag"
+            id="@+id/tab_cart"
+            inActiveColor="@color/menu_inactive"
+            title="@string/menu_cart" />
+
+        <tab
+            activeColor="@color/menu_active"
             icon="@drawable/ic_orders"
             id="@+id/tab_orders"
             inActiveColor="@color/menu_inactive"
