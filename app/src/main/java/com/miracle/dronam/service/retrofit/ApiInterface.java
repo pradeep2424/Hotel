@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 /**
  * Created by Pradeep Jadhav.
@@ -23,7 +24,7 @@ public interface ApiInterface {
 
     @GET("GetUserDetails/{Username}/{Password}")
     Call<ResponseBody> getUserDetails(@Path("Username") String username,
-                                       @Path("Password") String password);
+                                      @Path("Password") String password);
 
 
     @GET("getRestaurantDetails/{Zip}")
@@ -35,11 +36,28 @@ public interface ApiInterface {
                                              @Path("foodtypeid") String foodTypeID,
                                              @Path("CategoryID") String categoryID);
 
+
+    @GET("getcartItem/{userids}/{ClientIDs}")
+    Call<ResponseBody> getCartItem(@Path("userids") int userID, @Path("ClientIDs") int clientID);
+
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
 
     @POST("insertUserDetails")
     Call<ResponseBody> insertUserDetails(@Body UserDetails body);
+
+
+    @POST
+    Call<ResponseBody> getOtpSMS(@Url String url);
+
+    @POST("smsapi/{user}/{pass}/{channel}/{number}/{message}/{SenderID}/{Campaign}")
+    Call<ResponseBody> getOtpSMS(@Path("user") String smsUsername,
+                                 @Path("pass") String smsPassword,
+                                 @Path("channel") String smsChannel,
+                                 @Path("number") String smsNumber,
+                                 @Path("message") String smsMessage,
+                                 @Path("SenderID") String senderID,
+                                 @Path("Campaign") String campaign);
 
 //    @POST("GetLastResponseDate")
 //    Call<ResponseBody> getUserDetails(@Body JSONObject jsonObj);

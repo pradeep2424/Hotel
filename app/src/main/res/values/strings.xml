@@ -11,6 +11,9 @@
         <font fgcolor="#000000">MANO</font><font fgcolor="#13c7ac">R</font><font fgcolor="#000000">A</font>
     </string>
 
+    <string name="status_success">SUCCESS</string>
+    <string name="status_failed">FAILED</string>
+
     <string name="dronam">Manora</string>
     <string name="food_delivery">Food Delivery</string>
     <string name="username">Username</string>
@@ -31,6 +34,7 @@
     <string name="login_verify_awesome">Awesome,</string>
     <string name="login_verify_otp_text">We will auto detect the OTP sent to your number</string>
     <string name="otp_wait_for">Wait for</string>
+    <string name="otp_message">is your Dronam verification OTP.</string>
 
     <string name="location_permission_title">Location Permission Denied</string>
     <string name="location_permission_text">We use this permission to detect your current location and display restaurants near you.
@@ -97,5 +101,6 @@
 
     <string name="current_location">My Current Location</string>
     <string name="using_gps">Using GPS</string>
+
 
 </resources>

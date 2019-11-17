@@ -1,77 +1,89 @@
 package com.miracle.dronam.signUp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
-import com.miracle.dronam.activities.LocationGoogleMapActivity;
-import com.miracle.dronam.main.MainActivity;
+import com.miracle.dronam.model.SMSGatewayObject;
+import com.miracle.dronam.service.retrofit.ApiInterface;
+import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
+import com.miracle.dronam.utils.InternetConnection;
+import com.mukesh.OnOtpCompletionListener;
+import com.mukesh.OtpView;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Random;
 
-import in.aabhasjindal.otptextview.OTPListener;
-import in.aabhasjindal.otptextview.OtpTextView;
+import javax.net.ssl.HttpsURLConnection;
 
-public class GetStartedVerifyOTPActivity extends AppCompatActivity {
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import swarajsaaj.smscodereader.interfaces.OTPListener;
+import swarajsaaj.smscodereader.receivers.OtpReader;
 
-    private OtpTextView otpView;
+
+public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OTPListener {
+    private RelativeLayout rlRootLayout;
     View viewToolbar;
     ImageView ivBack;
 
     private TextView tvTitleText;
     private TextView tvTimerOTP;
     private TextView tvResendOTP;
+    private OtpView otpView;
 
     private String mVerificationId;
     private String mobileNumber;
-
-    private FirebaseAuth mAuth;
+    private String generatedOTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_verify_otp);
 
-        mAuth = FirebaseAuth.getInstance();
+        OtpReader.bind(this,"DRONAM");
 
-//        init();
-//        events();
+        init();
+        events();
+        sendOTP();
     }
 
     private void init() {
+        rlRootLayout = findViewById(R.id.rl_rootLayout);
         viewToolbar = findViewById(R.id.view_toolbarOTP);
         ivBack = (ImageView) findViewById(R.id.iv_back);
 
         tvTitleText = (TextView) findViewById(R.id.tv_otpText);
         tvTimerOTP = (TextView) findViewById(R.id.tv_otpTimer);
         tvResendOTP = (TextView) findViewById(R.id.tv_otpResend);
-        otpView = (OtpTextView) findViewById(R.id.otp_view);
+        otpView = (OtpView) findViewById(R.id.otp_view);
 //        btnGetStarted = (Button) findViewById(R.id.btn_getStartedNow);
-
 
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mobileNumber = extras.getString("mobile");
-            sendVerificationCode(mobileNumber);
-            startOTPTimer();
         }
 
         String titleText = getResources().getString(R.string.login_verify_otp_text)
@@ -84,24 +96,34 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 otpView.setEnabled(false);
-                sendVerificationCode(mobileNumber);
-                startOTPTimer();
+                sendOTP();
+//                startOTPTimer();
             }
         });
 
-        otpView.setOtpListener(new OTPListener() {
+        otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
             @Override
-            public void onOTPComplete(String otp) {
-                if (otp != null) {
-//                    verifyVerificationCode(otp);
-                }
-            }
+            public void onOtpCompleted(String otp) {
 
-            @Override
-            public void onInteractionListener() {
 
+                // do Stuff
+                Log.d("onOtpCompleted=>", otp);
             }
         });
+
+//        otpView.setOtpListener(new OTPListener() {
+//            @Override
+//            public void onOTPComplete(String otp) {
+//                if (otp != null) {
+////                    verifyVerificationCode(otp);
+//                }
+//            }
+//
+////            @Override
+////            public void onInteractionListener() {
+////
+////            }
+//        });
 
 //        btnGetStarted.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -119,95 +141,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity {
         });
     }
 
-    //the method is sending verification code
-    //the country id is concatenated
-    //you can take the country id as user input as well
-    private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+91" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
-                mCallbacks);
-    }
-
-
-    //the callback to detect the verification status
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
-            //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
-
-            //sometime the code is not detected automatically
-            //in this case the code will be null
-            //so user has to manually enter the code
-            if (code != null) {
-                otpView.setOTP(code);
-                //verifying the code
-                verifyVerificationCode(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(GetStartedVerifyOTPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-
-            //storing the verification id that is sent to the user
-            mVerificationId = s;
-        }
-    };
-
-
-    private void verifyVerificationCode(String code) {
-        //creating the credential
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
-
-        //signing the user
-        signInWithPhoneAuthCredential(credential);
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(GetStartedVerifyOTPActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //verification successful we will start the profile activity
-                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-
-                        } else {
-
-                            //verification unsuccessful.. display an error message
-
-                            String message = "Something is wrong, we will fix it soon...";
-
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                message = "Invalid code entered...";
-                            }
-
-                            Toast.makeText(GetStartedVerifyOTPActivity.this, message, Toast.LENGTH_SHORT).show();
-
-//                            Snackbar snackbar = Snackbar.make(this, message, Snackbar.LENGTH_LONG);
-//                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                }
-//                            });
-//                            snackbar.show();
-                        }
-                    }
-                });
-    }
 
     private void startOTPTimer() {
         showTimerCount();
@@ -237,5 +170,185 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity {
         otpView.setEnabled(true);
         tvTimerOTP.setVisibility(View.GONE);
         tvResendOTP.setVisibility(View.VISIBLE);
+    }
+
+//    private void sendOTP() {
+//        if (InternetConnection.checkConnection(this)) {
+//            generatedOTP = generateRandomOTP();
+//
+//            SMSGatewayObject smsGatewayObject = Application.smsGatewayObject;
+//            String smsURL = smsGatewayObject.getUrl();
+//            String smsUsername = smsGatewayObject.getSmsUsername();
+//            String smsPass = smsGatewayObject.getSmsPass();
+//            String channel = smsGatewayObject.getChannel();
+//            String senderID = smsGatewayObject.getSenderID();
+//            String otpMessage = generatedOTP.concat(" ").concat(getString(R.string.otp_message));
+//
+//            String url = smsURL + "user=" + smsUsername + "&pass=" + smsPass
+//                + "&channel=" + channel + "&number=" + mobileNumber  + "&message=" + otpMessage
+//                + "&SenderID=" + senderID + "&Campaign=";
+//
+//            new RequestOtpAsyncTask().execute(url);
+//
+//        } else {
+//            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("RETRY", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            sendOTP();
+//                        }
+//                    })
+////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+//                    .show();
+//        }
+//    }
+
+    private void sendOTP() {
+        if (InternetConnection.checkConnection(this)) {
+            generatedOTP = generateRandomOTP();
+
+            SMSGatewayObject smsGatewayObject = Application.smsGatewayObject;
+            String smsURL = smsGatewayObject.getUrl();
+            String smsUsername = smsGatewayObject.getSmsUsername();
+            String smsPass = smsGatewayObject.getSmsPass();
+            String channel = smsGatewayObject.getChannel();
+            String senderID = smsGatewayObject.getSenderID();
+            String otpMessage = generatedOTP.concat(" ").concat(getString(R.string.otp_message));
+
+            String url = smsURL + "user=" + smsUsername + "&pass=" + smsPass
+                    + "&channel=" + channel + "&number=" + mobileNumber + "&message=" + otpMessage
+                    + "&SenderID=" + senderID + "&Campaign=";
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getOtpSMS(url);
+
+//            Call<ResponseBody> call = apiService.getOtpSMS(smsUsername, smsPass, channel,
+//                    mobileNumber, senderID, otpAndMessage, "" );
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+                            startOTPTimer();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendOTP();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+//    class RequestOtpAsyncTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected String doInBackground(String... uri) {
+//            String responseString = null;
+//            try {
+//                URL url = new URL(uri[0]);
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                conn.setRequestMethod("POST");
+//                if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+//                    responseString = getString(R.string.status_success);
+//
+//                } else {
+//                    responseString = getString(R.string.status_failed);
+//                }
+//            } catch (Exception e) {
+//                responseString = getString(R.string.status_failed);
+//            }
+//            return responseString;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            if (result.equalsIgnoreCase(getString(R.string.status_success))) {
+//                startOTPTimer();
+//
+//            } else {
+//                showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+//            }
+//        }
+//    }
+
+    public void showSnackbarErrorMsg(String erroMsg) {
+        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+        snackbar.show();
+    }
+
+    private String generateRandomOTP() {
+        Random random = new Random();
+        String otp = String.format("%04d", random.nextInt(10000));
+        return otp;
+    }
+
+    @Override
+    public void otpReceived(String smsText) {
+        //Do whatever you want to do with the text
+        otpView.setText(smsText);
+
+        Toast.makeText(this,"Got "+smsText,Toast.LENGTH_LONG).show();
+        Log.d("Otp",smsText);
+    }
+
+//    public ApiInterface getApiService(Context mContext) {
+//        return getRetrofitInstance(mContext).create(ApiInterface.class);
+//    }
+//
+//    private Retrofit getRetrofitInstance(Context mContext) {
+//
+//        return new Retrofit.Builder()
+//                .baseUrl(ConstantValues.SMS_URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .client(RetroClient.getRequestHeader(mContext))
+////                .addConverterFactory(ScalarsConverterFactory.create())
+////                .client(okClient)
+//                .build();
+//    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        Intent it = new Intent(this, GetStartedMobileNumberActivity.class);
+        startActivity(it);
+        finish();
     }
 }

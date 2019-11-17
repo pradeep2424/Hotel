@@ -6,4 +6,5 @@ package com.miracle.dronam.utils;
 
 public class ConstantValues {
     public static final String ROOT_URL = "http://www.miracleinfotech.in:9091/service1.svc/";
+    public static final String SMS_URL = "http://www.miracleinfotech.in/";
 }
