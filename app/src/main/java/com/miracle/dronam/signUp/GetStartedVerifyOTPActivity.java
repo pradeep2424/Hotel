@@ -1,50 +1,51 @@
 package com.miracle.dronam.signUp;
 
-import android.content.Context;
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
+import com.miracle.dronam.activities.LocationGoogleMapActivity;
+import com.miracle.dronam.broadcastReceiver.SMSListener;
+import com.miracle.dronam.listeners.OTPListener;
 import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
-import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import swarajsaaj.smscodereader.interfaces.OTPListener;
-import swarajsaaj.smscodereader.receivers.OtpReader;
 
 
 public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OTPListener {
-    private RelativeLayout rlRootLayout;
+    private ScrollView rlRootLayout;
     View viewToolbar;
     ImageView ivBack;
 
@@ -57,16 +58,22 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     private String mobileNumber;
     private String generatedOTP;
 
+    private final int REQUEST_PERMISSION_READ_SMS = 1001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_verify_otp);
 
-        OtpReader.bind(this,"DRONAM");
+        SMSListener.bindListener(this);
 
         init();
         events();
         sendOTP();
+
+        if (requestSMSPermission()) {
+            SMSListener.bindListener(this);
+        }
     }
 
     private void init() {
@@ -79,7 +86,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         tvResendOTP = (TextView) findViewById(R.id.tv_otpResend);
         otpView = (OtpView) findViewById(R.id.otp_view);
 //        btnGetStarted = (Button) findViewById(R.id.btn_getStartedNow);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -95,7 +101,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         tvResendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                otpView.setEnabled(false);
+//                otpView.setEnabled(false);
                 sendOTP();
 //                startOTPTimer();
             }
@@ -104,10 +110,11 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
             @Override
             public void onOtpCompleted(String otp) {
-
-
-                // do Stuff
-                Log.d("onOtpCompleted=>", otp);
+                if (generatedOTP.equalsIgnoreCase(otp)) {
+                    Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -141,7 +148,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         });
     }
 
-
     private void startOTPTimer() {
         showTimerCount();
 
@@ -161,13 +167,13 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     }
 
     private void showTimerCount() {
-        otpView.setEnabled(false);
+//        otpView.setEnabled(false);
         tvTimerOTP.setVisibility(View.VISIBLE);
         tvResendOTP.setVisibility(View.GONE);
     }
 
     private void discardTimerCount() {
-        otpView.setEnabled(true);
+//        otpView.setEnabled(true);
         tvTimerOTP.setVisibility(View.GONE);
         tvResendOTP.setVisibility(View.VISIBLE);
     }
@@ -206,6 +212,8 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
     private void sendOTP() {
         if (InternetConnection.checkConnection(this)) {
+            startOTPTimer();
+
             generatedOTP = generateRandomOTP();
 
             SMSGatewayObject smsGatewayObject = Application.smsGatewayObject;
@@ -233,7 +241,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                     try {
                         int statusCode = response.code();
                         if (response.isSuccessful()) {
-                            startOTPTimer();
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -313,20 +320,125 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         snackbar.show();
     }
 
+    private void showDialogOK(DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.location_permission_title))
+                .setMessage(getResources().getString(R.string.location_permission_text))
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", okListener)
+                .setCancelable(false)
+                .create()
+                .show();
+    }
+
     private String generateRandomOTP() {
         Random random = new Random();
-        String otp = String.format("%04d", random.nextInt(10000));
+        String otp = String.format("%06d", random.nextInt(999999));
         return otp;
     }
 
-    @Override
-    public void otpReceived(String smsText) {
-        //Do whatever you want to do with the text
-        otpView.setText(smsText);
+    private boolean requestSMSPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-        Toast.makeText(this,"Got "+smsText,Toast.LENGTH_LONG).show();
-        Log.d("Otp",smsText);
+            int permissionReadSMS = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
+            int permissionReceiveSMS = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
+
+            List<String> listPermissionsNeeded = new ArrayList<>();
+            if (permissionReadSMS != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.READ_SMS);
+            }
+
+            if (permissionReceiveSMS != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.RECEIVE_SMS);
+            }
+
+            if (!listPermissionsNeeded.isEmpty()) {
+                requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_PERMISSION_READ_SMS);
+                return false;
+            }
+        }
+        return true;
+
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_READ_SMS:
+
+                Map<String, Integer> perms1 = new HashMap<>();
+                perms1.put(Manifest.permission.READ_SMS, PackageManager.PERMISSION_GRANTED);
+                perms1.put(Manifest.permission.RECEIVE_SMS, PackageManager.PERMISSION_GRANTED);
+
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        perms1.put(permissions[i], grantResults[i]);
+                    }
+
+                    // Check for both permissions
+//                    if (perms1.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+////                            && perms1.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+////                            && perms1.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+                    if (perms1.get(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
+                            && perms1.get(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        SMSListener.bindListener(this);
+
+                    } else {
+
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)
+                                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)) {
+
+                            showDialogOK(new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            requestSMSPermission();
+
+                                            break;
+                                        case DialogInterface.BUTTON_NEGATIVE:
+
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                        //permission is denied (and never ask again is  checked)
+                        //shouldShowRequestPermissionRationale will return false
+                        else {
+                            Toast.makeText(this, "Go to settings and enable app permissions",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                break;
+        }
+    }
+
+
+    @Override
+    public void onOtpReceived(String otp) {
+        otpView.setText(otp);
+
+//        Toast.makeText(this,"Got : "+otp,Toast.LENGTH_LONG).show();
+//        Log.d("Otp",otp);
+    }
+
+    @Override
+    public void onOtpTimeout() {
+
+    }
+
+//    @Override
+//    public void otpReceived(String smsText) {
+//        //Do whatever you want to do with the text
+//        otpView.setText(smsText);
+//
+//        Toast.makeText(this,"Got "+smsText,Toast.LENGTH_LONG).show();
+//        Log.d("Otp",smsText);
+//    }
 
 //    public ApiInterface getApiService(Context mContext) {
 //        return getRetrofitInstance(mContext).create(ApiInterface.class);
@@ -350,5 +462,12 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         Intent it = new Intent(this, GetStartedMobileNumberActivity.class);
         startActivity(it);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        SMSListener.unbindListener();
     }
 }

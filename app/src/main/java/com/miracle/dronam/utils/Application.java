@@ -23,6 +23,9 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+
+//        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
+//        appSignatureHelper.getAppSignatures();
     }
 }
 

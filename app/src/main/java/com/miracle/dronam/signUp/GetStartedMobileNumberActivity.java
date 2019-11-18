@@ -1,14 +1,24 @@
 package com.miracle.dronam.signUp;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.Credentials;
+import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.model.UserDetails;
@@ -24,6 +34,7 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
     EditText etFName;
     EditText etLName;
 
+    final int RESOLVE_HINT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,8 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         init();
         componentEvents();
         setNameData();
+        getHintPhoneNumber();
+
     }
 
     private void init() {
@@ -43,6 +56,8 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         etMobileNumber = findViewById(R.id.et_mobileNumber);
         etFName = findViewById(R.id.et_fname);
         etLName = findViewById(R.id.et_lname);
+
+        etMobileNumber.setText("8655289417");
 
 //        tvTitle = (TextView) findViewById(R.id.tv_title);
 //        tvLogin = (TextView) findViewById(R.id.tv_login);
@@ -75,6 +90,27 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         });
     }
 
+
+    // Construct a request for phone numbers and show the picker
+    private void getHintPhoneNumber() {
+        HintRequest hintRequest = new HintRequest.Builder()
+                .setPhoneNumberIdentifierSupported(true)
+                .build();
+
+        PendingIntent intent = Credentials.getClient(this).getHintPickerIntent(hintRequest);
+
+        try {
+            startIntentSenderForResult(intent.getIntentSender(), RESOLVE_HINT, null, 0, 0, 0);
+
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void setNameData() {
         UserDetails userDetails = Application.userDetails;
         if (userDetails.getFirstName() != null) {
@@ -96,5 +132,27 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         Application.userDetails.setLastName(lname);
         Application.userDetails.setFullName(fullName);
         Application.userDetails.setMobile(mobileNo);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESOLVE_HINT) {
+            if (resultCode == RESULT_OK) {
+                Credential cred = data.getParcelableExtra(Credential.EXTRA_KEY);
+                String phoneNumber = cred.getId().substring(3);
+                etMobileNumber.setText(phoneNumber);
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        Intent it = new Intent(this, GetStartedActivity.class);
+        startActivity(it);
+        finish();
+
     }
 }
