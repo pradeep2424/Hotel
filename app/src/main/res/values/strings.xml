@@ -70,7 +70,7 @@
     <string name="cart_empty_title">Oops! Your cart is empty</string>
     <string name="cart_empty_text">Looks like you haven\'t added anything to your cart yet</string>
     <string name="browse_menu">Browse Menu</string>
-
+    <string name="add">Add</string>
     <string name="profile_favourite_restaurants">Favourite Restaurant</string>
     <string name="profile_payment_methods">Payment Methods</string>
     <string name="profile_reward_credits">Reward Credits</string>

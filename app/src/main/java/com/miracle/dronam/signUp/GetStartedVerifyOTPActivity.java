@@ -72,7 +72,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         sendOTP();
 
         if (requestSMSPermission()) {
-            SMSListener.bindListener(this);
         }
     }
 

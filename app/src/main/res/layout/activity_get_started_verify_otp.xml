@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_back"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -74,13 +74,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:gravity="center"
                     android:inputType="number"
                     android:textColor="@color/main_text"
                     android:textSize="16sp"
                     app:itemCount="6"
+                    app:itemWidth="40dp"
                     app:itemSpacing="10dp"
                     app:lineColor="@color/menu_inactive"
                     app:viewType="line" />

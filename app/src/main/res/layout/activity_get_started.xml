@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_margin="20dp"
-        android:background="@drawable/rect_gray_border"
+        android:background="@drawable/rounded_gray_border"
         android:gravity="right"
         android:orientation="vertical">
 
