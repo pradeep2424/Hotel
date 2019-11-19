@@ -11,9 +11,15 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
+import com.miracle.dronam.adapter.RecycleAdapterDish;
+import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
+import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -36,6 +42,16 @@ public class CartFragment extends Fragment {
     View rootView;
     LinearLayout llBrowseMenu;
 
+    String dish_name[] = {"Paratha", "Cheese Butter", "Paneer Handi", "Paneer Kopta", "Chiken"};
+    String dish_type[] = {"Punjabi", "Maxican", "Punjabi", "Punjabi", "Non Veg"};
+    String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
+
+    Integer image[] = {R.drawable.temp_paneer, R.drawable.temp_paratha, R.drawable.temp_paneer,
+            R.drawable.temp_paratha, R.drawable.temp_paneer};
+
+    private RecyclerView rvOrderedItems;
+    private RecycleAdapterOrderedItem adapterOrderedItems;
+
     private ArrayList<DishObject> listCartDish;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +64,7 @@ public class CartFragment extends Fragment {
 
         init();
         componentEvents();
+        setupRecyclerViewOrderedItems();
 
         return rootView;
     }
@@ -55,6 +72,7 @@ public class CartFragment extends Fragment {
     private void init()
     {
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
+        rvOrderedItems = (RecyclerView) rootView.findViewById(R.id.recyclerView_orderedItems);
     }
 
     private void componentEvents() {
@@ -65,6 +83,30 @@ public class CartFragment extends Fragment {
             }
         });
     }
+
+    private void setupRecyclerViewOrderedItems() {
+        getUserLikeDishData();
+
+        adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(), listCartDish);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        rvOrderedItems.setLayoutManager(layoutManager);
+        rvOrderedItems.setItemAnimator(new DefaultItemAnimator());
+        rvOrderedItems.setAdapter(adapterOrderedItems);
+//        adapterOrderedItems.setClickListener(this);
+    }
+
+    private void getUserLikeDishData() {
+        listCartDish = new ArrayList<>();
+        for (int i = 0; i < image.length; i++) {
+//            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
+            DishObject dishObject = new DishObject();
+            dishObject.setDishName(dish_name[i]);
+            dishObject.setDishImage(String.valueOf(image[i]));
+            dishObject.setDishCategory(dish_type[i]);
+            listCartDish.add(dishObject);
+        }
+    }
+
 
     public void switchToHomeFragment1() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
