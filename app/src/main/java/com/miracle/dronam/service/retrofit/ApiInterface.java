@@ -1,5 +1,6 @@
 package com.miracle.dronam.service.retrofit;
 
+import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.UserDetails;
 
 import okhttp3.MultipartBody;
@@ -38,7 +39,10 @@ public interface ApiInterface {
 
 
     @GET("getcartItem/{userids}/{ClientIDs}")
-    Call<ResponseBody> getCartItem(@Path("userids") int userID, @Path("ClientIDs") int clientID);
+    Call<ResponseBody> getCartItem(@Path("userids") String userID, @Path("ClientIDs") String clientID);
+
+    @GET("insCartItem")
+    Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
 
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();

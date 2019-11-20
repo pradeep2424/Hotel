@@ -13,6 +13,15 @@ public class DishObject implements Serializable {
     String dishCategory;
     String dishImage;
     String dishPrice;
+    int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public String getDishCategory() {
         return dishCategory;

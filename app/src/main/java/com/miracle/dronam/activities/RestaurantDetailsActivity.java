@@ -197,6 +197,92 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void addItemToCart() {
+        if (InternetConnection.checkConnection(this)) {
+
+            String userTypeID = Application.userDetails.getUserType();
+            String restaurantID = "1";
+
+            DishObject dishObject = new DishObject();
+            dishObject.setDishID("1");
+            dishObject.setDishName("Test Name Paneer");
+            dishObject.setDishDescription("Test Desc Paneer");
+            dishObject.setDishImage("");
+            dishObject.setDishPrice("10000");
+
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.addItemToCart(dishObject);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+//                            listCartDish = new ArrayList<>();
+
+                            JSONArray jsonArray = new JSONArray(responseString);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
+//
+//                                DishObject dishObject = new DishObject();
+//                                dishObject.setDishID(dishID);
+//                                dishObject.setDishName(dishName);
+//                                dishObject.setDishDescription(dishDescription);
+//                                dishObject.setDishImage(dishImage);
+//                                dishObject.setDishPrice(dishPrice);
+//
+//                                listCartDish.add(dishObject);
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+//                        setupRecyclerViewOrderedItems();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addItemToCart();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+
     public void showSnackbarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
 

@@ -34,7 +34,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -138,7 +141,10 @@
                     android:clipToPadding="false"
                     android:divider="#fff"
                     android:dividerHeight="0dp"
-                    android:padding="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
                     android:scrollbars="none" />
 
             </LinearLayout>
@@ -147,19 +153,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_below="@+id/ll_orderDetails"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/smokegray" />
 
             <LinearLayout
                 android:id="@+id/ll_billDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
                     android:orientation="vertical">
 
                     <com.miracle.dronam.custom.MyTextView
@@ -184,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.2"
                             android:text="Item Total"
-                            android:textColor="#9b9b9b"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                         <com.miracle.dronam.custom.MyTextView
@@ -193,8 +202,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
                             android:gravity="right"
-                            android:text="607"
-                            android:textColor="#9b9b9b"
+                            android:text="₹ 607"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -214,7 +223,7 @@
                             android:layout_weight="1.2"
 
                             android:text="Restaurant Charges"
-                            android:textColor="#9b9b9b"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                         <com.miracle.dronam.custom.MyTextView
@@ -223,8 +232,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
                             android:gravity="right"
-                            android:text="60"
-                            android:textColor="#9b9b9b"
+                            android:text="₹ 60"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -232,13 +241,13 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/divider_dark" />
+                        android:layout_marginTop="20dp"
+                        android:background="@color/divider_light" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="15dp"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -249,7 +258,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1.2"
                             android:text="Delivery Fee"
-                            android:textColor="#9b9b9b"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                         <com.miracle.dronam.custom.MyTextView
@@ -258,8 +267,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
                             android:gravity="right"
-                            android:text="35"
-                            android:textColor="#9b9b9b"
+                            android:text="₹ 35"
+                            android:textColor="@color/main_text"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -267,13 +276,14 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@color/divider_dark" />
+                        android:layout_marginTop="20dp"
+                        android:background="@color/divider_light" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:weightSum="2">
@@ -285,7 +295,7 @@
                             android:layout_weight="1.2"
                             android:text="Total Pay"
                             android:textColor="@color/main_text"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <com.miracle.dronam.custom.MyTextView
@@ -294,13 +304,20 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
                             android:gravity="right"
-                            android:text="870"
+                            android:text="₹ 870"
                             android:textColor="@color/main_text"
-                            android:textSize="14sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/ll_orderDetails"
+                android:background="@color/smokegray" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

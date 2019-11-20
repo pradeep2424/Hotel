@@ -36,7 +36,7 @@
                 android:textSize="15sp" />
 
             <com.miracle.dronam.custom.MyTextView
-                android:id="@+id/tv_foodType"
+                android:id="@+id/tv_foodCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_foodName"
@@ -49,7 +49,7 @@
                 android:id="@+id/tv_foodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_foodType"
+                android:layout_below="@+id/tv_foodCategory"
                 android:layout_marginTop="6dp"
                 android:text="₹ 50.00"
                 android:textColor="@color/main_text"
@@ -58,7 +58,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_foodType"
+                android:layout_below="@+id/tv_foodCategory"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="6dp"
                 android:layout_marginRight="10dp">
@@ -74,7 +74,7 @@
                     android:paddingTop="7dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="7dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <com.miracle.dronam.custom.MyTextView
                         android:layout_width="wrap_content"
@@ -96,14 +96,15 @@
                 </LinearLayout>
 
                 <com.travijuu.numberpicker.library.NumberPicker
-                    android:id="@+id/numberPicker_min"
+                    android:id="@+id/numberPicker_quantity"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="20dp"
                     app:custom_layout="@layout/custom_layout_number_picker"
                     app:focusable="false"
                     app:unit="1"
-                    app:value="-5" />
+                    app:value="1"
+                    android:visibility="gone"/>
 
 <!--                <com.travijuu.numberpicker.library.NumberPicker-->
 <!--                    android:id="@+id/number_picker_default"-->
