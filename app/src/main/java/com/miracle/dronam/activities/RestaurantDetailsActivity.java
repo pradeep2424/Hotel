@@ -197,7 +197,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void addItemToCart() {
+    public void addItemToCart() {
         if (InternetConnection.checkConnection(this)) {
 
             String userTypeID = Application.userDetails.getUserType();
@@ -224,7 +224,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                             String responseString = response.body().string();
 //                            listCartDish = new ArrayList<>();
 
-                            JSONArray jsonArray = new JSONArray(responseString);
+                            ada
+
+//                            JSONArray jsonArray = new JSONArray(responseString);
 //                            for (int i = 0; i < jsonArray.length(); i++) {
 //                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 //
@@ -248,7 +250,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
 
-//                        setupRecyclerViewOrderedItems();
 
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -41,7 +41,7 @@ public interface ApiInterface {
     @GET("getcartItem/{userids}/{ClientIDs}")
     Call<ResponseBody> getCartItem(@Path("userids") String userID, @Path("ClientIDs") String clientID);
 
-    @GET("insCartItem")
+    @POST("insCartItem")
     Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
 
     @GET("getAreaDetails")
