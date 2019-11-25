@@ -21,6 +21,8 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     RestaurantDetailsActivity activity;
     private ArrayList<DishObject> modelArrayList;
 
+    private ViewHolder viewHolderClickedItem;
+
     public RecycleAdapterRestaurantMenu(RestaurantDetailsActivity activity, ArrayList<DishObject> modelArrayList) {
         this.activity = activity;
         this.modelArrayList = modelArrayList;
@@ -33,7 +35,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         DishObject dishObject = modelArrayList.get(position);
         holder.tvFoodName.setText(dishObject.getDishName());
         holder.tvFoodCategory.setText(dishObject.getDishCategory());
@@ -43,6 +45,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                viewHolderClickedItem = holder;
                 activity.addItemToCart();
             }
         });
@@ -54,14 +57,14 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 //        }
     }
 
-    private void showAddItemButton(ViewHolder holder) {
-        holder.numberPickerItemQuantity.setVisibility(View.VISIBLE);
-        holder.llAddItem.setVisibility(View.GONE);
+    public void showAddItemButton() {
+        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.GONE);
+        viewHolderClickedItem.llAddItem.setVisibility(View.VISIBLE);
     }
 
-    private void showItemQuantityPicker(ViewHolder holder) {
-        holder.numberPickerItemQuantity.setVisibility(View.GONE);
-        holder.llAddItem.setVisibility(View.VISIBLE);
+    public void showItemQuantityPicker() {
+        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.VISIBLE);
+        viewHolderClickedItem.llAddItem.setVisibility(View.GONE);
     }
 
 

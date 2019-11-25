@@ -222,9 +222,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
+
+                            adapterRestaurantMenu.showItemQuantityPicker();
 //                            listCartDish = new ArrayList<>();
 
-                            ada
+//                            ada
 
 //                            JSONArray jsonArray = new JSONArray(responseString);
 //                            for (int i = 0; i < jsonArray.length(); i++) {

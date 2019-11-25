@@ -98,8 +98,8 @@
                 <com.travijuu.numberpicker.library.NumberPicker
                     android:id="@+id/numberPicker_quantity"
                     android:layout_width="100dp"
+                    android:gravity="center"
                     android:layout_height="30dp"
-                    android:layout_marginRight="20dp"
                     app:custom_layout="@layout/custom_layout_number_picker"
                     app:focusable="false"
                     app:unit="1"
