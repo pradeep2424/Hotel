@@ -12,15 +12,15 @@ public class DishObject implements Serializable {
     String dishDescription;
     String dishCategory;
     String dishImage;
-    String dishPrice;
-    int quantity;
+    String dishAmount;
+    int dishQuantity;
 
-    public int getQuantity() {
-        return quantity;
+    public int getDishQuantity() {
+        return dishQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setDishQuantity(int dishQuantity) {
+        this.dishQuantity = dishQuantity;
     }
 
     public String getDishCategory() {
@@ -63,12 +63,12 @@ public class DishObject implements Serializable {
         this.dishImage = dishImage;
     }
 
-    public String getDishPrice() {
-        return dishPrice;
+    public String getDishAmount() {
+        return dishAmount;
     }
 
-    public void setDishPrice(String dishPrice) {
-        this.dishPrice = dishPrice;
+    public void setDishAmount(String dishAmount) {
+        this.dishAmount = dishAmount;
     }
 
 //    Integer image;

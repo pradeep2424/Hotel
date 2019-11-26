@@ -347,7 +347,7 @@
             android:textStyle="bold" />
 
         <com.miracle.dronam.custom.MyTextView
-            android:id="@+id/text_action_bottom2"
+            android:id="@+id/tv_paymentButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

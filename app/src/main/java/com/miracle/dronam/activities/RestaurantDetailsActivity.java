@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantFoodPhotos;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -48,6 +49,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     RestaurantObject restaurantObject;
 
+    DialogLoadingIndicator progressIndicator;
+
 //    private FoodPagerAdapter loginPagerAdapter;
 //    private ViewPager viewPager;
 //    private CircleIndicator indicator;
@@ -70,6 +73,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
+
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         rvPhotos = findViewById(R.id.recyclerView_photos);
         rvMenu = findViewById(R.id.recyclerView_menu);
@@ -154,7 +159,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                                 dishObject.setDishName(dishName);
                                 dishObject.setDishDescription(dishDescription);
                                 dishObject.setDishImage(dishImage);
-                                dishObject.setDishPrice(dishPrice);
+                                dishObject.setDishAmount(dishPrice);
 
                                 listDishProducts.add(dishObject);
                             }
@@ -197,7 +202,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void addItemToCart() {
+    public void addItemToCart(final int quantity) {
         if (InternetConnection.checkConnection(this)) {
 
             String userTypeID = Application.userDetails.getUserType();
@@ -205,11 +210,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
             DishObject dishObject = new DishObject();
             dishObject.setDishID("1");
+            dishObject.setDishQuantity(quantity);
             dishObject.setDishName("Test Name Paneer");
             dishObject.setDishDescription("Test Desc Paneer");
             dishObject.setDishImage("");
-            dishObject.setDishPrice("10000");
-
+            dishObject.setDishAmount("10000");
 
             ApiInterface apiService = RetroClient.getApiService(this);
             Call<ResponseBody> call = apiService.addItemToCart(dishObject);
@@ -223,7 +228,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            adapterRestaurantMenu.showItemQuantityPicker();
+                            adapterRestaurantMenu.showHideQuantityAndAddItemButton();
 //                            listCartDish = new ArrayList<>();
 
 //                            ada
@@ -277,7 +282,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart();
+                            addItemToCart(quantity);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -285,6 +290,15 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void showDialog() {
+        progressIndicator.showProgress(RestaurantDetailsActivity.this);
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
+    }
 
     public void showSnackbarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();

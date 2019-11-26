@@ -64,9 +64,19 @@ public class PastOrdersFragment extends Fragment {
         listPastOrders = new ArrayList<>();
 
         for (int i=0; i<restaurantName.length; i++){
-            OrderDetailsObject food7_model = new OrderDetailsObject(restaurantName[i], orderAddress[i],
-                    restaurantReviews[i], orderDate[i], orderPrice[i], foodImage[i]);
-            listPastOrders.add(food7_model);
+//            OrderDetailsObject food7_model = new OrderDetailsObject(restaurantName[i], orderAddress[i],
+//                    restaurantReviews[i], orderDate[i], orderPrice[i], foodImage[i]);
+//            listPastOrders.add(food7_model);
+
+            OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
+            orderDetailsObject.setRestaurantName(restaurantName[i]);
+            orderDetailsObject.setUserAddress(orderAddress[i]);
+            orderDetailsObject.setRestaurantReviews(restaurantReviews[i]);
+            orderDetailsObject.setOrderDate(orderDate[i]);
+            orderDetailsObject.setTotalAmount(orderPrice[i]);
+            orderDetailsObject.setDishImage(String.valueOf(foodImage[i]));
+
+            listPastOrders.add(orderDetailsObject);
         }
     }
 }

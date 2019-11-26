@@ -70,7 +70,7 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
 
         holder.dish_name.setText(movie.getDishName());
         holder.dish_type.setText(movie.getDishCategory());
-        holder.price.setText(movie.getDishPrice());
+        holder.price.setText(movie.getDishAmount());
         holder.image.setImageResource(Integer.parseInt(movie.getDishImage()));
 
 //        Glide.with(context)

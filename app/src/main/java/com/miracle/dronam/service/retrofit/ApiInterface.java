@@ -44,6 +44,10 @@ public interface ApiInterface {
     @POST("insCartItem")
     Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
 
+
+    @POST("insorder")
+    Call<ResponseBody> placeOrder(@Body DishObject dishObject);
+
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
 

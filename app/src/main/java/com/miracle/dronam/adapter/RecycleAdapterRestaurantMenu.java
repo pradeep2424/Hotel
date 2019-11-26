@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.model.DishObject;
+import com.travijuu.numberpicker.library.Enums.ActionEnum;
+import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.ArrayList;
@@ -39,14 +41,24 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         DishObject dishObject = modelArrayList.get(position);
         holder.tvFoodName.setText(dishObject.getDishName());
         holder.tvFoodCategory.setText(dishObject.getDishCategory());
-        holder.tvFoodPrice.setText(dishObject.getDishPrice());
+        holder.tvFoodPrice.setText(dishObject.getDishAmount());
 
 
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewHolderClickedItem = holder;
-                activity.addItemToCart();
+                activity.addItemToCart(1);
+            }
+        });
+
+        holder.numberPickerItemQuantity.setValueChangedListener(new ValueChangedListener() {
+            @Override
+            public void valueChanged(int value, ActionEnum action) {
+                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
+                String message = String.format("NumberPicker is %s to %d", actionText, value);
+
+                activity.addItemToCart(value);
             }
         });
 
@@ -57,12 +69,21 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 //        }
     }
 
-    public void showAddItemButton() {
+    public void showHideQuantityAndAddItemButton() {
+        if (viewHolderClickedItem.numberPickerItemQuantity.getValue() == 0) {
+            showAddItemButton();
+        }
+        else {
+            showItemQuantityPicker();
+        }
+    }
+
+    private void showAddItemButton() {
         viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.GONE);
         viewHolderClickedItem.llAddItem.setVisibility(View.VISIBLE);
     }
 
-    public void showItemQuantityPicker() {
+    private void showItemQuantityPicker() {
         viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.VISIBLE);
         viewHolderClickedItem.llAddItem.setVisibility(View.GONE);
     }
