@@ -22,6 +22,7 @@ import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
@@ -92,7 +93,7 @@ public class CartFragment extends Fragment {
         tvPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                placeOrder();
             }
         });
     }
@@ -213,8 +214,13 @@ public class CartFragment extends Fragment {
             String userTypeID = Application.userDetails.getUserType();
             String restaurantID = "1";
 
+            OrderDetailsObject orderObj = new OrderDetailsObject();
+            orderObj.setTotalAmount("450");
+            orderObj.setUserTypeID(userTypeID);
+            orderObj.setRestaurantID(restaurantID);
+
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.placeOrder(restaurantID);
+            Call<ResponseBody> call = apiService.placeOrder(orderObj);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -227,24 +233,24 @@ public class CartFragment extends Fragment {
                             listCartDish = new ArrayList<>();
 
                             JSONArray jsonArray = new JSONArray(responseString);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
-
-                                String dishID = jsonObj.optString("ProductId");
-                                String dishName = jsonObj.optString("ProductName");
-                                String dishDescription = jsonObj.optString("ProductDesc");
-                                String dishImage = jsonObj.optString("ProductImage");
-                                String dishPrice = jsonObj.optString("Price");
-
-                                DishObject dishObject = new DishObject();
-                                dishObject.setDishID(dishID);
-                                dishObject.setDishName(dishName);
-                                dishObject.setDishDescription(dishDescription);
-                                dishObject.setDishImage(dishImage);
-                                dishObject.setDishAmount(dishPrice);
-
-                                listCartDish.add(dishObject);
-                            }
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
+//
+//                                DishObject dishObject = new DishObject();
+//                                dishObject.setDishID(dishID);
+//                                dishObject.setDishName(dishName);
+//                                dishObject.setDishDescription(dishDescription);
+//                                dishObject.setDishImage(dishImage);
+//                                dishObject.setDishAmount(dishPrice);
+//
+//                                listCartDish.add(dishObject);
+//                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));

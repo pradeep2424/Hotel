@@ -1,6 +1,7 @@
 package com.miracle.dronam.service.retrofit;
 
 import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.UserDetails;
 
 import okhttp3.MultipartBody;
@@ -46,7 +47,7 @@ public interface ApiInterface {
 
 
     @POST("insorder")
-    Call<ResponseBody> placeOrder(@Body DishObject dishObject);
+    Call<ResponseBody> placeOrder(@Body OrderDetailsObject orderObject);
 
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
