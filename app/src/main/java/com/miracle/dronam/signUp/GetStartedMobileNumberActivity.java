@@ -45,7 +45,6 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         componentEvents();
         setNameData();
         getHintPhoneNumber();
-
     }
 
     private void init() {
@@ -56,8 +55,6 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         etMobileNumber = findViewById(R.id.et_mobileNumber);
         etFName = findViewById(R.id.et_fname);
         etLName = findViewById(R.id.et_lname);
-
-        etMobileNumber.setText("8655289417");
 
 //        tvTitle = (TextView) findViewById(R.id.tv_title);
 //        tvLogin = (TextView) findViewById(R.id.tv_login);
@@ -72,8 +69,8 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
-//                Intent intent = new Intent(GetStartedMobileNumberActivity.this, GetStartedVerifyOTPActivity.class);
+//                Intent intent = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
+                Intent intent = new Intent(GetStartedMobileNumberActivity.this, GetStartedVerifyOTPActivity.class);
                 intent.putExtra("mobile", etMobileNumber.getText().toString().trim());
                 startActivity(intent);
                 finish();

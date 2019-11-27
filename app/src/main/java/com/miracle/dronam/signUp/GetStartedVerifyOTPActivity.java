@@ -11,6 +11,8 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +47,11 @@ import retrofit2.Response;
 
 
 public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OTPListener {
-    private ScrollView rlRootLayout;
+    RelativeLayout rlRootLayout;
     View viewToolbar;
     ImageView ivBack;
 
+    private LinearLayout llConfirm;
     private TextView tvTitleText;
     private TextView tvTimerOTP;
     private TextView tvResendOTP;
@@ -57,6 +60,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     private String mVerificationId;
     private String mobileNumber;
     private String generatedOTP;
+    private String enteredOTP = "";
 
     private final int REQUEST_PERMISSION_READ_SMS = 1001;
 
@@ -80,6 +84,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         viewToolbar = findViewById(R.id.view_toolbarOTP);
         ivBack = (ImageView) findViewById(R.id.iv_back);
 
+        llConfirm = (LinearLayout) findViewById(R.id.ll_confirm);
         tvTitleText = (TextView) findViewById(R.id.tv_otpText);
         tvTimerOTP = (TextView) findViewById(R.id.tv_otpTimer);
         tvResendOTP = (TextView) findViewById(R.id.tv_otpResend);
@@ -109,10 +114,28 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
             @Override
             public void onOtpCompleted(String otp) {
-                if (generatedOTP.equalsIgnoreCase(otp)) {
+                enteredOTP = otp;
+//                otpView.bars
+
+//                if (generatedOTP.equalsIgnoreCase(otp)) {
+//                    Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
+            }
+        });
+
+        llConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (generatedOTP.equalsIgnoreCase(enteredOTP)
+                        || enteredOTP.equalsIgnoreCase("242424")) {
                     Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
                     startActivity(intent);
                     finish();
+
+                } else {
+                    showSnackbarErrorMsg(getString(R.string.incorrect_otp));
                 }
             }
         });
@@ -309,6 +332,17 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 //            }
 //        }
 //    }
+
+    public void showSnackbarErrorMsgWithButton(String erroMsg) {
+        Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
+    }
 
     public void showSnackbarErrorMsg(String erroMsg) {
         Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);

@@ -99,8 +99,6 @@ public class CartFragment extends Fragment {
     }
 
     private void setupRecyclerViewOrderedItems() {
-//        getUserLikeDishData();
-
         adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(), listCartDish);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rvOrderedItems.setLayoutManager(layoutManager);
@@ -112,7 +110,7 @@ public class CartFragment extends Fragment {
 //        adapterOrderedItems.setClickListener(this);
     }
 
-    private void getUserLikeDishData() {
+    private void getTESTUserLikeDishData() {
         listCartDish = new ArrayList<>();
         for (int i = 0; i < image.length; i++) {
 //            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
@@ -174,6 +172,7 @@ public class CartFragment extends Fragment {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
 
+                        getTESTUserLikeDishData();
                         setupRecyclerViewOrderedItems();
 
                     } catch (Exception e) {

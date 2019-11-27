@@ -102,6 +102,7 @@
     <string name="current_location">My Current Location</string>
     <string name="using_gps">Using GPS</string>
 
+    <string name="incorrect_otp">Incorrect OTP.</string>
     <string name="rupees">₹</string>
 
 </resources>
