@@ -60,14 +60,18 @@ dependencies {
 //    implementation project(path: ':otptextview')
 //    implementation project(path: ':vanillaplacepicker')
 
+
+    implementation 'com.google.android.gms:play-services-base:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.0.0'
+
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.0.0'
 
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
-    implementation  'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-analytics:17.0.0'
+    implementation  'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
 
 //    implementation 'com.github.aabhasr1:otpview:1.0.0'
@@ -76,10 +80,6 @@ dependencies {
 //    implementation 'swarajsaaj:otpreader:1.1'
     implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
 
-    implementation 'com.google.android.gms:play-services-base:17.0.0'
-    implementation 'com.google.android.gms:play-services-auth-api-phone:17.0.0'
-    //Optional for phone number hint
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.github.travijuu:numberpicker:1.0.7'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 

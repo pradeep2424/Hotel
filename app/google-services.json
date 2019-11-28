@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "626966784346-o7l5fj8nefboq8r2epmv67j6u3sa29qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miracle.dronam",
+            "certificate_hash": "34fab2417ffcc87b05842e2cc291042ecc74c907"
+          }
+        },
+        {
           "client_id": "626966784346-gtb5sdn0h68tf1c2b22ibo794eect45d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

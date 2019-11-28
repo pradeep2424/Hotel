@@ -388,7 +388,7 @@ public class GetStartedActivity extends AppCompatActivity {
             llGoogle.setClickable(true);
             llFacebook.setClickable(true);
 
-        } else if (requestCode == RC_SIGN_IN) {
+            } else if (requestCode == RC_SIGN_IN) {
 
             //Getting the GoogleSignIn Task
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
