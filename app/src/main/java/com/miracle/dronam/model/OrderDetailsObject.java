@@ -1,6 +1,7 @@
 package com.miracle.dronam.model;
 
 public class OrderDetailsObject {
+     String orderID;
      String orderNumber;
      String orderDate;
      String orderType;
@@ -30,12 +31,20 @@ public class OrderDetailsObject {
      String taxable;
      String includeTax;
      String foodType;
-     String taxId;
+     String taxID;
      String orderPaid;
      String userTypeID;
      String discount;
      String userRole;
      String rejectReason;
+
+     public String getOrderID() {
+          return orderID;
+     }
+
+     public void setOrderID(String orderID) {
+          this.orderID = orderID;
+     }
 
      public String getOrderNumber() {
           return orderNumber;
@@ -269,12 +278,12 @@ public class OrderDetailsObject {
           this.foodType = foodType;
      }
 
-     public String getTaxId() {
-          return taxId;
+     public String getTaxID() {
+          return taxID;
      }
 
-     public void setTaxId(String taxId) {
-          this.taxId = taxId;
+     public void setTaxID(String taxID) {
+          this.taxID = taxID;
      }
 
      public String getOrderPaid() {

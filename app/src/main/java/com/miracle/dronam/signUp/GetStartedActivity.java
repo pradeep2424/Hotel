@@ -400,6 +400,7 @@ public class GetStartedActivity extends AppCompatActivity {
                 handleGoogleSignIn(account);
             } catch (ApiException e) {
                 llGoogle.setClickable(true);
+                e.printStackTrace();
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }

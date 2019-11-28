@@ -132,7 +132,8 @@ public class CartFragment extends Fragment {
     private void getCartItems() {
         if (InternetConnection.checkConnection(getActivity())) {
 
-            String userTypeID = Application.userDetails.getUserType();
+//            String userTypeID = Application.userDetails.getUserType();
+            String userTypeID = "1";
             String restaurantID = "1";
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());

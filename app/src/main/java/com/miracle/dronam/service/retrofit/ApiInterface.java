@@ -55,6 +55,8 @@ public interface ApiInterface {
     @POST("insertUserDetails")
     Call<ResponseBody> insertUserDetails(@Body UserDetails body);
 
+    @GET("getorderDetails/{userids}")
+    Call<ResponseBody> getPastOrders(@Path("userids") String userID);
 
     @POST
     Call<ResponseBody> getOtpSMS(@Url String url);
