@@ -31,6 +31,7 @@ import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -105,6 +106,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
         initComponents();
         componentEvents();
+        setToolbarLocation();
         setupRecyclerViewUserLikeDish();
         setupRecyclerViewCuisine();
 //        setupRecyclerViewRestaurant();
@@ -257,6 +259,12 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private void setupViewPagerBanner() {
         pagerAdapterForBanner = new PagerAdapterBanner(getFragmentManager());
         viewPager.setAdapter(pagerAdapterForBanner);
+    }
+
+    private void setToolbarLocation() {
+        if (Application.locationAddressData != null) {
+            tvToolbarTitle.setText(Application.locationAddressData.getAddressList().get(0).getSubLocality());
+        }
     }
 
     @Override

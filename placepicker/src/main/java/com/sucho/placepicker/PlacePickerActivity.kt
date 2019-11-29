@@ -87,6 +87,11 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (latitude.toInt() == 0 && longitude.toInt() == 0) {
             setCurrentLocation()
+
+//            Handler().postDelayed({
+//                setCurrentLocation()
+//
+//            }, 5000)
         }
 
         placeSelectedFab.setOnClickListener {
@@ -324,8 +329,10 @@ class PlacePickerActivity : AppCompatActivity(), OnMapReadyCallback {
             return if (addresses != null && addresses.size != 0) {
                 fullAddress = addresses[0].getAddressLine(
                         0
-                ) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                shortAddress = generateFinalAddress(fullAddress).trim()
+                )
+                // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//                shortAddress = generateFinalAddress(fullAddress).trim()
+                shortAddress = addresses[0].subLocality
             } else {
                 shortAddress = ""
                 fullAddress = ""

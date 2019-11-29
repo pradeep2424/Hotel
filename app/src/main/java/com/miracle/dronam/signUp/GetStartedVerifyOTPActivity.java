@@ -59,7 +59,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
     private String mVerificationId;
     private String mobileNumber;
-    private String generatedOTP;
+    private String generatedOTP = "";
     private String enteredOTP = "";
 
     private final int REQUEST_PERMISSION_READ_SMS = 1001;
@@ -73,7 +73,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
         init();
         events();
-        sendOTP();
+//        sendOTP();
 
         if (requestSMSPermission()) {
         }
@@ -93,7 +93,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mobileNumber = extras.getString("mobile");
+            mobileNumber = extras.getString("Mobile");
         }
 
         String titleText = getResources().getString(R.string.login_verify_otp_text)

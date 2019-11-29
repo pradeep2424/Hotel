@@ -57,7 +57,7 @@ public class GetStartedActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListener;
+//    FirebaseAuth.AuthStateListener mAuthListener;
     CallbackManager mCallbackManager;
 
     final int RC_SIGN_IN = 100;

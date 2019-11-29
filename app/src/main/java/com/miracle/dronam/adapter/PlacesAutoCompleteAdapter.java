@@ -116,8 +116,9 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
                 //.setLocationBias(bounds)
                 //.setCountry("BD")
 //                .setTypeFilter(TypeFilter.ADDRESS)
+
                 .setCountry("IN")   //to set country only for e.g australia
-                .setTypeFilter(TypeFilter.ADDRESS)
+//                .setTypeFilter(TypeFilter.ADDRESS)
                 .setSessionToken(token)
                 .setQuery(constraint.toString())
                 .build();

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -22,6 +23,7 @@ import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,6 +41,10 @@ import retrofit2.Response;
 public class SplashActivity extends AppCompatActivity {
     RelativeLayout rlRootLayout;
 
+    SharedPreferences prefs;
+
+    boolean isUserLoggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
         getUserDetails();
         getAreaDetails();
 
-        insertUserDetails();
+//        insertUserDetails();
 
         loadNextPage();
     }
@@ -72,20 +78,37 @@ public class SplashActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void init()
-    {
+    private void init() {
+        prefs = getSharedPreferences(ConstantValues.SP_LOGIN_DETAILS, MODE_PRIVATE);
+        isUserLoggedIn = prefs.getBoolean(ConstantValues.SP_KEY_IS_USER_LOGGED_IN, false);
+
         rlRootLayout = findViewById(R.id.rl_rootLayout);
     }
 
     private void loadNextPage() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, GetStartedActivity.class);
+        if (isUserLoggedIn) {
+//            autoLogin();
+
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+
+        } else {
+//            callSignUpPage();
+
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, GetStartedActivity.class);
 //                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        }
     }
 
 //    private JSONObject createJsonUserDetails() {
@@ -276,7 +299,7 @@ public class SplashActivity extends AppCompatActivity {
                             String responseString = response.body().string();
                             JSONArray jsonArray = new JSONArray(responseString);
 
-                            for(int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
                                 String area = jsonObj.optString("Area");
@@ -374,110 +397,110 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void insertUserDetails(){
-        if (InternetConnection.checkConnection(this)) {
-
-            UserDetails userDetails = new UserDetails();
-            userDetails.setUsername("Pradeep");
-            userDetails.setPassword("PradeepPass");
-
-            ApiInterface apiService = RetroClient.getApiService(this);
-//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.insertUserDetails(userDetails);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-
-                        int statusCode = response.code();
-                        if (response.isSuccessful()) {
-
-                            String responseString = response.body().string();
-                            JSONObject jsonObject = new JSONObject(responseString);
-
-
-//                            if (status.equalsIgnoreCase("Success")) {
-//                                FirebaseUser user = mAuth.getCurrentUser();
+//    private void insertUserDetails() {
+//        if (InternetConnection.checkConnection(this)) {
 //
-//                                String accessToken = jsonObj.getString("AccessToken");
-//                                int accountType = jsonObj.getInt("AccountType");
-//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
-//                                String corpID = jsonObj.getString("CorpID");
-//                                String emailID = jsonObj.getString("EmailID");
-//                                String firstName = jsonObj.getString("FirstName");
-//                                String lastName = jsonObj.getString("LastName");
+//            UserDetails userDetails = new UserDetails();
+//            userDetails.setUsername("Pradeep");
+//            userDetails.setPassword("PradeepPass");
 //
-//                                String hibernate = jsonObj.getString("Hibernate");
-//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
-//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
-//                                msgHeader = jsonObj.getString("MessageHeader");
-//                                message = jsonObj.getString("Message");
+//            ApiInterface apiService = RetroClient.getApiService(this);
+////            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
+//            Call<ResponseBody> call = apiService.insertUserDetails(userDetails);
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    try {
 //
-//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
-//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+//                        int statusCode = response.code();
+//                        if (response.isSuccessful()) {
 //
-//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
-//
-//                                String msg = jsonObj.getString("Message");
-//                                String msgHeader = jsonObj.getString("MessageHeader");
-//
-//                                prefs.edit().clear().apply();
-//                                signOutFirebaseAccounts();
+//                            String responseString = response.body().string();
+//                            JSONObject jsonObject = new JSONObject(responseString);
 //
 //
-//                                if (msgHeader.trim().equalsIgnoreCase("")) {
-//                                    showSnackbarErrorMsg(msg);
-//                                    callSignUpPage();
-//                                } else {
-//                                    accountBlockedDialog(msgHeader, msg);
-//                                }
+////                            if (status.equalsIgnoreCase("Success")) {
+////                                FirebaseUser user = mAuth.getCurrentUser();
+////
+////                                String accessToken = jsonObj.getString("AccessToken");
+////                                int accountType = jsonObj.getInt("AccountType");
+////                                String mainCorpNo = jsonObj.getString("MainCorpNo");
+////                                String corpID = jsonObj.getString("CorpID");
+////                                String emailID = jsonObj.getString("EmailID");
+////                                String firstName = jsonObj.getString("FirstName");
+////                                String lastName = jsonObj.getString("LastName");
+////
+////                                String hibernate = jsonObj.getString("Hibernate");
+////                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
+////                                boolean isTrial = jsonObj.getBoolean("IsTrial");
+////                                msgHeader = jsonObj.getString("MessageHeader");
+////                                message = jsonObj.getString("Message");
+////
+////                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
+////                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+////
+////                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+////
+////                                String msg = jsonObj.getString("Message");
+////                                String msgHeader = jsonObj.getString("MessageHeader");
+////
+////                                prefs.edit().clear().apply();
+////                                signOutFirebaseAccounts();
+////
+////
+////                                if (msgHeader.trim().equalsIgnoreCase("")) {
+////                                    showSnackbarErrorMsg(msg);
+////                                    callSignUpPage();
+////                                } else {
+////                                    accountBlockedDialog(msgHeader, msg);
+////                                }
+////
+////                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
+////                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+////
+////                            } else if (status.equalsIgnoreCase("Error")) {
+////                                String msg = jsonObj.getString("Message");
+////                                showSnackbarErrorMsg(msg);
+////
+////                            } else {
+////                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+////                            }
 //
-//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
-//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+//                        } else {
+//                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+//                        }
 //
-//                            } else if (status.equalsIgnoreCase("Error")) {
-//                                String msg = jsonObj.getString("Message");
-//                                showSnackbarErrorMsg(msg);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 //
-//                            } else {
-//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
-//                            }
-
-                        } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-                        Log.e("Error onFailure : ", t.toString());
-                        t.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else {
-//            signOutFirebaseAccounts();
-
-            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            getUserDetails();
-                        }
-                    })
-//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
-                    .show();
-        }
-    }
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    try {
+//                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+//                        Log.e("Error onFailure : ", t.toString());
+//                        t.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        } else {
+////            signOutFirebaseAccounts();
+//
+//            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("RETRY", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            getUserDetails();
+//                        }
+//                    })
+////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+//                    .show();
+//        }
+//    }
 
     public void showSnackbarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();

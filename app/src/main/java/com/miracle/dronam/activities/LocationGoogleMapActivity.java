@@ -12,30 +12,45 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.PlacesAutoCompleteAdapter;
 import com.miracle.dronam.main.MainActivity;
+import com.miracle.dronam.service.retrofit.ApiInterface;
+import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.signUp.GetStartedMobileNumberActivity;
 import com.miracle.dronam.utils.Application;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.miracle.dronam.utils.InternetConnection;
 import com.sucho.placepicker.AddressData;
 import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.PlacePicker;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 //import com.vanillaplacepicker.data.VanillaAddress;
 //import com.vanillaplacepicker.presentation.builder.VanillaPlacePicker;
 //import com.vanillaplacepicker.utils.KeyUtils;
@@ -52,6 +67,8 @@ import java.util.Map;
 public class LocationGoogleMapActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener {
     private View viewCurrentLocation;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
+
+    private RelativeLayout rlRootLayout;
     private RecyclerView recyclerView;
     private EditText etSearchText;
 
@@ -75,6 +92,7 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     }
 
     private void init() {
+        rlRootLayout = findViewById(R.id.rl_rootLayout);
         viewCurrentLocation = findViewById(R.id.view_currentLocation);
         recyclerView = findViewById(R.id.places_recycler_view);
         etSearchText = findViewById(R.id.et_searchAddress);
@@ -179,7 +197,7 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
                 .setLatLong(latitude, longitude)  // Initial Latitude and Longitude the Map will load into
 //                .setLatLong(40.748672, -73.985628)
                 .showLatLong(false)  // Show Coordinates in the Activity
-                .setMapZoom(18.0f)  // Map Zoom Level. Default: 14.0
+                .setMapZoom(19.0f)  // Map Zoom Level. Default: 14.0
                 .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
                 .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
 //                .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
@@ -197,10 +215,10 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     private boolean requestLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            int permissionCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
             List<String> listPermissionsNeeded = new ArrayList<>();
-            if (permissionCamera != PackageManager.PERMISSION_GRANTED) {
+            if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
                 listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
 
@@ -222,6 +240,138 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
                 .setCancelable(false)
                 .create()
                 .show();
+    }
+
+    private void saveUserLocationData(AddressData addressData) {
+        Application.locationAddressData = addressData;
+
+        Address address = addressData.getAddressList().get(0);
+        String fullAddress = address.getAddressLine(0);
+        String zipCode = address.getPostalCode();
+        String cityName = address.getLocality();
+        String area = address.getFeatureName();
+
+        Application.userDetails.setAddress(fullAddress);
+        Application.userDetails.setZipCode(zipCode);
+        Application.userDetails.setCityName(cityName);
+        Application.userDetails.setArea(area);
+    }
+
+
+    private void insertUserDetails() {
+        if (InternetConnection.checkConnection(this)) {
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
+            Call<ResponseBody> call = apiService.insertUserDetails(Application.userDetails);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+                            JSONObject jsonObject = new JSONObject(responseString);
+
+//                            Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
+//                            startActivity(it);
+//                            finish();
+
+
+//                            if (status.equalsIgnoreCase("Success")) {
+//                                FirebaseUser user = mAuth.getCurrentUser();
+//
+//                                String accessToken = jsonObj.getString("AccessToken");
+//                                int accountType = jsonObj.getInt("AccountType");
+//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
+//                                String corpID = jsonObj.getString("CorpID");
+//                                String emailID = jsonObj.getString("EmailID");
+//                                String firstName = jsonObj.getString("FirstName");
+//                                String lastName = jsonObj.getString("LastName");
+//
+//                                String hibernate = jsonObj.getString("Hibernate");
+//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
+//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
+//                                msgHeader = jsonObj.getString("MessageHeader");
+//                                message = jsonObj.getString("Message");
+//
+//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
+//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+//
+//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+//
+//                                String msg = jsonObj.getString("Message");
+//                                String msgHeader = jsonObj.getString("MessageHeader");
+//
+//                                prefs.edit().clear().apply();
+//                                signOutFirebaseAccounts();
+//
+//
+//                                if (msgHeader.trim().equalsIgnoreCase("")) {
+//                                    showSnackbarErrorMsg(msg);
+//                                    callSignUpPage();
+//                                } else {
+//                                    accountBlockedDialog(msgHeader, msg);
+//                                }
+//
+//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
+//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+//
+//                            } else if (status.equalsIgnoreCase("Error")) {
+//                                String msg = jsonObj.getString("Message");
+//                                showSnackbarErrorMsg(msg);
+//
+//                            } else {
+//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            insertUserDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    public void showSnackbarErrorMsg(String erroMsg) {
+//        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
+
+        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+        snackbar.show();
     }
 
     @Override
@@ -256,7 +406,8 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
         if (requestCode == REQUEST_CODE_MAP) {
             if (resultCode == RESULT_OK && data != null) {
                 AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
-                Application.locationAddressData = addressData;
+                saveUserLocationData(addressData);
+                insertUserDetails();
 
                 Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
                 startActivity(it);
