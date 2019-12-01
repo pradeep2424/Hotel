@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class RestaurantObject implements Serializable {
     String categoryID;
     String categoryName;
-    String restaurantID;
+    int restaurantID;
     String restaurantName ;
     String restaurantAddress;
     String openTime;
@@ -38,11 +38,11 @@ public class RestaurantObject implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public String getRestaurantID() {
+    public int getRestaurantID() {
         return restaurantID;
     }
 
-    public void setRestaurantID(String restaurantID) {
+    public void setRestaurantID(int restaurantID) {
         this.restaurantID = restaurantID;
     }
 

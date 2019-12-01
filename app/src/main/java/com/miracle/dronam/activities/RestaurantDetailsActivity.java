@@ -126,13 +126,16 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
 
-            String userTypeID = Application.userDetails.getUserType();
-            String restaurantID = restaurantObject.getRestaurantID();
-            String foodTypeID = restaurantObject.getFoodTypeID();
-            String categoryID = restaurantObject.getCategoryID();
+//            String userTypeID = Application.userDetails.getUserType();
+//            int restaurantID = restaurantObject.getRestaurantID();
+//            String foodTypeID = restaurantObject.getFoodTypeID();
+//            String categoryID = restaurantObject.getCategoryID();
+
+
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getProductDetailsData(userTypeID, restaurantID, foodTypeID, categoryID);
+            Call<ResponseBody> call = apiService.getProductDetailsData("0", 0, "0", "0");
+//            Call<ResponseBody> call = apiService.getProductDetailsData(userTypeID, restaurantID, foodTypeID, categoryID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

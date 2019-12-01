@@ -264,6 +264,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private void setToolbarLocation() {
         if (Application.locationAddressData != null) {
             tvToolbarTitle.setText(Application.locationAddressData.getAddressList().get(0).getSubLocality());
+        } else {
+            tvToolbarTitle.setText(getString(R.string.set_location));
         }
     }
 
@@ -310,7 +312,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
                                 String categoryID = jsonObj.optString("CategoryId");
                                 String categoryName = jsonObj.optString("CategoryName");
-                                String restaurantID = jsonObj.optString("ClientId");
+                                int restaurantID = jsonObj.optInt("ClientId");
                                 String restaurantName = jsonObj.optString("RestaurantName");
                                 String restaurantAddress = jsonObj.optString("ClientAddress");
                                 String openTime = jsonObj.optString("OpentTime");
@@ -319,7 +321,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                                 String description = jsonObj.optString("Description");
                                 String longitude = jsonObj.optString("Langitude");
                                 String latitude = jsonObj.optString("Latitude");
-                                String rating = jsonObj.optString("Rating");
+                                String rating = jsonObj.optString("Rating", "4.5");
                                 String foodTypeID = jsonObj.optString("FoodTypeId");
                                 String foodTypeName = jsonObj.optString("FoodTypeName");
                                 String logo = jsonObj.optString("Logo");

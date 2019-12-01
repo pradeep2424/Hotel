@@ -3,10 +3,10 @@ package com.miracle.dronam.model;
 import java.io.Serializable;
 
 public class UserDetails implements Serializable {
-    String userID;
+    int userID;
     String username;
-    String firstName;
-    String lastName;
+    String fName;
+    String lName;
     String fullName;
     String gender;
     String userType;
@@ -21,24 +21,23 @@ public class UserDetails implements Serializable {
     String userPhoto;
     String facebookId;
     String stateName;
-
     String status;
     String password;
 
     public String getFirstName() {
-        return firstName;
+        return fName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String fName) {
+        this.fName = fName;
     }
 
     public String getLastName() {
-        return lastName;
+        return lName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName(String lName) {
+        this.lName = lName;
     }
 
     public String getStatus() {
@@ -137,11 +136,11 @@ public class UserDetails implements Serializable {
         this.telephone = telephone;
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 

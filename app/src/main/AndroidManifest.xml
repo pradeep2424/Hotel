@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".signUp.GetStartedVerifyOTPActivity"
             android:theme="@style/NoActionBarShowStatusBar" />

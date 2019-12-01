@@ -100,7 +100,7 @@ public class SeeMoreActivity extends AppCompatActivity implements OnRecyclerView
 
                                 String categoryID = jsonObj.optString("CategoryId");
                                 String categoryName = jsonObj.optString("CategoryName");
-                                String restaurantID = jsonObj.optString("ClientId");
+                                int restaurantID = jsonObj.optInt("ClientId");
                                 String restaurantName = jsonObj.optString("RestaurantName");
                                 String restaurantAddress = jsonObj.optString("ClientAddress");
                                 String openTime = jsonObj.optString("OpentTime");

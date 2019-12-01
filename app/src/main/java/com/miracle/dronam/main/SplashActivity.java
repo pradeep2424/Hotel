@@ -21,6 +21,7 @@ import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.ConstantValues;
@@ -41,9 +42,10 @@ import retrofit2.Response;
 public class SplashActivity extends AppCompatActivity {
     RelativeLayout rlRootLayout;
 
-    SharedPreferences prefs;
+    private PrefManagerConfig prefManagerConfig;
 
     boolean isUserLoggedIn;
+    String mobileNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +55,18 @@ public class SplashActivity extends AppCompatActivity {
 //        printHashKey();8
 
         init();
-        getUserDetails();
-        getAreaDetails();
+        loadNextPage();
+
+//        if (isUserLoggedIn && !mobileNumber.equalsIgnoreCase(ConstantValues.SP_DEFAULT_VALUE)) {
+//            getUserDetails();
+//            getAreaDetails();
+//
+//        } else {
+//            loadNextPage();
+//        }
 
 //        insertUserDetails();
 
-        loadNextPage();
     }
 
 //    public void printHashKey() {
@@ -79,23 +87,27 @@ public class SplashActivity extends AppCompatActivity {
 //    }
 
     private void init() {
-        prefs = getSharedPreferences(ConstantValues.SP_LOGIN_DETAILS, MODE_PRIVATE);
-        isUserLoggedIn = prefs.getBoolean(ConstantValues.SP_KEY_IS_USER_LOGGED_IN, false);
-
+        prefManagerConfig = new PrefManagerConfig(this);
         rlRootLayout = findViewById(R.id.rl_rootLayout);
     }
 
     private void loadNextPage() {
-        if (isUserLoggedIn) {
+        isUserLoggedIn = prefManagerConfig.getIsUserLoggedIn();
+        mobileNumber = prefManagerConfig.getMobileNo();
+
+        if (isUserLoggedIn && !mobileNumber.equalsIgnoreCase(prefManagerConfig.SP_DEFAULT_VALUE)) {
 //            autoLogin();
 
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, 2000);
+            getUserDetails();
+            getAreaDetails();
+
+//            new Handler().postDelayed(new Runnable() {
+//                public void run() {
+//                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            }, 2000);
 
         } else {
 //            callSignUpPage();
@@ -128,8 +140,8 @@ public class SplashActivity extends AppCompatActivity {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);
-//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.getUserDetails("abc1", "123456");
+            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
+//            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -143,14 +155,15 @@ public class SplashActivity extends AppCompatActivity {
                             JSONObject jsonObj = new JSONObject(responseString);
                             String status = jsonObj.optString("Status");
 
-                            String name = jsonObj.optString("Name");
+                            String fname = jsonObj.optString("FName");
+                            String lname = jsonObj.optString("LName");
                             String gender = jsonObj.optString("Gender");
                             String email = jsonObj.optString("Email");
-                            String mobile = jsonObj.optString("Mobile");
                             String telephone = jsonObj.optString("Telephone");
+                            String mobile = jsonObj.optString("Mobile");
                             String facebookId = jsonObj.optString("FacebookId");
 
-                            String userID = jsonObj.optString("UserID");
+                            int userID = jsonObj.optInt("UserID");
                             String username = jsonObj.optString("Username");
                             String password = jsonObj.optString("Pass");
                             String userPhoto = jsonObj.optString("UserPhoto");
@@ -161,7 +174,7 @@ public class SplashActivity extends AppCompatActivity {
                             String area = jsonObj.optString("Area");
                             String cityName = jsonObj.optString("CityName");
                             String stateName = jsonObj.optString("StateName");
-                            String zipCode = jsonObj.optString("ZipCode");
+                            int zipCode = jsonObj.optInt("ZipCode");
 
                             String url = jsonObj.optString("URL");
                             String smsUsername = jsonObj.optString("SMSUsername");
@@ -171,7 +184,8 @@ public class SplashActivity extends AppCompatActivity {
                             String senderID = jsonObj.optString("SenderID");
 
                             UserDetails userDetails = new UserDetails();
-                            userDetails.setFullName(name);
+                            userDetails.setFirstName(fname);
+                            userDetails.setLastName(lname);
                             userDetails.setGender(gender);
                             userDetails.setEmail(email);
                             userDetails.setMobile(mobile);
@@ -187,7 +201,7 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setArea(area);
                             userDetails.setCityName(cityName);
                             userDetails.setStateName(stateName);
-                            userDetails.setZipCode(zipCode);
+                            userDetails.setZipCode(String.valueOf(zipCode));
                             Application.userDetails = userDetails;
 
                             SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
@@ -198,6 +212,11 @@ public class SplashActivity extends AppCompatActivity {
                             smsGatewayObject.setSendSMS(sendSMS);
                             smsGatewayObject.setSenderID(senderID);
                             Application.smsGatewayObject = smsGatewayObject;
+
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
 
 //                            if (status.equalsIgnoreCase("Success")) {
 //                                FirebaseUser user = mAuth.getCurrentUser();
@@ -388,7 +407,7 @@ public class SplashActivity extends AppCompatActivity {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            getUserDetails();
+                            getAreaDetails();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))

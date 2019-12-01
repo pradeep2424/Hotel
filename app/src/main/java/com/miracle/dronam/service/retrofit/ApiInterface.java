@@ -1,8 +1,11 @@
 package com.miracle.dronam.service.retrofit;
 
+import com.google.gson.JsonObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.UserDetails;
+
+import org.json.JSONObject;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -34,7 +37,7 @@ public interface ApiInterface {
 
     @GET("getProductDetails/{Usertypeid}/{ClientID}/{foodtypeid}/{CategoryID}")
     Call<ResponseBody> getProductDetailsData(@Path("Usertypeid") String userTypeID,
-                                             @Path("ClientID") String clientID,
+                                             @Path("ClientID") int clientID,
                                              @Path("foodtypeid") String foodTypeID,
                                              @Path("CategoryID") String categoryID);
 
@@ -52,8 +55,12 @@ public interface ApiInterface {
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
 
+//    @POST("insertUserDetails")
+//    Call<ResponseBody> insertUserDetails(@Body UserDetails body);
+
+
     @POST("insertUserDetails")
-    Call<ResponseBody> insertUserDetails(@Body UserDetails body);
+    Call<ResponseBody> insertUserDetails(@Body JsonObject jsonObj);
 
     @GET("getorderDetails/{userids}")
     Call<ResponseBody> getPastOrders(@Path("userids") String userID);
@@ -70,18 +77,8 @@ public interface ApiInterface {
                                  @Path("SenderID") String senderID,
                                  @Path("Campaign") String campaign);
 
-//    @POST("GetLastResponseDate")
-//    Call<ResponseBody> getUserDetails(@Body JSONObject jsonObj);
-
-
-//    @Multipart
-//    @POST("UploadFile")
-//    Call<ResponseBody> uploadImage(@Part List<MultipartBody.Part> file);
-
     @Multipart
     @POST("UploadFile")
     Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);
 
-    @POST("UploadFile")
-    Call<ResponseBody> uploadImageString(String image);
 }

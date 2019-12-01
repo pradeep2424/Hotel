@@ -37,6 +37,7 @@
     <string name="otp_wait_for">Wait for</string>
     <string name="otp_message">is your Dronam verification OTP.</string>
 
+    <string name="set_location">Set Location</string>
     <string name="location_permission_title">Location Permission Denied</string>
     <string name="location_permission_text">We use this permission to detect your current location and display restaurants near you.
     \nGrant this permission now!!!</string>

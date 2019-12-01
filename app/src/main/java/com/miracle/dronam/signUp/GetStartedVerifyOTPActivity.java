@@ -22,17 +22,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.broadcastReceiver.SMSListener;
 import com.miracle.dronam.listeners.OTPListener;
+import com.miracle.dronam.main.MainActivity;
 import com.miracle.dronam.model.SMSGatewayObject;
+import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +69,8 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     private String generatedOTP = "";
     private String enteredOTP = "";
 
+    private PrefManagerConfig prefManagerConfig;
+
     private final int REQUEST_PERMISSION_READ_SMS = 1001;
 
     @Override
@@ -80,6 +89,8 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     }
 
     private void init() {
+        prefManagerConfig = new PrefManagerConfig(this);
+
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         viewToolbar = findViewById(R.id.view_toolbarOTP);
         ivBack = (ImageView) findViewById(R.id.iv_back);
@@ -130,9 +141,11 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
             public void onClick(View v) {
                 if (generatedOTP.equalsIgnoreCase(enteredOTP)
                         || enteredOTP.equalsIgnoreCase("242424")) {
-                    Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    insertUserDetails();
+//                    Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+//                    startActivity(intent);
+//                    finish();
 
                 } else {
                     showSnackbarErrorMsg(getString(R.string.incorrect_otp));
@@ -332,6 +345,129 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 //            }
 //        }
 //    }
+
+
+    private JsonObject createJsonUserDetails() {
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("Mobile", Application.userDetails.getMobile());
+            postParam.addProperty("FName", Application.userDetails.getFirstName());
+            postParam.addProperty("LName", Application.userDetails.getLastName());
+            postParam.addProperty("Email", Application.userDetails.getEmail());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
+    private void insertUserDetails() {
+        if (InternetConnection.checkConnection(this)) {
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.insertUserDetails(createJsonUserDetails());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+//                            JSONObject jsonObject = new JSONObject(responseString);
+
+                            prefManagerConfig.setIsUserLoggedIn(true);
+                            prefManagerConfig.setMobileNo(mobileNumber);
+
+                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+                            startActivity(intent);
+                            finish();
+
+//                            if (status.equalsIgnoreCase("Success")) {
+//                                FirebaseUser user = mAuth.getCurrentUser();
+//
+//                                String accessToken = jsonObj.getString("AccessToken");
+//                                int accountType = jsonObj.getInt("AccountType");
+//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
+//                                String corpID = jsonObj.getString("CorpID");
+//                                String emailID = jsonObj.getString("EmailID");
+//                                String firstName = jsonObj.getString("FirstName");
+//                                String lastName = jsonObj.getString("LastName");
+//
+//                                String hibernate = jsonObj.getString("Hibernate");
+//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
+//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
+//                                msgHeader = jsonObj.getString("MessageHeader");
+//                                message = jsonObj.getString("Message");
+//
+//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
+//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+//
+//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+//
+//                                String msg = jsonObj.getString("Message");
+//                                String msgHeader = jsonObj.getString("MessageHeader");
+//
+//                                prefs.edit().clear().apply();
+//                                signOutFirebaseAccounts();
+//
+//
+//                                if (msgHeader.trim().equalsIgnoreCase("")) {
+//                                    showSnackbarErrorMsg(msg);
+//                                    callSignUpPage();
+//                                } else {
+//                                    accountBlockedDialog(msgHeader, msg);
+//                                }
+//
+//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
+//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+//
+//                            } else if (status.equalsIgnoreCase("Error")) {
+//                                String msg = jsonObj.getString("Message");
+//                                showSnackbarErrorMsg(msg);
+//
+//                            } else {
+//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            insertUserDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
 
     public void showSnackbarErrorMsgWithButton(String erroMsg) {
         Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)

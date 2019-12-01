@@ -71,7 +71,8 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
         RestaurantObject restaurantObj = listRestaurants.get(position);
 
         float rating = 0;
-        if (restaurantObj.getRating() != null && restaurantObj.getRating().length() > 0) {
+        if (restaurantObj.getRating() != null && restaurantObj.getRating().length() > 0
+                && restaurantObj.getRating() != "null") {
             rating = Float.parseFloat(restaurantObj.getRating());
         }
 

@@ -136,7 +136,7 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESOLVE_HINT) {
-            if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                 Credential cred = data.getParcelableExtra(Credential.EXTRA_KEY);
                 String phoneNumber = cred.getId().substring(3);
                 etMobileNumber.setText(phoneNumber);
