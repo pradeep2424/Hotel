@@ -99,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
 //            autoLogin();
 
             getUserDetails();
-            getAreaDetails();
+//            getAreaDetails();
 
 //            new Handler().postDelayed(new Runnable() {
 //                public void run() {
@@ -140,8 +140,8 @@ public class SplashActivity extends AppCompatActivity {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
 //            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
+            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -301,119 +301,119 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void getAreaDetails() {
-        if (InternetConnection.checkConnection(this)) {
-
-            ApiInterface apiService = RetroClient.getApiService(this);
-//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.getAreaDetails();
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-
-                        int statusCode = response.code();
-                        if (response.isSuccessful()) {
-
-                            String responseString = response.body().string();
-                            JSONArray jsonArray = new JSONArray(responseString);
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
-
-                                String area = jsonObj.optString("Area");
-                                String areaId = jsonObj.optString("AreaId");
-                                String cityId = jsonObj.optString("CityId");
-                                String cityName = jsonObj.optString("CityName");
-                                String country = jsonObj.optString("Country");
-                                String countryId = jsonObj.optString("CountryId");
-                                String stateId = jsonObj.optString("StateId");
-                                String stateName = jsonObj.optString("StateName");
-                            }
-
-
-//                            if (status.equalsIgnoreCase("Success")) {
-//                                FirebaseUser user = mAuth.getCurrentUser();
+//    private void getAreaDetails() {
+//        if (InternetConnection.checkConnection(this)) {
 //
-//                                String accessToken = jsonObj.getString("AccessToken");
-//                                int accountType = jsonObj.getInt("AccountType");
-//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
-//                                String corpID = jsonObj.getString("CorpID");
-//                                String emailID = jsonObj.getString("EmailID");
-//                                String firstName = jsonObj.getString("FirstName");
-//                                String lastName = jsonObj.getString("LastName");
+//            ApiInterface apiService = RetroClient.getApiService(this);
+////            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
+//            Call<ResponseBody> call = apiService.getAreaDetails();
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    try {
 //
-//                                String hibernate = jsonObj.getString("Hibernate");
-//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
-//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
-//                                msgHeader = jsonObj.getString("MessageHeader");
-//                                message = jsonObj.getString("Message");
+//                        int statusCode = response.code();
+//                        if (response.isSuccessful()) {
 //
-//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
-//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+//                            String responseString = response.body().string();
+//                            JSONArray jsonArray = new JSONArray(responseString);
 //
-//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 //
-//                                String msg = jsonObj.getString("Message");
-//                                String msgHeader = jsonObj.getString("MessageHeader");
-//
-//                                prefs.edit().clear().apply();
-//                                signOutFirebaseAccounts();
-//
-//
-//                                if (msgHeader.trim().equalsIgnoreCase("")) {
-//                                    showSnackbarErrorMsg(msg);
-//                                    callSignUpPage();
-//                                } else {
-//                                    accountBlockedDialog(msgHeader, msg);
-//                                }
-//
-//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
-//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
-//
-//                            } else if (status.equalsIgnoreCase("Error")) {
-//                                String msg = jsonObj.getString("Message");
-//                                showSnackbarErrorMsg(msg);
-//
-//                            } else {
-//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+//                                String area = jsonObj.optString("Area");
+//                                String areaId = jsonObj.optString("AreaId");
+//                                String cityId = jsonObj.optString("CityId");
+//                                String cityName = jsonObj.optString("CityName");
+//                                String country = jsonObj.optString("Country");
+//                                String countryId = jsonObj.optString("CountryId");
+//                                String stateId = jsonObj.optString("StateId");
+//                                String stateName = jsonObj.optString("StateName");
 //                            }
-
-                        } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-                        Log.e("Error onFailure : ", t.toString());
-                        t.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else {
-//            signOutFirebaseAccounts();
-
-            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            getAreaDetails();
-                        }
-                    })
-//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
-                    .show();
-        }
-    }
+//
+//
+////                            if (status.equalsIgnoreCase("Success")) {
+////                                FirebaseUser user = mAuth.getCurrentUser();
+////
+////                                String accessToken = jsonObj.getString("AccessToken");
+////                                int accountType = jsonObj.getInt("AccountType");
+////                                String mainCorpNo = jsonObj.getString("MainCorpNo");
+////                                String corpID = jsonObj.getString("CorpID");
+////                                String emailID = jsonObj.getString("EmailID");
+////                                String firstName = jsonObj.getString("FirstName");
+////                                String lastName = jsonObj.getString("LastName");
+////
+////                                String hibernate = jsonObj.getString("Hibernate");
+////                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
+////                                boolean isTrial = jsonObj.getBoolean("IsTrial");
+////                                msgHeader = jsonObj.getString("MessageHeader");
+////                                message = jsonObj.getString("Message");
+////
+////                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
+////                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+////
+////                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+////
+////                                String msg = jsonObj.getString("Message");
+////                                String msgHeader = jsonObj.getString("MessageHeader");
+////
+////                                prefs.edit().clear().apply();
+////                                signOutFirebaseAccounts();
+////
+////
+////                                if (msgHeader.trim().equalsIgnoreCase("")) {
+////                                    showSnackbarErrorMsg(msg);
+////                                    callSignUpPage();
+////                                } else {
+////                                    accountBlockedDialog(msgHeader, msg);
+////                                }
+////
+////                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
+////                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+////
+////                            } else if (status.equalsIgnoreCase("Error")) {
+////                                String msg = jsonObj.getString("Message");
+////                                showSnackbarErrorMsg(msg);
+////
+////                            } else {
+////                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+////                            }
+//
+//                        } else {
+//                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+//                        }
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    try {
+//                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+//                        Log.e("Error onFailure : ", t.toString());
+//                        t.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        } else {
+////            signOutFirebaseAccounts();
+//
+//            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("RETRY", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            getAreaDetails();
+//                        }
+//                    })
+////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+//                    .show();
+//        }
+//    }
 
 
 //    private void insertUserDetails() {

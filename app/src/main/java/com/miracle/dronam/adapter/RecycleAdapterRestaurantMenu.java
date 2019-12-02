@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
+import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.model.DishObject;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -23,11 +24,17 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     RestaurantDetailsActivity activity;
     private ArrayList<DishObject> modelArrayList;
 
+    private OnItemAddedToCart onItemAddedToCart;
+
     private ViewHolder viewHolderClickedItem;
 
     public RecycleAdapterRestaurantMenu(RestaurantDetailsActivity activity, ArrayList<DishObject> modelArrayList) {
         this.activity = activity;
         this.modelArrayList = modelArrayList;
+    }
+
+    public void setOnItemAddedToCart(OnItemAddedToCart onItemAddedToCart) {
+        this.onItemAddedToCart = onItemAddedToCart;
     }
 
     @Override
@@ -41,14 +48,16 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         DishObject dishObject = modelArrayList.get(position);
         holder.tvFoodName.setText(dishObject.getProductName());
         holder.tvFoodCategory.setText(dishObject.getCategoryName());
-        holder.tvFoodPrice.setText(dishObject.getPrice());
+        holder.tvFoodPrice.setText("₹ " + dishObject.getPrice());
 
 
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewHolderClickedItem = holder;
-                activity.addItemToCart(1, position);
+                if (onItemAddedToCart != null) {
+                    onItemAddedToCart.onItemChangedInCart(1, position);
+                }
             }
         });
 
@@ -58,7 +67,9 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                 String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
-                activity.addItemToCart(value, position);
+                if (onItemAddedToCart != null) {
+                    onItemAddedToCart.onItemChangedInCart(1, position);
+                }
             }
         });
 
@@ -72,8 +83,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     public void showHideQuantityAndAddItemButton() {
         if (viewHolderClickedItem.numberPickerItemQuantity.getValue() == 0) {
             showAddItemButton();
-        }
-        else {
+        } else {
             showItemQuantityPicker();
         }
     }

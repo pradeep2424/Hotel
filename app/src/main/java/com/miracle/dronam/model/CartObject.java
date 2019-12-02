@@ -3,7 +3,7 @@ package com.miracle.dronam.model;
 import java.io.Serializable;
 
 public class CartObject implements Serializable {
-    int cgst;
+    double cgst;
     int restaurantID;
     double deliveryCharge;
     String restaurantName;
@@ -22,11 +22,11 @@ public class CartObject implements Serializable {
     int userID;
     int cartID;
 
-    public int getCgst() {
+    public double getCgst() {
         return cgst;
     }
 
-    public void setCgst(int cgst) {
+    public void setCgst(double cgst) {
         this.cgst = cgst;
     }
 
@@ -54,19 +54,19 @@ public class CartObject implements Serializable {
         this.restaurantName = restaurantName;
     }
 
-    public boolean isIncludeTax() {
+    public boolean getIsIncludeTax() {
         return isIncludeTax;
     }
 
-    public void setIncludeTax(boolean includeTax) {
+    public void setIsIncludeTax(boolean includeTax) {
         isIncludeTax = includeTax;
     }
 
-    public boolean isTaxApplicable() {
+    public boolean getIsTaxApplicable() {
         return isTaxApplicable;
     }
 
-    public void setTaxApplicable(boolean taxApplicable) {
+    public void setIsTaxApplicable(boolean taxApplicable) {
         isTaxApplicable = taxApplicable;
     }
 

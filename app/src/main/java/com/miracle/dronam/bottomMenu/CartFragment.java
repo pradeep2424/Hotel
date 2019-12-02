@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
+import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
@@ -43,7 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment implements OnItemAddedToCart {
     View rootView;
     LinearLayout llBrowseMenu;
     TextView tvPaymentButton;
@@ -58,10 +60,17 @@ public class CartFragment extends Fragment {
     private RecyclerView rvOrderedItems;
     private RecycleAdapterOrderedItem adapterOrderedItems;
 
-    private ArrayList<DishObject> listCartDish;
+    private ArrayList<CartObject> listCartDish;
+
+    int userID;
+    int restaurantID;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userID = Application.userDetails.getUserID();
+        restaurantID = Application.restaurantObject.getRestaurantID();
     }
 
     @Override
@@ -77,8 +86,7 @@ public class CartFragment extends Fragment {
         return rootView;
     }
 
-    private void init()
-    {
+    private void init() {
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
         tvPaymentButton = rootView.findViewById(R.id.tv_paymentButton);
         rvOrderedItems = (RecyclerView) rootView.findViewById(R.id.recyclerView_orderedItems);
@@ -107,22 +115,24 @@ public class CartFragment extends Fragment {
         rvOrderedItems.setItemAnimator(new DefaultItemAnimator());
         rvOrderedItems.setAdapter(adapterOrderedItems);
 
+        adapterOrderedItems.setOnItemAddedToCart(this);
+
 //        rvOrderedItems.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
 //        adapterOrderedItems.setClickListener(this);
     }
 
-    private void getTESTUserLikeDishData() {
-        listCartDish = new ArrayList<>();
-        for (int i = 0; i < image.length; i++) {
-//            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
-            DishObject dishObject = new DishObject();
-            dishObject.setProductName(dish_name[i]);
-            dishObject.setProductImage(String.valueOf(image[i]));
-            dishObject.setCategoryName(dish_type[i]);
-            listCartDish.add(dishObject);
-        }
-    }
+//    private void getTESTUserLikeDishData() {
+//        listCartDish = new ArrayList<>();
+//        for (int i = 0; i < image.length; i++) {
+////            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
+//            CartObject cartObject = new CartObject();
+//            cartObject.setProductName(dish_name[i]);
+//            cartObject.setProductImage(String.valueOf(image[i]));
+//            cartObject.setCategoryName(dish_type[i]);
+//            listCartDish.add(dishObject);
+//        }
+//    }
 
 
     public void switchToHomeFragment1() {
@@ -131,15 +141,26 @@ public class CartFragment extends Fragment {
         transaction.commit();
     }
 
+    @Override
+    public void onItemChangedInCart(int quantity, int position) {
+
+        if (quantity == 0) {
+            deleteCartItem(quantity, position);
+
+        } else {
+            addItemToCart(quantity, position);
+        }
+
+    }
+
     private void getCartItems() {
         if (InternetConnection.checkConnection(getActivity())) {
 
-//            String userTypeID = Application.userDetails.getUserType();
-            String userTypeID = "0";
-            String restaurantID = "1";
+//            String userTypeID = "0";
+//            String restaurantID = "1";
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.getCartItem(userTypeID, restaurantID);
+            Call<ResponseBody> call = apiService.getCartItem(userID, restaurantID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -156,53 +177,47 @@ public class CartFragment extends Fragment {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
                                 double cgst = jsonObj.optDouble("CGST");
-                                int categoryID = jsonObj.optInt("CategoryID");
-                                String categoryName = jsonObj.optString("CategoryName");
-                                String foodType = jsonObj.optString("FoodType");
-                                int foodTypeID = jsonObj.optInt("FoodTypeId");
-                                int dishID = jsonObj.optInt("HaveRuntimeRate");
-                                String isDiscounted = jsonObj.optString("IsDiscounted");
-                                String price = jsonObj.optString("Price");
-                                String productDesc = jsonObj.optString("ProductDesc");
+                                int restaurantID = jsonObj.optInt("Clientid");
+                                double deliveryCharge = jsonObj.optDouble("DeliveryCharge");
+                                String restaurantName = jsonObj.optString("HotelName");
+                                boolean isIncludeTax = jsonObj.optBoolean("IsIncludeTax");
+                                boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
+                                double productAmount = jsonObj.optDouble("ProductAmount");
                                 int productID = jsonObj.optInt("ProductId");
-                                String productImage = jsonObj.optString("ProductImage");
                                 String productName = jsonObj.optString("ProductName");
+                                int productQuantity = jsonObj.optInt("ProductQnty");
+                                double productRate = jsonObj.optDouble("ProductRate");
+                                String productSize = jsonObj.optString("ProductSize");
                                 double sgst = jsonObj.optDouble("SGST");
-                                int taxID = jsonObj.optInt("TaxID");
-                                String taxName = jsonObj.optString("TaxName");
-
-                                DishObject dishObject = new DishObject();
-                                dishObject.setCgst(cgst);
-                                dishObject.setCategoryID(categoryID);
-                                dishObject.setCategoryName(categoryName);
-                                dishObject.setFoodType(foodType);
-                                dishObject.setFoodTypeID(foodTypeID);
-                                dishObject.setDishID(dishID);
-                                dishObject.setIsDiscounted(isDiscounted);
-                                dishObject.setPrice(price);
-                                dishObject.setProductDesc(productDesc);
-                                dishObject.setProductID(productID);
-                                dishObject.setProductImage(productImage);
-                                dishObject.setProductName(productName);
-                                dishObject.setSgst(sgst);
-                                dishObject.setTaxID(taxID);
-                                dishObject.setTaxName(taxName);
-
-//                                String dishID = jsonObj.optString("ProductId");
-//                                String dishName = jsonObj.optString("ProductName");
-//                                String dishDescription = jsonObj.optString("ProductDesc");
-//                                String dishImage = jsonObj.optString("ProductImage");
-//                                String dishPrice = jsonObj.optString("Price");
-//
-//                                DishObject dishObject = new DishObject();
-//                                dishObject.setDishID(dishID);
-//                                dishObject.setDishName(dishName);
-//                                dishObject.setDishDescription(dishDescription);
-//                                dishObject.setDishImage(dishImage);
-//                                dishObject.setDishAmount(dishPrice);
+                                int taxID = jsonObj.optInt("TaxId");
+                                double taxableVal = jsonObj.optDouble("Taxableval");
+                                double totalAmount = jsonObj.optDouble("TotalAmount");
+                                int userID = jsonObj.optInt("Userid");
+                                int cartID = jsonObj.optInt("cartId");
 
 
-                                listCartDish.add(dishObject);
+                                CartObject cartObject = new CartObject();
+                                cartObject.setCgst(cgst);
+                                cartObject.setRestaurantID(restaurantID);
+                                cartObject.setDeliveryCharge(deliveryCharge);
+                                cartObject.setRestaurantName(restaurantName);
+                                cartObject.setIsIncludeTax(isIncludeTax);
+                                cartObject.setIsTaxApplicable(isTaxApplicable);
+                                cartObject.setProductAmount(productAmount);
+                                cartObject.setProductID(productID);
+                                cartObject.setProductName(productName);
+                                cartObject.setProductQuantity(productQuantity);
+                                cartObject.setProductRate(productRate);
+                                cartObject.setProductSize(productSize);
+                                cartObject.setSgst(sgst);
+                                cartObject.setTaxID(taxID);
+                                cartObject.setTaxableVal(taxableVal);
+                                cartObject.setTotalAmount(totalAmount);
+                                cartObject.setUserID(userID);
+                                cartObject.setCartID(cartID);
+
+
+                                listCartDish.add(cartObject);
                             }
 
                             setupRecyclerViewOrderedItems();
@@ -244,6 +259,205 @@ public class CartFragment extends Fragment {
                     .show();
         }
     }
+
+    private JsonObject createJsonCart(CartObject cartObject, int quantity) {
+        double totalPrice;
+
+        RestaurantObject restaurantObject = Application.restaurantObject;
+//        if(restaurantObject.getTaxable().equalsIgnoreCase("true"))
+//        {
+//            double productPrice = cartObject.getProductRate();
+//            double cgst = cartObject.getCgst();
+//            totalPrice = productPrice * ()
+//        }
+
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("ProductId", cartObject.getProductID());
+            postParam.addProperty("ProductName", cartObject.getProductName());
+            postParam.addProperty("ProductRate", 80.00);
+            postParam.addProperty("ProductAmount", cartObject.getProductAmount());
+            postParam.addProperty("ProductSize", "Regular");
+            postParam.addProperty("cartId", 1);
+            postParam.addProperty("ProductQnty", quantity);
+            postParam.addProperty("Taxableval", 20.00);
+            postParam.addProperty("CGST", 10.00);
+            postParam.addProperty("SGST", 10.00);
+            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
+            postParam.addProperty("IsIncludeTax", false);
+            postParam.addProperty("IsTaxApplicable", false);
+            postParam.addProperty("DeliveryCharge", 30.00);
+            postParam.addProperty("Userid", 0);
+            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
+            postParam.addProperty("TotalAmount", cartObject.getTotalAmount());
+            postParam.addProperty("TaxId", 1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
+
+    public void addItemToCart(final int quantity, final int position) {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            CartObject cartObject = listCartDish.get(position);
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(cartObject, quantity));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+                            adapterOrderedItems.updateCartItemQuantity(quantity);
+//                            listCartDish = new ArrayList<>();
+
+//                            ada
+
+//                            JSONArray jsonArray = new JSONArray(responseString);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
+//
+//                                DishObject dishObject = new DishObject();
+//                                dishObject.setDishID(dishID);
+//                                dishObject.setDishName(dishName);
+//                                dishObject.setDishDescription(dishDescription);
+//                                dishObject.setDishImage(dishImage);
+//                                dishObject.setDishPrice(dishPrice);
+//
+//                                listCartDish.add(dishObject);
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addItemToCart(quantity, position);
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    public void deleteCartItem(final int quantity, final int position) {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+//            CartObject cartObject = listCartDish.get(position);
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.deleteCartItem(userID, restaurantID);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+                            adapterOrderedItems.removeAt(position);
+//                            listCartDish = new ArrayList<>();
+
+//                            ada
+
+//                            JSONArray jsonArray = new JSONArray(responseString);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
+//
+//                                DishObject dishObject = new DishObject();
+//                                dishObject.setDishID(dishID);
+//                                dishObject.setDishName(dishName);
+//                                dishObject.setDishDescription(dishDescription);
+//                                dishObject.setDishImage(dishImage);
+//                                dishObject.setDishPrice(dishPrice);
+//
+//                                listCartDish.add(dishObject);
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addItemToCart(quantity, position);
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
 
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
@@ -311,11 +525,11 @@ public class CartFragment extends Fragment {
 //                                listCartDish.add(dishObject);
 //                            }
 
+                            setupRecyclerViewOrderedItems();
+
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
-
-                        setupRecyclerViewOrderedItems();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -358,5 +572,4 @@ public class CartFragment extends Fragment {
         snackTextView.setMaxLines(4);
         snackbar.show();
     }
-
 }

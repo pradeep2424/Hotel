@@ -14,7 +14,7 @@ public class DishObject implements Serializable {
     int foodTypeID;
     int dishID;
     String isDiscounted;
-    String price;
+    double price;
     String productDesc;
     int productID;
     String productImage;
@@ -79,11 +79,11 @@ public class DishObject implements Serializable {
         this.isDiscounted = isDiscounted;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

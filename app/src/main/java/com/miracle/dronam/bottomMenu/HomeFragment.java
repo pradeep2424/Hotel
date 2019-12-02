@@ -272,6 +272,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     @Override
     public void onClick(View view, int position) {
         RestaurantObject restaurantObject = listRestaurantObject.get(position);
+        Application.restaurantObject = restaurantObject;
 
         Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
         intent.putExtra("RestaurantObject", restaurantObject);

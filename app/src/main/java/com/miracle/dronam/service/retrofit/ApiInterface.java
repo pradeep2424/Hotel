@@ -59,8 +59,12 @@ public interface ApiInterface {
     @POST("insCartItem")
     Call<ResponseBody> addItemToCart(@Body JsonObject jsonObj);
 
+    @GET("delcartItem/{userids}/{ClientIDs}")
+    Call<ResponseBody> deleteCartItem(@Path("userids") int userID, @Path("ClientIDs") int clientID);
+
+
     @GET("getcartItem/{userids}/{ClientIDs}")
-    Call<ResponseBody> getCartItem(@Path("userids") String userID, @Path("ClientIDs") String clientID);
+    Call<ResponseBody> getCartItem(@Path("userids") int userID, @Path("ClientIDs") int clientID);
 
 //    @POST("insCartItem")
 //    Call<ResponseBody> addItemToCart(@Body DishObject dishObject);

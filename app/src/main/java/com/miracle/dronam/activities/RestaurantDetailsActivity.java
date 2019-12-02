@@ -16,6 +16,7 @@ import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantFoodPhotos;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
 import com.miracle.dronam.dialog.DialogLoadingIndicator;
+import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -34,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RestaurantDetailsActivity extends AppCompatActivity {
+public class RestaurantDetailsActivity extends AppCompatActivity implements OnItemAddedToCart {
     RelativeLayout rlRootLayout;
     String[] foodName = {"Navgrah Veg Restaurant", "Saroj Hotel", "Hotel Jewel of Chembur"};
     Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order,
@@ -113,6 +114,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         rvMenu.setLayoutManager(layoutManager);
         rvMenu.setItemAnimator(new DefaultItemAnimator());
         rvMenu.setAdapter(adapterRestaurantMenu);
+
+        adapterRestaurantMenu.setOnItemAddedToCart(this);
     }
 
 //    private void getMenuData() {
@@ -124,10 +127,19 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 //        }
 //    }
 
+
+    @Override
+    public void onItemChangedInCart(int quantity, int position) {
+        DishObject dishObject = listDishProducts.get(position);
+        Application.dishObject = dishObject;
+
+        addItemToCart(quantity, dishObject);
+    }
+
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
 
-            int userTypeID = 0;
+            int userTypeID = Application.userDetails.getUserID();
             int restaurantID = restaurantObject.getRestaurantID();
             int foodTypeID = restaurantObject.getFoodTypeID();
             int categoryID = restaurantObject.getCategoryID();
@@ -157,7 +169,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                                 int foodTypeID = jsonObj.optInt("FoodTypeId");
                                 int dishID = jsonObj.optInt("HaveRuntimeRate");
                                 String isDiscounted = jsonObj.optString("IsDiscounted");
-                                String price = jsonObj.optString("Price");
+                                double price = jsonObj.optDouble("Price");
                                 String productDesc = jsonObj.optString("ProductDesc");
                                 int productID = jsonObj.optInt("ProductId");
                                 String productImage = jsonObj.optString("ProductImage");
@@ -231,12 +243,25 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
     private JsonObject createJsonCart(DishObject dishObject, int quantity) {
+        double totalPrice;
+
+        RestaurantObject restaurantObject = Application.restaurantObject;
+
+        if(restaurantObject.getTaxable().equalsIgnoreCase("true"))
+        {
+            double productPrice = dishObject.getPrice();
+            double cgst = dishObject.getCgst();
+            double sgst = dishObject.getCgst();
+
+//            totalPrice = productPrice * ()
+        }
+
         JsonObject postParam = new JsonObject();
 
         try {
             postParam.addProperty("ProductId", dishObject.getProductID());
             postParam.addProperty("ProductName", dishObject.getProductName());
-            postParam.addProperty("ProductRate", 80.00);
+            postParam.addProperty("ProductRate", dishObject.getPrice());
             postParam.addProperty("ProductAmount", dishObject.getPrice());
             postParam.addProperty("ProductSize", "Regular");
             postParam.addProperty("cartId", 1);
@@ -244,12 +269,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             postParam.addProperty("Taxableval", 20.00);
             postParam.addProperty("CGST", 10.00);
             postParam.addProperty("SGST",10.00);
-            postParam.addProperty("HotelName", "Hotel Manora");
+            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
             postParam.addProperty("IsIncludeTax", false);
             postParam.addProperty("IsTaxApplicable", false);
             postParam.addProperty("DeliveryCharge", 30.00);
             postParam.addProperty("Userid", 0);
-            postParam.addProperty("Clientid", 1);
+            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
             postParam.addProperty("TotalAmount", dishObject.getPrice());
             postParam.addProperty("TaxId", 1);
 
@@ -260,21 +285,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
 
-    public void addItemToCart(final int quantity, final int position) {
+    public void addItemToCart(final int quantity, final DishObject dishObject) {
         if (InternetConnection.checkConnection(this)) {
-
-//            String userTypeID = Application.userDetails.getUserType();
-//            String restaurantID = "1";
-//
-//            DishObject dishObject = new DishObject();
-//            dishObject.setDishID("1");
-//            dishObject.setDishQuantity(quantity);
-//            dishObject.setDishName("Test Name Paneer");
-//            dishObject.setDishDescription("Test Desc Paneer");
-//            dishObject.setDishImage("");
-//            dishObject.setDishAmount("10000");
-
-            DishObject dishObject = listDishProducts.get(position);
 
             ApiInterface apiService = RetroClient.getApiService(this);
             Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
@@ -342,7 +354,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(quantity, position);
+                            addItemToCart(quantity, dishObject);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))

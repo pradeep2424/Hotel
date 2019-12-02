@@ -2,6 +2,7 @@ package com.miracle.dronam.utils;
 
 import com.miracle.dronam.model.AddressDetails;
 import com.miracle.dronam.model.CartObject;
+import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.model.SMSGatewayObject;
@@ -17,6 +18,7 @@ public class Application extends android.app.Application {
 
     public static UserDetails userDetails = new UserDetails();
     public static RestaurantObject restaurantObject = new RestaurantObject();
+    public static DishObject dishObject = new DishObject();
     public static CartObject cartObject = new CartObject();
     public static OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
 
