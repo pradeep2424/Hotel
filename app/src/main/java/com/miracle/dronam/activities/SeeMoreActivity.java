@@ -98,7 +98,7 @@ public class SeeMoreActivity extends AppCompatActivity implements OnRecyclerView
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String categoryID = jsonObj.optString("CategoryId");
+                                int categoryID = jsonObj.optInt("CategoryId");
                                 String categoryName = jsonObj.optString("CategoryName");
                                 int restaurantID = jsonObj.optInt("ClientId");
                                 String restaurantName = jsonObj.optString("RestaurantName");
@@ -110,7 +110,7 @@ public class SeeMoreActivity extends AppCompatActivity implements OnRecyclerView
                                 String longitude = jsonObj.optString("Langitude");
                                 String latitude = jsonObj.optString("Latitude");
                                 String rating = jsonObj.optString("Rating");
-                                String foodTypeID = jsonObj.optString("FoodTypeId");
+                                int foodTypeID = jsonObj.optInt("FoodTypeId");
                                 String foodTypeName = jsonObj.optString("FoodTypeName");
                                 String logo = jsonObj.optString("Logo");
                                 String taxID = jsonObj.optString("TaxId");

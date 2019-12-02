@@ -3,7 +3,7 @@ package com.miracle.dronam.model;
 import java.io.Serializable;
 
 public class RestaurantObject implements Serializable {
-    String categoryID;
+    int categoryID;
     String categoryName;
     int restaurantID;
     String restaurantName ;
@@ -15,18 +15,18 @@ public class RestaurantObject implements Serializable {
     String longitude;
     String latitude ;
     String rating ;
-    String foodTypeID ;
+    int foodTypeID ;
     String foodTypeName ;
     String logo ;
     String taxID ;
     String taxable ;
     String includeTax ;
 
-    public String getCategoryID() {
+    public int getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(String categoryID) {
+    public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }
 
@@ -118,11 +118,11 @@ public class RestaurantObject implements Serializable {
         this.rating = rating;
     }
 
-    public String getFoodTypeID() {
+    public int getFoodTypeID() {
         return foodTypeID;
     }
 
-    public void setFoodTypeID(String foodTypeID) {
+    public void setFoodTypeID(int foodTypeID) {
         this.foodTypeID = foodTypeID;
     }
 

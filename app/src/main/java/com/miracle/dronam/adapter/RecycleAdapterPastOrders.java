@@ -37,10 +37,11 @@ public class RecycleAdapterPastOrders extends RecyclerView.Adapter<RecycleAdapte
 
         holder.tvRestaurantName.setText(orderDetailsObject.getRestaurantName());
         holder.tvRestaurantAddress.setText(orderDetailsObject.getUserAddress());
-        holder.tvRestaurantReviews.setText(orderDetailsObject.getRestaurantReviews());
+//        holder.tvRestaurantReviews.setText(orderDetailsObject.getRestaurantReviews());
         holder.tvOrderDate.setText(orderDetailsObject.getOrderDate());
-        holder.tvOrderPrice.setText(orderDetailsObject.getTotalAmount());
-        holder.ivFoodImage.setImageResource(Integer.parseInt(orderDetailsObject.getDishImage()));
+        holder.tvOrderPrice.setText("₹ " + orderDetailsObject.getTotalAmount());
+//        holder.ivFoodImage.setImageResource(Integer.parseInt(orderDetailsObject.getDishImage()));
+
 
 //        TextDrawable drawable = TextDrawable.builder()
 //                .beginConfig()

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.PlacesAutoCompleteAdapter;
 import com.miracle.dronam.main.MainActivity;
@@ -33,6 +34,7 @@ import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.signUp.GetStartedMobileNumberActivity;
+import com.miracle.dronam.signUp.GetStartedVerifyOTPActivity;
 import com.miracle.dronam.utils.Application;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -75,6 +77,10 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     private RecyclerView recyclerView;
     private EditText etSearchText;
 
+    private PrefManagerConfig prefManagerConfig;
+
+    String mobileNumber;
+
     double latitude = 0;
     double longitude = 0;
 
@@ -95,7 +101,8 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     }
 
     private void init() {
-
+        prefManagerConfig = new PrefManagerConfig(this);
+        mobileNumber = prefManagerConfig.getMobileNo();
 
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         viewCurrentLocation = findViewById(R.id.view_currentLocation);
@@ -258,128 +265,142 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 
         Application.userDetails.setAddress(fullAddress);
         Application.userDetails.setZipCode(zipCode);
-        Application.userDetails.setCityName(cityName);
-        Application.userDetails.setArea(area);
+        Application.userDetails.setAddressType("Home");
+    }
+
+    private JsonObject createJsonUserAddress() {
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("AddressId", "1");
+            postParam.addProperty("Address", Application.userDetails.getAddress());
+            postParam.addProperty("ZipCode", Application.userDetails.getZipCode());
+            postParam.addProperty("AddressType", Application.userDetails.getAddressType());
+            postParam.addProperty("MobNo", mobileNumber);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
+    private void insertUserAddress() {
+        if (InternetConnection.checkConnection(this)) {
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.insertUserAddress(createJsonUserAddress());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+//                            JSONObject jsonObject = new JSONObject(responseString);
+
+//                            prefManagerConfig.setIsUserLoggedIn(true);
+//                            prefManagerConfig.setMobileNo(mobileNumber);
+
+                            Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
+                            startActivity(it);
+                            finish();
+
+//                            if (status.equalsIgnoreCase("Success")) {
+//                                FirebaseUser user = mAuth.getCurrentUser();
+//
+//                                String accessToken = jsonObj.getString("AccessToken");
+//                                int accountType = jsonObj.getInt("AccountType");
+//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
+//                                String corpID = jsonObj.getString("CorpID");
+//                                String emailID = jsonObj.getString("EmailID");
+//                                String firstName = jsonObj.getString("FirstName");
+//                                String lastName = jsonObj.getString("LastName");
+//
+//                                String hibernate = jsonObj.getString("Hibernate");
+//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
+//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
+//                                msgHeader = jsonObj.getString("MessageHeader");
+//                                message = jsonObj.getString("Message");
+//
+//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
+//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
+//
+//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
+//
+//                                String msg = jsonObj.getString("Message");
+//                                String msgHeader = jsonObj.getString("MessageHeader");
+//
+//                                prefs.edit().clear().apply();
+//                                signOutFirebaseAccounts();
+//
+//
+//                                if (msgHeader.trim().equalsIgnoreCase("")) {
+//                                    showSnackbarErrorMsg(msg);
+//                                    callSignUpPage();
+//                                } else {
+//                                    accountBlockedDialog(msgHeader, msg);
+//                                }
+//
+//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
+//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
+//
+//                            } else if (status.equalsIgnoreCase("Error")) {
+//                                String msg = jsonObj.getString("Message");
+//                                showSnackbarErrorMsg(msg);
+//
+//                            } else {
+//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            insertUserAddress();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
     }
 
 
-//    private void insertUserDetails() {
-//        if (InternetConnection.checkConnection(this)) {
-//
-//            ApiInterface apiService = RetroClient.getApiService(this);
-////            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-//            Call<ResponseBody> call = apiService.insertUserDetails(Application.userDetails);
-//            call.enqueue(new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                    try {
-//
-//                        int statusCode = response.code();
-//                        if (response.isSuccessful()) {
-//
-//                            String responseString = response.body().string();
-////                            JSONObject jsonObject = new JSONObject(responseString);
-//
-//                            prefManagerConfig.setIsUserLoggedIn(true);
-//                            prefManagerConfig.setMobileNo();
-//
-//                            Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
-//                            startActivity(it);
-//                            finish();
-//
-////                            if (status.equalsIgnoreCase("Success")) {
-////                                FirebaseUser user = mAuth.getCurrentUser();
-////
-////                                String accessToken = jsonObj.getString("AccessToken");
-////                                int accountType = jsonObj.getInt("AccountType");
-////                                String mainCorpNo = jsonObj.getString("MainCorpNo");
-////                                String corpID = jsonObj.getString("CorpID");
-////                                String emailID = jsonObj.getString("EmailID");
-////                                String firstName = jsonObj.getString("FirstName");
-////                                String lastName = jsonObj.getString("LastName");
-////
-////                                String hibernate = jsonObj.getString("Hibernate");
-////                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
-////                                boolean isTrial = jsonObj.getBoolean("IsTrial");
-////                                msgHeader = jsonObj.getString("MessageHeader");
-////                                message = jsonObj.getString("Message");
-////
-////                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
-////                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
-////
-////                            } else if (status.equalsIgnoreCase("LoginFailed")) {
-////
-////                                String msg = jsonObj.getString("Message");
-////                                String msgHeader = jsonObj.getString("MessageHeader");
-////
-////                                prefs.edit().clear().apply();
-////                                signOutFirebaseAccounts();
-////
-////
-////                                if (msgHeader.trim().equalsIgnoreCase("")) {
-////                                    showSnackbarErrorMsg(msg);
-////                                    callSignUpPage();
-////                                } else {
-////                                    accountBlockedDialog(msgHeader, msg);
-////                                }
-////
-////                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
-////                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
-////
-////                            } else if (status.equalsIgnoreCase("Error")) {
-////                                String msg = jsonObj.getString("Message");
-////                                showSnackbarErrorMsg(msg);
-////
-////                            } else {
-////                                showSnackbarErrorMsg("Unmatched response, Please try again.");
-////                            }
-//
-//                        } else {
-//                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
-//                        }
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                    try {
-//                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-//                        Log.e("Error onFailure : ", t.toString());
-//                        t.printStackTrace();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//        } else {
-////            signOutFirebaseAccounts();
-//
-//            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction("RETRY", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            insertUserDetails();
-//                        }
-//                    })
-////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
-//                    .show();
-//        }
-//    }
-//
-//    public void showSnackbarErrorMsg(String erroMsg) {
-////        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
-//
-//        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
-//        View snackbarView = snackbar.getView();
-//        TextView snackTextView = (TextView) snackbarView
-//                .findViewById(R.id.snackbar_text);
-//        snackTextView.setMaxLines(4);
-//        snackbar.show();
-//    }
+    public void showSnackbarErrorMsg(String erroMsg) {
+//        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
+
+        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+        snackbar.show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -414,11 +435,11 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
             if (resultCode == RESULT_OK && data != null) {
                 AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
                 saveUserLocationData(addressData);
-//                insertUserDetails();
+                insertUserAddress();
 
-                Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
-                startActivity(it);
-                finish();
+//                Intent it = new Intent(LocationGoogleMapActivity.this, MainActivity.class);
+//                startActivity(it);
+//                finish();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

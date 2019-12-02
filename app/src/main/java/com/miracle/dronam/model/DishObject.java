@@ -7,88 +7,172 @@ import java.io.Serializable;
  */
 
 public class DishObject implements Serializable {
-    String dishID;
-    String dishName;
-    String dishDescription;
-    String dishCategory;
-    String dishImage;
-    String dishAmount;
-    int dishQuantity;
+    double cgst;
+    int categoryID;
+    String categoryName;
+    String foodType;
+    int foodTypeID;
+    int dishID;
+    String isDiscounted;
+    String price;
+    String productDesc;
+    int productID;
+    String productImage;
+    String productName;
+    double sgst;
+    int taxID;
+    String taxName;
 
-    public int getDishQuantity() {
-        return dishQuantity;
+    public double getCgst() {
+        return cgst;
     }
 
-    public void setDishQuantity(int dishQuantity) {
-        this.dishQuantity = dishQuantity;
+    public void setCgst(double cgst) {
+        this.cgst = cgst;
     }
 
-    public String getDishCategory() {
-        return dishCategory;
+    public int getCategoryID() {
+        return categoryID;
     }
 
-    public void setDishCategory(String dishCategory) {
-        this.dishCategory = dishCategory;
+    public void setCategoryID(int categoryID) {
+        this.categoryID = categoryID;
     }
 
-    public String getDishID() {
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
+
+    public int getFoodTypeID() {
+        return foodTypeID;
+    }
+
+    public void setFoodTypeID(int foodTypeID) {
+        this.foodTypeID = foodTypeID;
+    }
+
+    public int getDishID() {
         return dishID;
     }
 
-    public void setDishID(String dishID) {
+    public void setDishID(int dishID) {
         this.dishID = dishID;
     }
 
-    public String getDishName() {
-        return dishName;
+    public String getIsDiscounted() {
+        return isDiscounted;
     }
 
-    public void setDishName(String dishName) {
-        this.dishName = dishName;
+    public void setIsDiscounted(String isDiscounted) {
+        this.isDiscounted = isDiscounted;
     }
 
-    public String getDishDescription() {
-        return dishDescription;
+    public String getPrice() {
+        return price;
     }
 
-    public void setDishDescription(String dishDescription) {
-        this.dishDescription = dishDescription;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public String getDishImage() {
-        return dishImage;
+    public String getProductDesc() {
+        return productDesc;
     }
 
-    public void setDishImage(String dishImage) {
-        this.dishImage = dishImage;
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
     }
 
-    public String getDishAmount() {
-        return dishAmount;
+    public int getProductID() {
+        return productID;
     }
 
-    public void setDishAmount(String dishAmount) {
-        this.dishAmount = dishAmount;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-//    Integer image;
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public double getSgst() {
+        return sgst;
+    }
+
+    public void setSgst(double sgst) {
+        this.sgst = sgst;
+    }
+
+    public int getTaxID() {
+        return taxID;
+    }
+
+    public void setTaxID(int taxID) {
+        this.taxID = taxID;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
+    }
+
+    //    String dishID;
 //    String dishName;
-//    String dishType;
-//    String price;
+//    String dishDescription;
+//    String dishCategory;
+//    String dishImage;
+//    String dishAmount;
+//    int dishQuantity;
 //
-//    public DishObject(Integer image, String dishName, String dishType, String price) {
-//        this.image = image;
-//        this.dishName = dishName;
-//        this.dishType = dishType;
-//        this.price = price;
+//    public int getDishQuantity() {
+//        return dishQuantity;
 //    }
 //
-//    public Integer getImage() {
-//        return image;
+//    public void setDishQuantity(int dishQuantity) {
+//        this.dishQuantity = dishQuantity;
 //    }
 //
-//    public void setImage(Integer image) {
-//        this.image = image;
+//    public String getDishCategory() {
+//        return dishCategory;
+//    }
+//
+//    public void setDishCategory(String dishCategory) {
+//        this.dishCategory = dishCategory;
+//    }
+//
+//    public String getDishID() {
+//        return dishID;
+//    }
+//
+//    public void setDishID(String dishID) {
+//        this.dishID = dishID;
 //    }
 //
 //    public String getDishName() {
@@ -99,19 +183,27 @@ public class DishObject implements Serializable {
 //        this.dishName = dishName;
 //    }
 //
-//    public String getDishType() {
-//        return dishType;
+//    public String getDishDescription() {
+//        return dishDescription;
 //    }
 //
-//    public void setDishType(String dishType) {
-//        this.dishType = dishType;
+//    public void setDishDescription(String dishDescription) {
+//        this.dishDescription = dishDescription;
 //    }
 //
-//    public String getPrice() {
-//        return price;
+//    public String getDishImage() {
+//        return dishImage;
 //    }
 //
-//    public void setPrice(String price) {
-//        this.price = price;
+//    public void setDishImage(String dishImage) {
+//        this.dishImage = dishImage;
+//    }
+//
+//    public String getDishAmount() {
+//        return dishAmount;
+//    }
+//
+//    public void setDishAmount(String dishAmount) {
+//        this.dishAmount = dishAmount;
 //    }
 }

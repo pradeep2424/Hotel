@@ -211,9 +211,9 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         for (int i = 0; i < image.length; i++) {
 //            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
             DishObject dishObject = new DishObject();
-            dishObject.setDishName(dish_name[i]);
-            dishObject.setDishImage(String.valueOf(image[i]));
-            dishObject.setDishCategory(dish_type[i]);
+            dishObject.setProductName(dish_name[i]);
+            dishObject.setProductImage(String.valueOf(image[i]));
+            dishObject.setCategoryName(dish_type[i]);
             listDishObject.add(dishObject);
         }
     }
@@ -310,7 +310,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String categoryID = jsonObj.optString("CategoryId");
+                                int categoryID = jsonObj.optInt("CategoryId");
                                 String categoryName = jsonObj.optString("CategoryName");
                                 int restaurantID = jsonObj.optInt("ClientId");
                                 String restaurantName = jsonObj.optString("RestaurantName");
@@ -322,7 +322,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                                 String longitude = jsonObj.optString("Langitude");
                                 String latitude = jsonObj.optString("Latitude");
                                 String rating = jsonObj.optString("Rating", "4.5");
-                                String foodTypeID = jsonObj.optString("FoodTypeId");
+                                int foodTypeID = jsonObj.optInt("FoodTypeId");
                                 String foodTypeName = jsonObj.optString("FoodTypeName");
                                 String logo = jsonObj.optString("Logo");
                                 String taxID = jsonObj.optString("TaxId");

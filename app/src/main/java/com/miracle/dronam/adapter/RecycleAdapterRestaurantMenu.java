@@ -37,18 +37,18 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         DishObject dishObject = modelArrayList.get(position);
-        holder.tvFoodName.setText(dishObject.getDishName());
-        holder.tvFoodCategory.setText(dishObject.getDishCategory());
-        holder.tvFoodPrice.setText(dishObject.getDishAmount());
+        holder.tvFoodName.setText(dishObject.getProductName());
+        holder.tvFoodCategory.setText(dishObject.getCategoryName());
+        holder.tvFoodPrice.setText(dishObject.getPrice());
 
 
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewHolderClickedItem = holder;
-                activity.addItemToCart(1);
+                activity.addItemToCart(1, position);
             }
         });
 
@@ -58,7 +58,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                 String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
-                activity.addItemToCart(value);
+                activity.addItemToCart(value, position);
             }
         });
 

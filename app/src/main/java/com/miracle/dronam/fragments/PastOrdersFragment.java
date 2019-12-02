@@ -40,7 +40,7 @@ public class PastOrdersFragment extends Fragment {
     String[] orderAddress = {"Chembur","Ghatkopar","Thane","Sion"};
     String[] restaurantReviews ={"238 reviews","200 reviews","556 reviews","240 reviews"};
     String[] orderDate = {"25 Nov 2017 10 : 30 AM","27 Nov 2017 10 : 30 AM","28 Nov 2017 10 : 30 AM","29 Nov 2017 10 : 30 AM"};
-    String[] orderPrice={"₹ 199.00","₹ 249.00","₹ 149.00","₹ 399.00"};
+    double[] orderPrice={199.00, 249.00, 149.00, 399.00};
     Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order};
 
     private RecyclerView rvPastOrders;
@@ -90,10 +90,10 @@ public class PastOrdersFragment extends Fragment {
             OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
             orderDetailsObject.setRestaurantName(restaurantName[i]);
             orderDetailsObject.setUserAddress(orderAddress[i]);
-            orderDetailsObject.setRestaurantReviews(restaurantReviews[i]);
+//            orderDetailsObject.setRestaurantReviews(restaurantReviews[i]);
             orderDetailsObject.setOrderDate(orderDate[i]);
             orderDetailsObject.setTotalAmount(orderPrice[i]);
-            orderDetailsObject.setDishImage(String.valueOf(foodImage[i]));
+//            orderDetailsObject.setDishImage(String.valueOf(foodImage[i]));
 
             listPastOrders.add(orderDetailsObject);
         }
@@ -121,85 +121,85 @@ public class PastOrdersFragment extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String cgst = jsonObj.optString("CGST");
-                                String cgstVal = jsonObj.optString("CGSTval");
-                                String restaurantID = jsonObj.optString("Clientid");
-                                String discount = jsonObj.optString("Discount");
-                                String foodType = jsonObj.optString("FoodType");
-                                String includeTax = jsonObj.optString("IncludeTax");
-                                String orderDate = jsonObj.optString("OrderDate");
-                                String orderID = jsonObj.optString("OrderId");
-                                String orderMode = jsonObj.optString("OrderMode");
-                                String orderNumber = jsonObj.optString("OrderNumber");
-                                String orderStatus = jsonObj.optString("OrderStatus");
-                                String orderType = jsonObj.optString("OrderType");
-                                String paymentID = jsonObj.optString("PaymentId");
-                                String dishAmount = jsonObj.optString("ProductAmount");
-                                String dishID = jsonObj.optString("ProductId");
-                                String dishName = jsonObj.optString("ProductName");
-                                String dishQuantity = jsonObj.optString("ProductQnty");
-                                String dishRate = jsonObj.optString("ProductRate");
-                                String dishSize = jsonObj.optString("ProductSize");
-                                String rejectReason = jsonObj.optString("RejectReason");
-                                String restaurantName = jsonObj.optString("RestaurantName");
-                                String sgst = jsonObj.optString("SGST");
-                                String sgstVal = jsonObj.optString("SGSTval");
-                                String subtotal = jsonObj.optString("Subtotal");
-                                String taxID = jsonObj.optString("TaxId");
-                                String taxable = jsonObj.optString("Taxable");
-                                String taxableVal = jsonObj.optString("Taxableval");
-                                String totalAmount = jsonObj.optString("TotalAmount");
-                                String userAddress = jsonObj.optString("UserAddress");
-                                String userRole = jsonObj.optString("UserRole");
-                                String userTypeId = jsonObj.optString("UserTypeId");
-                                String userID = jsonObj.optString("Userid");
-                                String voucher = jsonObj.optString("Voucher");
-
-                                OrderDetailsObject orderObj = new OrderDetailsObject();
-                                orderObj.setCGST(cgst);
-                                orderObj.setCGSTVal(cgstVal);
-                                orderObj.setRestaurantID(restaurantID);
-                                orderObj.setDiscount(discount);
-                                orderObj.setFoodType(foodType);
-                                orderObj.setIncludeTax(includeTax);
-                                orderObj.setOrderDate(orderDate);
-                                orderObj.setOrderID(orderID);
-                                orderObj.setOrderMode(orderMode);
-                                orderObj.setOrderNumber(orderNumber);
-                                orderObj.setOrderStatus(orderStatus);
-
-                                orderObj.setOrderType(orderType);
-                                orderObj.setPaymentID(paymentID);
-                                orderObj.setDishAmount(dishAmount);
-                                orderObj.setDishID(dishID);
-                                orderObj.setDishName(dishName);
-                                orderObj.setDishQuantity(dishQuantity);
-                                orderObj.setDishRate(dishRate);
-                                orderObj.setDishSize(dishSize);
-                                orderObj.setRejectReason(rejectReason);
-                                orderObj.setRestaurantName(restaurantName);
-                                orderObj.setSGST(sgst);
-                                orderObj.setSGSTVal(sgstVal);
-                                orderObj.setSubtotal(subtotal);
-                                orderObj.setTaxID(taxID);
-                                orderObj.setTaxable(taxable);
-                                orderObj.setTaxableVal(taxableVal);
-                                orderObj.setTotalAmount(totalAmount);
-                                orderObj.setUserAddress(userAddress);
-                                orderObj.setUserRole(userRole);
-                                orderObj.setUserTypeID(userTypeId);
-                                orderObj.setUserID(userID);
-                                orderObj.setVoucher(voucher);
-
-                                listPastOrders.add(orderObj);
+//                                String cgst = jsonObj.optString("CGST");
+//                                String cgstVal = jsonObj.optString("CGSTval");
+//                                String restaurantID = jsonObj.optString("Clientid");
+//                                String discount = jsonObj.optString("Discount");
+//                                String foodType = jsonObj.optString("FoodType");
+//                                String includeTax = jsonObj.optString("IncludeTax");
+//                                String orderDate = jsonObj.optString("OrderDate");
+//                                String orderID = jsonObj.optString("OrderId");
+//                                String orderMode = jsonObj.optString("OrderMode");
+//                                String orderNumber = jsonObj.optString("OrderNumber");
+//                                String orderStatus = jsonObj.optString("OrderStatus");
+//                                String orderType = jsonObj.optString("OrderType");
+//                                String paymentID = jsonObj.optString("PaymentId");
+//                                String dishAmount = jsonObj.optString("ProductAmount");
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishQuantity = jsonObj.optString("ProductQnty");
+//                                String dishRate = jsonObj.optString("ProductRate");
+//                                String dishSize = jsonObj.optString("ProductSize");
+//                                String rejectReason = jsonObj.optString("RejectReason");
+//                                String restaurantName = jsonObj.optString("RestaurantName");
+//                                String sgst = jsonObj.optString("SGST");
+//                                String sgstVal = jsonObj.optString("SGSTval");
+//                                String subtotal = jsonObj.optString("Subtotal");
+//                                String taxID = jsonObj.optString("TaxId");
+//                                String taxable = jsonObj.optString("Taxable");
+//                                String taxableVal = jsonObj.optString("Taxableval");
+//                                String totalAmount = jsonObj.optString("TotalAmount");
+//                                String userAddress = jsonObj.optString("UserAddress");
+//                                String userRole = jsonObj.optString("UserRole");
+//                                String userTypeId = jsonObj.optString("UserTypeId");
+//                                String userID = jsonObj.optString("Userid");
+//                                String voucher = jsonObj.optString("Voucher");
+//
+//                                OrderDetailsObject orderObj = new OrderDetailsObject();
+//                                orderObj.setCGST(cgst);
+//                                orderObj.setCGSTVal(cgstVal);
+//                                orderObj.setRestaurantID(restaurantID);
+//                                orderObj.setDiscount(discount);
+//                                orderObj.setFoodType(foodType);
+//                                orderObj.setIncludeTax(includeTax);
+//                                orderObj.setOrderDate(orderDate);
+//                                orderObj.setOrderID(orderID);
+//                                orderObj.setOrderMode(orderMode);
+//                                orderObj.setOrderNumber(orderNumber);
+//                                orderObj.setOrderStatus(orderStatus);
+//
+//                                orderObj.setOrderType(orderType);
+//                                orderObj.setPaymentID(paymentID);
+//                                orderObj.setDishAmount(dishAmount);
+//                                orderObj.setDishID(dishID);
+//                                orderObj.setDishName(dishName);
+//                                orderObj.setDishQuantity(dishQuantity);
+//                                orderObj.setDishRate(dishRate);
+//                                orderObj.setDishSize(dishSize);
+//                                orderObj.setRejectReason(rejectReason);
+//                                orderObj.setRestaurantName(restaurantName);
+//                                orderObj.setSGST(sgst);
+//                                orderObj.setSGSTVal(sgstVal);
+//                                orderObj.setSubtotal(subtotal);
+//                                orderObj.setTaxID(taxID);
+//                                orderObj.setTaxable(taxable);
+//                                orderObj.setTaxableVal(taxableVal);
+//                                orderObj.setTotalAmount(totalAmount);
+//                                orderObj.setUserAddress(userAddress);
+//                                orderObj.setUserRole(userRole);
+//                                orderObj.setUserTypeID(userTypeId);
+//                                orderObj.setUserID(userID);
+//                                orderObj.setVoucher(voucher);
+//
+//                                listPastOrders.add(orderObj);
                             }
+
+                            getTESTPastOrdersData();
+                            setupRecyclerViewPastOrders();
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
-
-                        getTESTPastOrdersData();
-                        setupRecyclerViewPastOrders();
 
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -8,17 +8,19 @@ public class UserDetails implements Serializable {
     String fName;
     String lName;
     String fullName;
-    String gender;
+        String gender;
     String userType;
-    String userRole;
     String email;
+    String mobile;
+    String userPhoto;
+
+    String userRole;
     String address;
     String zipCode;
     String cityName;
     String area;
+    String addressType;
     String telephone;
-    String mobile;
-    String userPhoto;
     String facebookId;
     String stateName;
     String status;
@@ -70,6 +72,14 @@ public class UserDetails implements Serializable {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(String addressType) {
+        this.addressType = addressType;
     }
 
     public String getCityName() {

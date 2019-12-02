@@ -468,7 +468,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         }
     }
 
-
     public void showSnackbarErrorMsgWithButton(String erroMsg) {
         Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", new View.OnClickListener() {

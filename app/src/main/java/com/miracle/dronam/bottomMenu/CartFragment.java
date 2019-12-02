@@ -21,9 +21,11 @@ import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
+import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
+import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
@@ -115,9 +117,9 @@ public class CartFragment extends Fragment {
         for (int i = 0; i < image.length; i++) {
 //            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
             DishObject dishObject = new DishObject();
-            dishObject.setDishName(dish_name[i]);
-            dishObject.setDishImage(String.valueOf(image[i]));
-            dishObject.setDishCategory(dish_type[i]);
+            dishObject.setProductName(dish_name[i]);
+            dishObject.setProductImage(String.valueOf(image[i]));
+            dishObject.setCategoryName(dish_type[i]);
             listCartDish.add(dishObject);
         }
     }
@@ -133,7 +135,7 @@ public class CartFragment extends Fragment {
         if (InternetConnection.checkConnection(getActivity())) {
 
 //            String userTypeID = Application.userDetails.getUserType();
-            String userTypeID = "1";
+            String userTypeID = "0";
             String restaurantID = "1";
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
@@ -153,28 +155,63 @@ public class CartFragment extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String dishID = jsonObj.optString("ProductId");
-                                String dishName = jsonObj.optString("ProductName");
-                                String dishDescription = jsonObj.optString("ProductDesc");
-                                String dishImage = jsonObj.optString("ProductImage");
-                                String dishPrice = jsonObj.optString("Price");
+                                double cgst = jsonObj.optDouble("CGST");
+                                int categoryID = jsonObj.optInt("CategoryID");
+                                String categoryName = jsonObj.optString("CategoryName");
+                                String foodType = jsonObj.optString("FoodType");
+                                int foodTypeID = jsonObj.optInt("FoodTypeId");
+                                int dishID = jsonObj.optInt("HaveRuntimeRate");
+                                String isDiscounted = jsonObj.optString("IsDiscounted");
+                                String price = jsonObj.optString("Price");
+                                String productDesc = jsonObj.optString("ProductDesc");
+                                int productID = jsonObj.optInt("ProductId");
+                                String productImage = jsonObj.optString("ProductImage");
+                                String productName = jsonObj.optString("ProductName");
+                                double sgst = jsonObj.optDouble("SGST");
+                                int taxID = jsonObj.optInt("TaxID");
+                                String taxName = jsonObj.optString("TaxName");
 
                                 DishObject dishObject = new DishObject();
+                                dishObject.setCgst(cgst);
+                                dishObject.setCategoryID(categoryID);
+                                dishObject.setCategoryName(categoryName);
+                                dishObject.setFoodType(foodType);
+                                dishObject.setFoodTypeID(foodTypeID);
                                 dishObject.setDishID(dishID);
-                                dishObject.setDishName(dishName);
-                                dishObject.setDishDescription(dishDescription);
-                                dishObject.setDishImage(dishImage);
-                                dishObject.setDishAmount(dishPrice);
+                                dishObject.setIsDiscounted(isDiscounted);
+                                dishObject.setPrice(price);
+                                dishObject.setProductDesc(productDesc);
+                                dishObject.setProductID(productID);
+                                dishObject.setProductImage(productImage);
+                                dishObject.setProductName(productName);
+                                dishObject.setSgst(sgst);
+                                dishObject.setTaxID(taxID);
+                                dishObject.setTaxName(taxName);
+
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
+//
+//                                DishObject dishObject = new DishObject();
+//                                dishObject.setDishID(dishID);
+//                                dishObject.setDishName(dishName);
+//                                dishObject.setDishDescription(dishDescription);
+//                                dishObject.setDishImage(dishImage);
+//                                dishObject.setDishAmount(dishPrice);
+
 
                                 listCartDish.add(dishObject);
                             }
+
+                            setupRecyclerViewOrderedItems();
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
 
-                        getTESTUserLikeDishData();
-                        setupRecyclerViewOrderedItems();
+//                        getTESTUserLikeDishData();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -211,41 +248,35 @@ public class CartFragment extends Fragment {
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
 
+            UserDetails userDetails = Application.userDetails;
+            RestaurantObject restaurantObj = Application.restaurantObject;
+            CartObject cartObject = Application.cartObject;
+
             String userTypeID = Application.userDetails.getUserType();
             String restaurantID = "1";
 
             OrderDetailsObject orderObj = new OrderDetailsObject();
-            orderObj.setTotalAmount("450");
-            orderObj.setUserTypeID(userTypeID);
-            orderObj.setRestaurantID(restaurantID);
-            orderObj.setOrderNumber("1");
-            orderObj.setOrderDate("28-11-2019");
-            orderObj.setOrderType("Dinner");
-            orderObj.setOrderStatus("Success");
-            orderObj.setOrderMode("Android App");
-            orderObj.setPaymentID("1");
-            orderObj.setDishName("TEST Palak Paneer");
-            orderObj.setDishRate("50");
-            orderObj.setDishSize("Large");
-            orderObj.setDishAmount("60");
-            orderObj.setDishQuantity("3");
-            orderObj.setTaxableVal("25");
-            orderObj.setCGST("3");
-            orderObj.setSGST("3");
-            orderObj.setCGSTVal("3");
-            orderObj.setSGSTVal("3");
-            orderObj.setSubtotal("500");
-            orderObj.setUserAddress("Chembur");
-            orderObj.setVoucher("20");
-            orderObj.setUserID("1");
-            orderObj.setTaxable("50");
-            orderObj.setIncludeTax("80");
-            orderObj.setFoodType("Dinner");
-            orderObj.setTaxID("1");
-            orderObj.setOrderPaid("200");
-            orderObj.setDiscount("15");
-            orderObj.setUserRole("User");
+            orderObj.setOrderID(1);
+            orderObj.setOrderNumber(1);
+            orderObj.setOrderType(1);
+            orderObj.setOrderStatus(1);
+            orderObj.setOrderMode(1);
+            orderObj.setPaymentID(1);
+            orderObj.setProductID(1);
+            orderObj.setProductName(cartObject.getProductName());
+            orderObj.setProductRate(cartObject.getProductRate());
+            orderObj.setProductQuantity(cartObject.getProductQuantity());
+            orderObj.setTaxableVal(cartObject.getTaxableVal());
+            orderObj.setCgst(cartObject.getCgst());
+            orderObj.setSgst(cartObject.getSgst());
+            orderObj.setUserAddress(userDetails.getAddress());
+            orderObj.setUserID(userDetails.getUserID());
+            orderObj.setRestaurantID(restaurantObj.getRestaurantID());
+            orderObj.setRestaurantName(restaurantObj.getRestaurantName());
+            orderObj.setTaxID(cartObject.getTaxID());
+            orderObj.setOrderPaid(true);
             orderObj.setRejectReason("NO");
+            orderObj.setOrderDate("28-11-2019");
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
             Call<ResponseBody> call = apiService.placeOrder(orderObj);

@@ -186,9 +186,10 @@ public class SplashActivity extends AppCompatActivity {
                             UserDetails userDetails = new UserDetails();
                             userDetails.setFirstName(fname);
                             userDetails.setLastName(lname);
-                            userDetails.setGender(gender);
+                            userDetails.setUserType(userType);
                             userDetails.setEmail(email);
                             userDetails.setMobile(mobile);
+                            userDetails.setGender(gender);
                             userDetails.setTelephone(telephone);
                             userDetails.setFacebookId(facebookId);
                             userDetails.setUserID(userID);
@@ -196,7 +197,6 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setPassword(password);
                             userDetails.setUserPhoto(userPhoto);
                             userDetails.setUserRole(userRole);
-                            userDetails.setUserType(userType);
                             userDetails.setAddress(address);
                             userDetails.setArea(area);
                             userDetails.setCityName(cityName);

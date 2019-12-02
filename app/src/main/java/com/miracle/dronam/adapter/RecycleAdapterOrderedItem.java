@@ -32,7 +32,7 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
     @Override
     public void onBindViewHolder( ViewHolder holder, int position) {
         DishObject dishObject = modelArrayList.get(position);
-        holder.tvFoodName.setText(dishObject.getDishName());
+        holder.tvFoodName.setText(dishObject.getProductName());
     }
 
     @Override

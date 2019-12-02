@@ -27,40 +27,51 @@ public interface ApiInterface {
     @GET("GetQuestionDetails/350/1366")
     Call<ResponseBody> testAnalyzeRespponse();
 
+
+    @POST("insertUserDetails")
+    Call<ResponseBody> insertUserDetails(@Body JsonObject jsonObj);
+
     @GET("GetUserDetails/{Username}/{Password}")
     Call<ResponseBody> getUserDetails(@Path("Username") String username,
                                       @Path("Password") String password);
+
+    @POST("insUserAddress")
+    Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);
+
+    @GET("getAreaDetails")
+    Call<ResponseBody> getAreaDetails();
 
 
     @GET("getRestaurantDetails/{Zip}")
     Call<ResponseBody> getRestaurantDetails(@Path("Zip") String zipCode);
 
-    @GET("getProductDetails/{Usertypeid}/{ClientID}/{foodtypeid}/{CategoryID}")
-    Call<ResponseBody> getProductDetailsData(@Path("Usertypeid") String userTypeID,
-                                             @Path("ClientID") int clientID,
-                                             @Path("foodtypeid") String foodTypeID,
-                                             @Path("CategoryID") String categoryID);
+//    @GET("getProductDetails/{ClientID}/{foodtypeid}/{CategoryID}")
+//    Call<ResponseBody> getProductDetailsData(@Path("ClientID") int clientID,
+//                                             @Path("foodtypeid") int foodTypeID,
+//                                             @Path("CategoryID") int categoryID);
 
+    @GET("getProductDetails/{Usertypeid}/{ClientID}/{foodtypeid}/{CategoryID}")
+    Call<ResponseBody> getProductDetailsData(@Path("Usertypeid") int userTypeID,
+                                             @Path("ClientID") int clientID,
+                                             @Path("foodtypeid") int foodTypeID,
+                                             @Path("CategoryID") int categoryID);
+
+    @POST("insCartItem")
+    Call<ResponseBody> addItemToCart(@Body JsonObject jsonObj);
 
     @GET("getcartItem/{userids}/{ClientIDs}")
     Call<ResponseBody> getCartItem(@Path("userids") String userID, @Path("ClientIDs") String clientID);
 
-    @POST("insCartItem")
-    Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
+//    @POST("insCartItem")
+//    Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
 
 
     @POST("insorder")
     Call<ResponseBody> placeOrder(@Body OrderDetailsObject orderObject);
 
-    @GET("getAreaDetails")
-    Call<ResponseBody> getAreaDetails();
-
 //    @POST("insertUserDetails")
 //    Call<ResponseBody> insertUserDetails(@Body UserDetails body);
 
-
-    @POST("insertUserDetails")
-    Call<ResponseBody> insertUserDetails(@Body JsonObject jsonObj);
 
     @GET("getorderDetails/{userids}")
     Call<ResponseBody> getPastOrders(@Path("userids") String userID);

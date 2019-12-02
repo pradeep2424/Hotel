@@ -68,10 +68,10 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         DishObject movie = listDish.get(position);
 
-        holder.dish_name.setText(movie.getDishName());
-        holder.dish_type.setText(movie.getDishCategory());
-        holder.price.setText(movie.getDishAmount());
-        holder.image.setImageResource(Integer.parseInt(movie.getDishImage()));
+        holder.dish_name.setText(movie.getProductName());
+        holder.dish_type.setText(movie.getCategoryName());
+        holder.price.setText(movie.getPrice());
+        holder.image.setImageResource(Integer.parseInt(movie.getProductImage()));
 
 //        Glide.with(context)
 //                .load(R.drawable.resource_id)

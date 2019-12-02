@@ -32,7 +32,7 @@ public class RecycleAdapterRestaurantFoodPhotos extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(RecycleAdapterRestaurantFoodPhotos.ViewHolder holder, int position) {
         DishObject dishObject = modelArrayList.get(position);
-        holder.ivFood.setImageResource(Integer.parseInt(dishObject.getDishImage()));
+        holder.ivFood.setImageResource(Integer.parseInt(dishObject.getProductImage()));
     }
 
     @Override

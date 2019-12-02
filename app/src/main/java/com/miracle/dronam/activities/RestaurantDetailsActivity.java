@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantFoodPhotos;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
@@ -96,7 +97,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         for (int i = 0; i < foodImage.length; i++) {
             DishObject dishObject = new DishObject();
-            dishObject.setDishImage(String.valueOf(foodImage[i]));
+            dishObject.setProductImage(String.valueOf(foodImage[i]));
             listPhotos.add(dishObject);
         }
 
@@ -126,15 +127,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
 
-//            String userTypeID = Application.userDetails.getUserType();
-//            int restaurantID = restaurantObject.getRestaurantID();
-//            String foodTypeID = restaurantObject.getFoodTypeID();
-//            String categoryID = restaurantObject.getCategoryID();
-
-
+            int userTypeID = 0;
+            int restaurantID = restaurantObject.getRestaurantID();
+            int foodTypeID = restaurantObject.getFoodTypeID();
+            int categoryID = restaurantObject.getCategoryID();
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getProductDetailsData("0", 0, "0", "0");
+            Call<ResponseBody> call = apiService.getProductDetailsData(userTypeID, restaurantID, foodTypeID, categoryID);
 //            Call<ResponseBody> call = apiService.getProductDetailsData(userTypeID, restaurantID, foodTypeID, categoryID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -151,27 +150,53 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String dishID = jsonObj.optString("ProductId");
-                                String dishName = jsonObj.optString("ProductName");
-                                String dishDescription = jsonObj.optString("ProductDesc");
-                                String dishImage = jsonObj.optString("ProductImage");
-                                String dishPrice = jsonObj.optString("Price");
+                                double cgst = jsonObj.optDouble("CGST");
+                                int categoryID = jsonObj.optInt("CategoryID");
+                                String categoryName = jsonObj.optString("CategoryName");
+                                String foodType = jsonObj.optString("FoodType");
+                                int foodTypeID = jsonObj.optInt("FoodTypeId");
+                                int dishID = jsonObj.optInt("HaveRuntimeRate");
+                                String isDiscounted = jsonObj.optString("IsDiscounted");
+                                String price = jsonObj.optString("Price");
+                                String productDesc = jsonObj.optString("ProductDesc");
+                                int productID = jsonObj.optInt("ProductId");
+                                String productImage = jsonObj.optString("ProductImage");
+                                String productName = jsonObj.optString("ProductName");
+                                double sgst = jsonObj.optDouble("SGST");
+                                int taxID = jsonObj.optInt("TaxID");
+                                String taxName = jsonObj.optString("TaxName");
+
+//                                String dishID = jsonObj.optString("ProductId");
+//                                String dishName = jsonObj.optString("ProductName");
+//                                String dishDescription = jsonObj.optString("ProductDesc");
+//                                String dishImage = jsonObj.optString("ProductImage");
+//                                String dishPrice = jsonObj.optString("Price");
 
                                 DishObject dishObject = new DishObject();
+                                dishObject.setCgst(cgst);
+                                dishObject.setCategoryID(categoryID);
+                                dishObject.setCategoryName(categoryName);
+                                dishObject.setFoodType(foodType);
+                                dishObject.setFoodTypeID(foodTypeID);
                                 dishObject.setDishID(dishID);
-                                dishObject.setDishName(dishName);
-                                dishObject.setDishDescription(dishDescription);
-                                dishObject.setDishImage(dishImage);
-                                dishObject.setDishAmount(dishPrice);
+                                dishObject.setIsDiscounted(isDiscounted);
+                                dishObject.setPrice(price);
+                                dishObject.setProductDesc(productDesc);
+                                dishObject.setProductID(productID);
+                                dishObject.setProductImage(productImage);
+                                dishObject.setProductName(productName);
+                                dishObject.setSgst(sgst);
+                                dishObject.setTaxID(taxID);
+                                dishObject.setTaxName(taxName);
 
                                 listDishProducts.add(dishObject);
                             }
 
+                            setupRecyclerViewProducts();
+
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
-
-                        setupRecyclerViewProducts();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -205,22 +230,54 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void addItemToCart(final int quantity) {
+    private JsonObject createJsonCart(DishObject dishObject, int quantity) {
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("ProductId", dishObject.getProductID());
+            postParam.addProperty("ProductName", dishObject.getProductName());
+            postParam.addProperty("ProductRate", 80.00);
+            postParam.addProperty("ProductAmount", dishObject.getPrice());
+            postParam.addProperty("ProductSize", "Regular");
+            postParam.addProperty("cartId", 1);
+            postParam.addProperty("ProductQnty", quantity);
+            postParam.addProperty("Taxableval", 20.00);
+            postParam.addProperty("CGST", 10.00);
+            postParam.addProperty("SGST",10.00);
+            postParam.addProperty("HotelName", "Hotel Manora");
+            postParam.addProperty("IsIncludeTax", false);
+            postParam.addProperty("IsTaxApplicable", false);
+            postParam.addProperty("DeliveryCharge", 30.00);
+            postParam.addProperty("Userid", 0);
+            postParam.addProperty("Clientid", 1);
+            postParam.addProperty("TotalAmount", dishObject.getPrice());
+            postParam.addProperty("TaxId", 1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
+
+    public void addItemToCart(final int quantity, final int position) {
         if (InternetConnection.checkConnection(this)) {
 
-            String userTypeID = Application.userDetails.getUserType();
-            String restaurantID = "1";
+//            String userTypeID = Application.userDetails.getUserType();
+//            String restaurantID = "1";
+//
+//            DishObject dishObject = new DishObject();
+//            dishObject.setDishID("1");
+//            dishObject.setDishQuantity(quantity);
+//            dishObject.setDishName("Test Name Paneer");
+//            dishObject.setDishDescription("Test Desc Paneer");
+//            dishObject.setDishImage("");
+//            dishObject.setDishAmount("10000");
 
-            DishObject dishObject = new DishObject();
-            dishObject.setDishID("1");
-            dishObject.setDishQuantity(quantity);
-            dishObject.setDishName("Test Name Paneer");
-            dishObject.setDishDescription("Test Desc Paneer");
-            dishObject.setDishImage("");
-            dishObject.setDishAmount("10000");
+            DishObject dishObject = listDishProducts.get(position);
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.addItemToCart(dishObject);
+            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -285,7 +342,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(quantity);
+                            addItemToCart(quantity, position);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
