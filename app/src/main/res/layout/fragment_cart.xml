@@ -14,350 +14,357 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <androidx.core.widget.NestedScrollView
+    <RelativeLayout
+        android:id="@+id/rl_cartItemLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/ll_bottomPaymentLayout"
-        android:descendantFocusability="blocksDescendants">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ll_bottomPaymentLayout"
+            android:descendantFocusability="blocksDescendants">
 
             <LinearLayout
-                android:id="@+id/ll_orderDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_orderDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/iv_foodImage"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/temp_order"
+                            app:riv_corner_radius="4dip" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="12dp"
+                            android:orientation="vertical">
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_restaurantName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Cocobolo Poolside Bar + Grill"
+                                android:textColor="#262628"
+                                android:textSize="16sp" />
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_restaurantAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="60 Kub Pines Apt. 797"
+                                android:textColor="#9b9b9b"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal">
+
+                                <RatingBar
+                                    android:id="@+id/ratingBar"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="5"
+                                    android:progressBackgroundTint="@color/colorAccent"
+                                    android:progressTint="@color/colorAccent"
+                                    android:rating="4" />
+
+                                <com.miracle.dronam.custom.MyTextView
+                                    android:id="@+id/tv_restaurantReview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="8.4dp"
+                                    android:text="238 reviews"
+                                    android:textColor="#9b9b9b"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <!--                <LinearLayout-->
+                            <!--                    android:layout_width="match_parent"-->
+                            <!--                    android:layout_height="wrap_content"-->
+                            <!--                    android:layout_marginTop="5dp"-->
+                            <!--                    android:orientation="horizontal">-->
+
+                            <!--                    <RatingBar-->
+                            <!--                        android:id="@+id/ratingBar"-->
+                            <!--                        style="?android:attr/ratingBarStyleSmall"-->
+                            <!--                        android:layout_width="wrap_content"-->
+                            <!--                        android:layout_height="wrap_content"-->
+                            <!--                        android:numStars="5"-->
+                            <!--                        android:progressBackgroundTint="@color/colorAccent"-->
+                            <!--                        android:progressTint="@color/colorAccent"-->
+                            <!--                        android:rating="4" />-->
+
+                            <!--                    <com.miracle.dronam.custom.MyTextView-->
+                            <!--                        android:id="@+id/tv_restaurantReview"-->
+                            <!--                        android:layout_width="wrap_content"-->
+                            <!--                        android:layout_height="wrap_content"-->
+                            <!--                        android:layout_marginLeft="8.4dp"-->
+                            <!--                        android:text="238 reviews"-->
+                            <!--                        android:textColor="#9b9b9b"-->
+                            <!--                        android:textSize="12sp" />-->
+
+                            <!--                </LinearLayout>-->
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_dark" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_orderedItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:clipToPadding="false"
+                        android:divider="#fff"
+                        android:dividerHeight="0dp"
+                        android:scrollbars="none" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/ll_orderDetails"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/smokegray" />
+
+                <LinearLayout
+                    android:id="@+id/ll_billDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/iv_foodImage"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:scaleType="fitXY"
-                        android:src="@mipmap/temp_order"
-                        app:riv_corner_radius="4dip" />
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="12dp"
                         android:orientation="vertical">
 
                         <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_restaurantName"
+                            android:id="@+id/tv_billDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Cocobolo Poolside Bar + Grill"
-                            android:textColor="#262628"
+                            android:text="Bill Details"
+                            android:textColor="@color/main_dark_text"
                             android:textSize="16sp" />
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_restaurantAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="60 Kub Pines Apt. 797"
-                            android:textColor="#9b9b9b"
-                            android:textSize="14sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal">
-
-                            <RatingBar
-                                android:id="@+id/ratingBar"
-                                style="?android:attr/ratingBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:progressBackgroundTint="@color/colorAccent"
-                                android:progressTint="@color/colorAccent"
-                                android:rating="4" />
+                            android:layout_marginTop="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
 
                             <com.miracle.dronam.custom.MyTextView
-                                android:id="@+id/tv_restaurantReview"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/tv_itemTotalTitle"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="8.4dp"
-                                android:text="238 reviews"
-                                android:textColor="#9b9b9b"
-                                android:textSize="12sp" />
+                                android:layout_weight="1.2"
+                                android:text="Item Total"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_itemTotalText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:gravity="right"
+                                android:text="₹ 607"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
-                        <!--                <LinearLayout-->
-                        <!--                    android:layout_width="match_parent"-->
-                        <!--                    android:layout_height="wrap_content"-->
-                        <!--                    android:layout_marginTop="5dp"-->
-                        <!--                    android:orientation="horizontal">-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
 
-                        <!--                    <RatingBar-->
-                        <!--                        android:id="@+id/ratingBar"-->
-                        <!--                        style="?android:attr/ratingBarStyleSmall"-->
-                        <!--                        android:layout_width="wrap_content"-->
-                        <!--                        android:layout_height="wrap_content"-->
-                        <!--                        android:numStars="5"-->
-                        <!--                        android:progressBackgroundTint="@color/colorAccent"-->
-                        <!--                        android:progressTint="@color/colorAccent"-->
-                        <!--                        android:rating="4" />-->
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_restaurantChargesTitle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
 
-                        <!--                    <com.miracle.dronam.custom.MyTextView-->
-                        <!--                        android:id="@+id/tv_restaurantReview"-->
-                        <!--                        android:layout_width="wrap_content"-->
-                        <!--                        android:layout_height="wrap_content"-->
-                        <!--                        android:layout_marginLeft="8.4dp"-->
-                        <!--                        android:text="238 reviews"-->
-                        <!--                        android:textColor="#9b9b9b"-->
-                        <!--                        android:textSize="12sp" />-->
+                                android:text="Restaurant Charges"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
 
-                        <!--                </LinearLayout>-->
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_restaurantChargesText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:gravity="right"
+                                android:text="₹ 60"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/divider_light" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_deliveryFeesTitle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
+                                android:text="Delivery Fee"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_deliveryFeeText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:gravity="right"
+                                android:text="₹ 35"
+                                android:textColor="@color/main_text"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/divider_light" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_totalPayTitle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.2"
+                                android:text="Total Pay"
+                                android:textColor="@color/main_text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <com.miracle.dronam.custom.MyTextView
+                                android:id="@+id/tv_totalPayText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.8"
+                                android:gravity="right"
+                                android:text="₹ 870"
+                                android:textColor="@color/main_text"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider_dark" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView_orderedItems"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:divider="#fff"
-                    android:dividerHeight="0dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:scrollbars="none" />
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/ll_orderDetails"
+                    android:background="@color/smokegray" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_below="@+id/ll_orderDetails"
-                android:layout_marginTop="10dp"
-                android:background="@color/smokegray" />
+        </androidx.core.widget.NestedScrollView>
 
-            <LinearLayout
-                android:id="@+id/ll_billDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ll_bottomPaymentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
+            android:elevation="30dp"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:weightSum="2">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <com.miracle.dronam.custom.MyTextView
+                android:id="@+id/text_action_bottom1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="Rs 8,750"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                    <com.miracle.dronam.custom.MyTextView
-                        android:id="@+id/tv_billDetails"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Bill Details"
-                        android:textColor="@color/main_dark_text"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_itemTotalTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.2"
-                            android:text="Item Total"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_itemTotalText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:gravity="right"
-                            android:text="₹ 607"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_restaurantChargesTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.2"
-
-                            android:text="Restaurant Charges"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_restaurantChargesText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:gravity="right"
-                            android:text="₹ 60"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@color/divider_light" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_deliveryFeesTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.2"
-                            android:text="Delivery Fee"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_deliveryFeeText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:gravity="right"
-                            android:text="₹ 35"
-                            android:textColor="@color/main_text"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@color/divider_light" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_totalPayTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.2"
-                            android:text="Total Pay"
-                            android:textColor="@color/main_text"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <com.miracle.dronam.custom.MyTextView
-                            android:id="@+id/tv_totalPayText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.8"
-                            android:gravity="right"
-                            android:text="₹ 870"
-                            android:textColor="@color/main_text"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/ll_orderDetails"
-                android:background="@color/smokegray" />
-
+            <com.miracle.dronam.custom.MyTextView
+                android:id="@+id/tv_paymentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/deep_orange"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="PAYMENT"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:id="@+id/ll_bottomPaymentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/black"
-        android:elevation="30dp"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:weightSum="2">
-
-        <com.miracle.dronam.custom.MyTextView
-            android:id="@+id/text_action_bottom1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="Rs 8,750"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <com.miracle.dronam.custom.MyTextView
-            android:id="@+id/tv_paymentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/deep_orange"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="PAYMENT"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

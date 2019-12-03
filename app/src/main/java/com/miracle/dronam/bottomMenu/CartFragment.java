@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -50,6 +51,9 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     LinearLayout llBrowseMenu;
     TextView tvPaymentButton;
 
+    RelativeLayout rlCartItemDetails;
+    View viewEmptyCart;
+
     String dish_name[] = {"Paratha", "Cheese Butter", "Paneer Handi", "Paneer Kopta", "Chiken"};
     String dish_type[] = {"Punjabi", "Maxican", "Punjabi", "Punjabi", "Non Veg"};
     String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
@@ -87,6 +91,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
     private void init() {
+        rlCartItemDetails = rootView.findViewById(R.id.rl_cartItemLayout);
+        viewEmptyCart = rootView.findViewById(R.id.view_emptyCart);
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
         tvPaymentButton = rootView.findViewById(R.id.tv_paymentButton);
         rvOrderedItems = (RecyclerView) rootView.findViewById(R.id.recyclerView_orderedItems);
@@ -150,7 +156,16 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         } else {
             addItemToCart(quantity, position);
         }
+    }
 
+    private void showEmptyCart() {
+        viewEmptyCart.setVisibility(View.VISIBLE);
+        rlCartItemDetails.setVisibility(View.GONE);
+    }
+
+    private void showCartItemDetails() {
+        viewEmptyCart.setVisibility(View.GONE);
+        rlCartItemDetails.setVisibility(View.VISIBLE);
     }
 
     private void getCartItems() {
@@ -318,6 +333,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                             String responseString = response.body().string();
 
                             adapterOrderedItems.updateCartItemQuantity(quantity);
+                            showCartItemDetails();
+
 //                            listCartDish = new ArrayList<>();
 
 //                            ada
@@ -397,6 +414,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                             String responseString = response.body().string();
 
                             adapterOrderedItems.removeAt(position);
+                            showEmptyCart();
+
 //                            listCartDish = new ArrayList<>();
 
 //                            ada
