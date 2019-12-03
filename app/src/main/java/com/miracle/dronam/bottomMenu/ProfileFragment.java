@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.PaymentMethodsActivity;
@@ -30,6 +31,8 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
 
     private Toolbar toolbar;
     private RecyclerView rvProfile;
+    private RelativeLayout rlManageAddresses;
+
     private RecycleAdapterProfile adapterProfile;
     private ArrayList<ProfileObject> listProfile;
 
@@ -53,7 +56,7 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     private void initComponents() {
         rvProfile = rootView.findViewById(R.id.rv_profile);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
+        rlManageAddresses = rootView.findViewById(R.id.ll_manageAddresses);
 
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
@@ -66,7 +69,12 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     }
 
     private void componentEvents() {
+        rlManageAddresses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
     private void setupToolbar() {

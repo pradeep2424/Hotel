@@ -76,9 +76,10 @@
             </FrameLayout>
 
             <LinearLayout
+                android:id="@+id/ll_manageAddresses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16.3dp"
+                android:layout_marginTop="16dp"
                 android:background="#ffffff"
                 android:orientation="horizontal"
                 android:padding="15dp">
@@ -118,7 +119,7 @@
                     android:id="@+id/rv_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16.3dp"
+                    android:layout_marginTop="16dp"
                     android:background="#ffffff"
                     android:nestedScrollingEnabled="false" />
             </LinearLayout>
