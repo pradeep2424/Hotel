@@ -1,16 +1,202 @@
 package com.miracle.dronam.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
+import com.miracle.dronam.adapter.RecycleAdapterAddresses;
+import com.miracle.dronam.adapter.RecycleAdapterProfile;
+import com.miracle.dronam.model.AddressDetails;
+import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.ProfileObject;
+import com.miracle.dronam.service.retrofit.ApiInterface;
+import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.sharedPreference.PrefManagerConfig;
+import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.InternetConnection;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ManageAddressesActivity extends AppCompatActivity {
+    RelativeLayout rlRootLayout;
+    RecyclerView rvAddresses;
+
+    View viewToolbarAddresses;
+    ImageView ivBack;
+    TextView tvToolbarTitle;
+
+    private PrefManagerConfig prefManagerConfig;
+    String mobileNumber;
+
+    private RecycleAdapterAddresses adapterAddresses;
+    private ArrayList<AddressDetails> listAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_addresses);
+
+        initComponents();
+        componentEvents();
+
+        getUserAddressList();
+//        setupRecyclerAddresses();
     }
+
+    private void initComponents() {
+        prefManagerConfig = new PrefManagerConfig(this);
+        mobileNumber = prefManagerConfig.getMobileNo();
+
+        rlRootLayout = findViewById(R.id.rl_rootLayout);
+        rvAddresses = findViewById(R.id.rv_manageAddresses);
+
+        viewToolbarAddresses = findViewById(R.id.view_toolbarAddresses);
+        ivBack = viewToolbarAddresses.findViewById(R.id.iv_back);
+        tvToolbarTitle = viewToolbarAddresses.findViewById(R.id.tv_toolbarTitle);
+        tvToolbarTitle.setText(getResources().getString(R.string.profile_manage_addresses));
+    }
+
+    private void componentEvents() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+    private void setupRecyclerAddresses() {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        rvAddresses.setLayoutManager(layoutManager);
+        rvAddresses.setItemAnimator(new DefaultItemAnimator());
+
+
+        adapterAddresses = new RecycleAdapterAddresses(this, listAddress);
+        rvAddresses.setAdapter(adapterAddresses);
+//        adapterAddresses.setClickListener(this);
+    }
+
+//    private void getProfileData() {
+//        String[] title = {getString(R.string.profile_payment_methods),
+//                getString(R.string.profile_reward_credits),
+//                getString(R.string.profile_settings),
+//                getString(R.string.profile_invite_friends)};
+//
+//        Integer[] icon = {R.mipmap.profile_payment_method, R.mipmap.profile_reward_credits,
+//                R.mipmap.profile_settings, R.mipmap.profile_invite_friends};
+//
+//        listAddress = new ArrayList<>();
+//        for (int i = 0; i < icon.length; i++) {
+//            ProfileObject profileObject = new ProfileObject(title[i], icon[i]);
+//            list.add(profileObject);
+//        }
+//    }
+
+    private void getUserAddressList() {
+        if (InternetConnection.checkConnection(this)) {
+            String mobileNo = Application.userDetails.getMobile();
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getUserAddress( "9665175415");
+//            Call<ResponseBody> call = apiService.getUserAddress(mobileNumber);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+                            listAddress = new ArrayList<>();
+
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                                int addressID = jsonObj.optInt("AddressId");
+                                String address = jsonObj.getString("Address");
+                                String addressType = jsonObj.optString("AddressType");
+                                String mobileNo = jsonObj.optString("MobNo");
+                                int zipCode = jsonObj.optInt("ZipCode");
+
+                                AddressDetails addressDetails = new AddressDetails();
+                                addressDetails.setAddressID(addressID);
+                                addressDetails.setAddress(address);
+                                addressDetails.setAddressType(addressType);
+                                addressDetails.setZipCode(zipCode);
+
+                                listAddress.add(addressDetails);
+                            }
+
+                            setupRecyclerAddresses();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getUserAddressList();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    public void showSnackbarErrorMsg(String erroMsg) {
+//        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
+
+        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+        snackbar.show();
+    }
+
 }

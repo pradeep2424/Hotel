@@ -38,6 +38,12 @@ public interface ApiInterface {
     @POST("insUserAddress")
     Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);
 
+    @GET("getUserAddress/{mobileNo}")
+    Call<ResponseBody> getUserAddress(@Path("mobileNo") String mobileNo);
+
+    @POST("delUserAddress/{AddressID}")
+    Call<ResponseBody> deleteUserAddress(@Path("AddressID") String addressID);
+
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
 

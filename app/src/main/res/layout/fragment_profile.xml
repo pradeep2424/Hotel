@@ -98,7 +98,7 @@
                     android:layout_marginLeft="9.5dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="@string/profile_favourite_restaurants"
+                    android:text="@string/profile_manage_addresses"
                     android:textColor="@color/main_text"
                     android:textSize="14.4sp" />
 

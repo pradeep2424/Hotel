@@ -5,8 +5,10 @@ import java.io.Serializable;
 public class AddressDetails implements Serializable {
     public int addressID;
     public String address;
-    public String zipCode;
     public String addressType;
+    public int zipCode;
+    public String latitude;
+    public String longitude;
 
     public int getAddressID() {
         return addressID;
@@ -24,11 +26,11 @@ public class AddressDetails implements Serializable {
         this.address = address;
     }
 
-    public String getZipCode() {
+    public int getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public void setZipCode(int zipCode) {
         this.zipCode = zipCode;
     }
 
@@ -38,5 +40,21 @@ public class AddressDetails implements Serializable {
 
     public void setAddressType(String addressType) {
         this.addressType = addressType;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }
