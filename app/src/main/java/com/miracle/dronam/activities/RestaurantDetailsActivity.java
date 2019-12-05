@@ -247,7 +247,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
         RestaurantObject restaurantObject = Application.restaurantObject;
 
-        if(restaurantObject.getTaxable().equalsIgnoreCase("true"))
+        if(restaurantObject.getTaxable())
         {
             double productPrice = dishObject.getPrice();
             double cgst = dishObject.getCgst();
@@ -264,19 +264,19 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
             postParam.addProperty("ProductRate", dishObject.getPrice());
             postParam.addProperty("ProductAmount", dishObject.getPrice());
             postParam.addProperty("ProductSize", "Regular");
-            postParam.addProperty("cartId", 1);
+            postParam.addProperty("cartId", 0);
             postParam.addProperty("ProductQnty", quantity);
-            postParam.addProperty("Taxableval", 20.00);
-            postParam.addProperty("CGST", 10.00);
-            postParam.addProperty("SGST",10.00);
+            postParam.addProperty("Taxableval",  dishObject.getPrice());    // doubt
+            postParam.addProperty("CGST", dishObject.getCgst());
+            postParam.addProperty("SGST",dishObject.getSgst());
             postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
-            postParam.addProperty("IsIncludeTax", false);
-            postParam.addProperty("IsTaxApplicable", false);
+            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
+            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
             postParam.addProperty("DeliveryCharge", 30.00);
-            postParam.addProperty("Userid", 0);
+            postParam.addProperty("Userid", Application.userDetails.getUserID());
             postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
             postParam.addProperty("TotalAmount", dishObject.getPrice());
-            postParam.addProperty("TaxId", 1);
+            postParam.addProperty("TaxId", 0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -300,6 +300,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
+//                            Application.cartObject = dishObject;
                             adapterRestaurantMenu.showHideQuantityAndAddItemButton();
 //                            listCartDish = new ArrayList<>();
 

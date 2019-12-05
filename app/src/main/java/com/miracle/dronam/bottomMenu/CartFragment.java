@@ -279,34 +279,37 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         double totalPrice;
 
         RestaurantObject restaurantObject = Application.restaurantObject;
-//        if(restaurantObject.getTaxable().equalsIgnoreCase("true"))
-//        {
-//            double productPrice = cartObject.getProductRate();
-//            double cgst = cartObject.getCgst();
+
+        if(restaurantObject.getTaxable())
+        {
+            double productPrice = cartObject.getProductAmount();
+            double cgst = cartObject.getCgst();
+            double sgst = cartObject.getCgst();
+
 //            totalPrice = productPrice * ()
-//        }
+        }
 
         JsonObject postParam = new JsonObject();
 
         try {
             postParam.addProperty("ProductId", cartObject.getProductID());
             postParam.addProperty("ProductName", cartObject.getProductName());
-            postParam.addProperty("ProductRate", 80.00);
+            postParam.addProperty("ProductRate", cartObject.getProductAmount());
             postParam.addProperty("ProductAmount", cartObject.getProductAmount());
             postParam.addProperty("ProductSize", "Regular");
-            postParam.addProperty("cartId", 1);
+            postParam.addProperty("cartId", cartObject.getCartID());
             postParam.addProperty("ProductQnty", quantity);
-            postParam.addProperty("Taxableval", 20.00);
-            postParam.addProperty("CGST", 10.00);
-            postParam.addProperty("SGST", 10.00);
+            postParam.addProperty("Taxableval",  cartObject.getProductAmount());    // doubt
+            postParam.addProperty("CGST", cartObject.getCgst());
+            postParam.addProperty("SGST",cartObject.getSgst());
             postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
-            postParam.addProperty("IsIncludeTax", false);
-            postParam.addProperty("IsTaxApplicable", false);
+            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
+            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
             postParam.addProperty("DeliveryCharge", 30.00);
-            postParam.addProperty("Userid", 0);
+            postParam.addProperty("Userid", Application.userDetails.getUserID());
             postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
             postParam.addProperty("TotalAmount", cartObject.getTotalAmount());
-            postParam.addProperty("TaxId", 1);
+            postParam.addProperty("TaxId", 0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -477,6 +480,43 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
+    private JsonObject createJsonPlaceOrder(CartObject cartObject) {
+        RestaurantObject restaurantObject = Application.restaurantObject;
+
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("orderID", cartObject.getProductID());
+            postParam.addProperty("orderNumber", cartObject.getProductName());
+            postParam.addProperty("orderDate", cartObject.getProductAmount());
+            postParam.addProperty("orderType", cartObject.getProductAmount());
+            postParam.addProperty("orderStatus", "Regular");
+            postParam.addProperty("orderMode", cartObject.getCartID());
+            postParam.addProperty("ProductQnty", 2);
+            postParam.addProperty("paymentID",  cartObject.getProductAmount());    // doubt
+            postParam.addProperty("productID", cartObject.getCgst());
+            postParam.addProperty("productName",cartObject.getSgst());
+            postParam.addProperty("productRate", restaurantObject.getRestaurantName());
+            postParam.addProperty("productQuantity", restaurantObject.getIncludeTax());
+            postParam.addProperty("taxableVal", restaurantObject.getTaxable());
+            postParam.addProperty("cgst", 30.00);
+            postParam.addProperty("sgst", Application.userDetails.getUserID());
+            postParam.addProperty("userAddress", restaurantObject.getRestaurantID());
+            postParam.addProperty("userID", cartObject.getTotalAmount());
+            postParam.addProperty("restaurantID", 0);
+            postParam.addProperty("restaurantName", 0);
+            postParam.addProperty("totalAmount", 0);
+            postParam.addProperty("taxID", 0);
+            postParam.addProperty("orderPaid", 0);
+            postParam.addProperty("rejectReason", 0);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
 
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
@@ -512,7 +552,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             orderObj.setOrderDate("28-11-2019");
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.placeOrder(orderObj);
+            Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(cartObject));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

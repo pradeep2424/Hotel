@@ -255,24 +255,38 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     }
 
     private void saveUserLocationData(AddressData addressData) {
-        Application.locationAddressData = addressData;
+        try {
 
-        Address address = addressData.getAddressList().get(0);
-        String fullAddress = address.getAddressLine(0);
-        String zipCode = address.getPostalCode();
-        String cityName = address.getLocality();
-        String area = address.getFeatureName();
 
-        Application.userDetails.setAddress(fullAddress);
-        Application.userDetails.setZipCode(zipCode);
-        Application.userDetails.setAddressType("Home");
+            Application.locationAddressData = addressData;
+
+            Address address = addressData.getAddressList().get(0);
+            String fullAddress = address.getAddressLine(0);
+            String zipCodeStr = address.getPostalCode();
+            String cityName = address.getLocality();
+            String area = address.getFeatureName();
+
+
+            int zipCode = 0;
+//        checking if zipCodeStr has integer values
+            if (zipCodeStr != null && zipCodeStr.matches("[0-9]+")) {
+                zipCode = Integer.parseInt(zipCodeStr);
+            }
+
+            Application.userDetails.setAddress(fullAddress);
+            Application.userDetails.setZipCode(zipCode);
+            Application.userDetails.setAddressType("Home");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private JsonObject createJsonUserAddress() {
         JsonObject postParam = new JsonObject();
 
         try {
-            postParam.addProperty("AddressId", "1");
+            postParam.addProperty("AddressId", 0);   // AddressId is 0 for insert
             postParam.addProperty("Address", Application.userDetails.getAddress());
             postParam.addProperty("ZipCode", Application.userDetails.getZipCode());
             postParam.addProperty("AddressType", Application.userDetails.getAddressType());

@@ -114,8 +114,8 @@ public class SeeMoreActivity extends AppCompatActivity implements OnRecyclerView
                                 String foodTypeName = jsonObj.optString("FoodTypeName");
                                 String logo = jsonObj.optString("Logo");
                                 String taxID = jsonObj.optString("TaxId");
-                                String taxable = jsonObj.optString("Taxable");
-                                String includeTax = jsonObj.optString("IncludeTax");
+                                boolean taxable = Boolean.parseBoolean(jsonObj.optString("Taxable"));
+                                boolean includeTax = Boolean.parseBoolean(jsonObj.optString("IncludeTax"));
 
                                 RestaurantObject restaurantObject = new RestaurantObject();
                                 restaurantObject.setCategoryID(categoryID);

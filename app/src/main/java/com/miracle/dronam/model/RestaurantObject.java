@@ -19,8 +19,8 @@ public class RestaurantObject implements Serializable {
     String foodTypeName ;
     String logo ;
     String taxID ;
-    String taxable ;
-    String includeTax ;
+    boolean taxable ;
+    boolean includeTax ;
 
     public int getCategoryID() {
         return categoryID;
@@ -150,19 +150,19 @@ public class RestaurantObject implements Serializable {
         this.taxID = taxID;
     }
 
-    public String getTaxable() {
+    public boolean getTaxable() {
         return taxable;
     }
 
-    public void setTaxable(String taxable) {
+    public void setTaxable(boolean taxable) {
         this.taxable = taxable;
     }
 
-    public String getIncludeTax() {
+    public boolean getIncludeTax() {
         return includeTax;
     }
 
-    public void setIncludeTax(String includeTax) {
+    public void setIncludeTax(boolean includeTax) {
         this.includeTax = includeTax;
     }
 }

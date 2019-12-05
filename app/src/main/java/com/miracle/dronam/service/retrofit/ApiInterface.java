@@ -65,7 +65,7 @@ public interface ApiInterface {
     @POST("insCartItem")
     Call<ResponseBody> addItemToCart(@Body JsonObject jsonObj);
 
-    @GET("delcartItem/{userids}/{ClientIDs}")
+    @POST("delcartItem/{userids}/{ClientIDs}")
     Call<ResponseBody> deleteCartItem(@Path("userids") int userID, @Path("ClientIDs") int clientID);
 
 
@@ -77,7 +77,7 @@ public interface ApiInterface {
 
 
     @POST("insorder")
-    Call<ResponseBody> placeOrder(@Body OrderDetailsObject orderObject);
+    Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
 
 //    @POST("insertUserDetails")
 //    Call<ResponseBody> insertUserDetails(@Body UserDetails body);

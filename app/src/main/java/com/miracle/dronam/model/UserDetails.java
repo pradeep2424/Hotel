@@ -16,7 +16,7 @@ public class UserDetails implements Serializable {
 
     String userRole;
     String address;
-    String zipCode;
+    int zipCode;
     String cityName;
     String area;
     String addressType;
@@ -186,11 +186,11 @@ public class UserDetails implements Serializable {
         this.username = username;
     }
 
-    public String getZipCode() {
+    public int getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public void setZipCode(int zipCode) {
         this.zipCode = zipCode;
     }
 }

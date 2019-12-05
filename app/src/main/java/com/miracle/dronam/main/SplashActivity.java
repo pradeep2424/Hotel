@@ -140,8 +140,8 @@ public class SplashActivity extends AppCompatActivity {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);
-//            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
-            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
+            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
+//            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -201,7 +201,7 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setArea(area);
                             userDetails.setCityName(cityName);
                             userDetails.setStateName(stateName);
-                            userDetails.setZipCode(String.valueOf(zipCode));
+                            userDetails.setZipCode(zipCode);
                             Application.userDetails = userDetails;
 
                             SMSGatewayObject smsGatewayObject = new SMSGatewayObject();

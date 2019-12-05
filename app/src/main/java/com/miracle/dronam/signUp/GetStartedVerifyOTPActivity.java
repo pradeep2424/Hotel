@@ -28,6 +28,7 @@ import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.broadcastReceiver.SMSListener;
 import com.miracle.dronam.listeners.OTPListener;
 import com.miracle.dronam.main.MainActivity;
+import com.miracle.dronam.main.SplashActivity;
 import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -381,6 +382,125 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                             prefManagerConfig.setIsUserLoggedIn(true);
                             prefManagerConfig.setMobileNo(mobileNumber);
 
+                            getUserDetails();
+
+//                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+//                            startActivity(intent);
+//                            finish();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            insertUserDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    private void getUserDetails() {
+        if (InternetConnection.checkConnection(this)) {
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
+//            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+
+                            JSONObject jsonObj = new JSONObject(responseString);
+                            String status = jsonObj.optString("Status");
+
+                            String fname = jsonObj.optString("FName");
+                            String lname = jsonObj.optString("LName");
+                            String gender = jsonObj.optString("Gender");
+                            String email = jsonObj.optString("Email");
+                            String telephone = jsonObj.optString("Telephone");
+                            String mobile = jsonObj.optString("Mobile");
+                            String facebookId = jsonObj.optString("FacebookId");
+
+                            int userID = jsonObj.optInt("UserID");
+                            String username = jsonObj.optString("Username");
+                            String password = jsonObj.optString("Pass");
+                            String userPhoto = jsonObj.optString("UserPhoto");
+                            String userRole = jsonObj.optString("UserRole");
+                            String userType = jsonObj.optString("UserType");
+
+                            String address = jsonObj.optString("Address");
+                            String area = jsonObj.optString("Area");
+                            String cityName = jsonObj.optString("CityName");
+                            String stateName = jsonObj.optString("StateName");
+                            int zipCode = jsonObj.optInt("ZipCode");
+
+                            String url = jsonObj.optString("URL");
+                            String smsUsername = jsonObj.optString("SMSUsername");
+                            String smsPass = jsonObj.optString("SMSPass");
+                            String channel = jsonObj.optString("channel");
+                            String sendSMS = jsonObj.optString("SendSMS");
+                            String senderID = jsonObj.optString("SenderID");
+
+                            UserDetails userDetails = new UserDetails();
+                            userDetails.setFirstName(fname);
+                            userDetails.setLastName(lname);
+                            userDetails.setUserType(userType);
+                            userDetails.setEmail(email);
+                            userDetails.setMobile(mobile);
+                            userDetails.setGender(gender);
+                            userDetails.setTelephone(telephone);
+                            userDetails.setFacebookId(facebookId);
+                            userDetails.setUserID(userID);
+                            userDetails.setUsername(username);
+                            userDetails.setPassword(password);
+                            userDetails.setUserPhoto(userPhoto);
+                            userDetails.setUserRole(userRole);
+                            userDetails.setAddress(address);
+                            userDetails.setArea(area);
+                            userDetails.setCityName(cityName);
+                            userDetails.setStateName(stateName);
+                            userDetails.setZipCode(zipCode);
+                            Application.userDetails = userDetails;
+
+                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
+                            smsGatewayObject.setUrl(url);
+                            smsGatewayObject.setSmsUsername(smsUsername);
+                            smsGatewayObject.setSmsPass(smsPass);
+                            smsGatewayObject.setChannel(channel);
+                            smsGatewayObject.setSendSMS(sendSMS);
+                            smsGatewayObject.setSenderID(senderID);
+                            Application.smsGatewayObject = smsGatewayObject;
+
                             Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
                             startActivity(intent);
                             finish();
@@ -460,13 +580,14 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            insertUserDetails();
+                            getUserDetails();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
                     .show();
         }
     }
+
 
     public void showSnackbarErrorMsgWithButton(String erroMsg) {
         Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
