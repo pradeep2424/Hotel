@@ -91,7 +91,6 @@ public class ManageAddressesActivity extends AppCompatActivity {
         rvAddresses.setLayoutManager(layoutManager);
         rvAddresses.setItemAnimator(new DefaultItemAnimator());
 
-
         adapterAddresses = new RecycleAdapterAddresses(this, listAddress);
         rvAddresses.setAdapter(adapterAddresses);
 //        adapterAddresses.setClickListener(this);

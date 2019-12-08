@@ -98,8 +98,8 @@ public interface ApiInterface {
                                  @Path("SenderID") String senderID,
                                  @Path("Campaign") String campaign);
 
-    @Multipart
-    @POST("UploadFile")
-    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);
+//    @Multipart
+//    @POST("UploadFile")
+//    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);
 
 }

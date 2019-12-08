@@ -40,7 +40,7 @@ public class RecycleAdapterAddresses extends RecyclerView.Adapter<RecycleAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_profile,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_manage_addresses,parent,false);
         return new ViewHolder(view);
     }
 
@@ -50,7 +50,8 @@ public class RecycleAdapterAddresses extends RecyclerView.Adapter<RecycleAdapter
 
 //        holder.ivIcon.setImageResource(addressDetails.getIcon());
 
-        holder.tvAddressTitle.setText(addressDetails.getAddress());
+        holder.tvAddressTitle.setText("Home");
+        holder.tvAddressText.setText(addressDetails.getAddress());
 
     }
 

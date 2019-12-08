@@ -26,6 +26,10 @@ public class OrderDetailsObject implements Serializable {
     boolean orderPaid;
     String rejectReason;
 
+//    double deliveryCharge;
+//    boolean isIncludeTax;
+//    boolean isTaxApplicable;
+
     public String getRestaurantName() {
         return restaurantName;
     }

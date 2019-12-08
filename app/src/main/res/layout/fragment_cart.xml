@@ -227,7 +227,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1.2"
-
                                 android:text="Restaurant Charges"
                                 android:textColor="@color/main_text"
                                 android:textSize="14sp" />
@@ -340,7 +339,7 @@
             android:weightSum="2">
 
             <com.miracle.dronam.custom.MyTextView
-                android:id="@+id/text_action_bottom1"
+                android:id="@+id/tv_paymentButtonAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

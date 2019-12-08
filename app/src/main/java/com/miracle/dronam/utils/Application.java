@@ -9,6 +9,8 @@ import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.sucho.placepicker.AddressData;
 
+import java.util.ArrayList;
+
 /**
  * Created by Pradeep Jadhav on 23/10/2019.
  */
@@ -20,6 +22,7 @@ public class Application extends android.app.Application {
     public static RestaurantObject restaurantObject = new RestaurantObject();
     public static DishObject dishObject = new DishObject();
     public static CartObject cartObject = new CartObject();
+    public static ArrayList<CartObject> listCartItems = new ArrayList();
     public static OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
 
 //    public static AddressDetails addressDetails = new AddressDetails();

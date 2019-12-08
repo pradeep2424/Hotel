@@ -5,6 +5,7 @@
     android:id="@+id/rl_rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".activities.ManageAddressesActivity">
 
     <LinearLayout
@@ -21,25 +22,30 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_below="@+id/ll_orderDetails"
-            android:layout_marginTop="10dp"
-            android:background="@color/smokegray" />
+            android:background="#f5f5f5" />
 
-        <com.miracle.dronam.custom.MyTextView
-            android:id="@+id/tv_billDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/saved_addresses"
-            android:padding="10dp"
-            android:textColor="@color/main_dark_text"
-            android:textSize="16sp" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_below="@+id/ll_orderDetails"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@color/smokegray" />-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@+id/ll_orderDetails"
-            android:layout_marginTop="10dp"
-            android:background="@color/smokegray" />
+<!--        <com.miracle.dronam.custom.MyTextView-->
+<!--            android:id="@+id/tv_billDetails"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/saved_addresses"-->
+<!--            android:padding="10dp"-->
+<!--            android:textColor="@color/main_dark_text"-->
+<!--            android:textSize="16sp" />-->
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_below="@+id/ll_orderDetails"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@color/smokegray" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_manageAddresses"

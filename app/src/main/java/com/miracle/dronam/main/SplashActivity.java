@@ -140,8 +140,8 @@ public class SplashActivity extends AppCompatActivity {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
-//            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
+//            Call<ResponseBody> call = apiService.getUserDetails(mobileNumber, mobileNumber);
+            Call<ResponseBody> call = apiService.getUserDetails("9665175415", "9665175415");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

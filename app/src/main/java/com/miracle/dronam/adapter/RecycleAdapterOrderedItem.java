@@ -46,6 +46,7 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         CartObject cartObject = modelArrayList.get(position);
         holder.tvFoodName.setText(cartObject.getProductName());
+        holder.tvFoodPrice.setText("₹ " + cartObject.getProductRate());
         holder.numberPickerQuantity.setValue(cartObject.getProductQuantity());
 
         holder.numberPickerQuantity.setValueChangedListener(new ValueChangedListener() {
@@ -66,6 +67,10 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
         viewHolderClickedItem.numberPickerQuantity.setValue(quantity);
     }
 
+    public void updateCartItemPrice(double price) {
+        viewHolderClickedItem.tvFoodPrice.setText("₹ " + price);
+    }
+
     public void removeAt(int position) {
         modelArrayList.remove(position);
         notifyItemRemoved(position);
@@ -79,11 +84,13 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvFoodName;
+        TextView tvFoodPrice;
         NumberPicker numberPickerQuantity;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvFoodName = itemView.findViewById(R.id.tv_foodName);
+            tvFoodPrice = itemView.findViewById(R.id.tv_foodPrice);
             numberPickerQuantity = itemView.findViewById(R.id.numberPicker_quantityLayout);
         }
     }

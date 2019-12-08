@@ -35,6 +35,7 @@ import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.miracle.dronam.utils.SimpleDividerItemDecoration;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,6 +64,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     private RecyclerView rvOrderedItems;
     private RecycleAdapterOrderedItem adapterOrderedItems;
+
+    private TextView tvItemTotal;
+    private TextView tvRestaurantCharges;
+    private TextView tvDeliveryFee;
+    private TextView tvTotalPaymentAmount;
+    private TextView tvPaymentButtonAmount;
 
     private ArrayList<CartObject> listCartDish;
 
@@ -96,6 +103,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
         tvPaymentButton = rootView.findViewById(R.id.tv_paymentButton);
         rvOrderedItems = (RecyclerView) rootView.findViewById(R.id.recyclerView_orderedItems);
+
+        tvItemTotal = rootView.findViewById(R.id.tv_itemTotalText);
+        tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
+        tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
+        tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
+        tvPaymentButtonAmount = rootView.findViewById(R.id.tv_paymentButtonAmount);
     }
 
     private void componentEvents() {
@@ -114,6 +127,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         });
     }
 
+
     private void setupRecyclerViewOrderedItems() {
         adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(), listCartDish);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -126,6 +140,60 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //        rvOrderedItems.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
 //        adapterOrderedItems.setClickListener(this);
+    }
+
+//    private void setupBillingDetails() {
+//        CartObject cartObject = Application.listCartItems.get(0);
+//        double itemTotal = getUpdateItemPrice(cartObject);
+//        double deliveryCharges = cartObject.getDeliveryCharge();
+//
+//        double sgst = cartObject.getSgst();
+//        double cgst = cartObject.getCgst();
+//        sgst = itemTotal * (sgst / 100);
+//        cgst = itemTotal * (cgst / 100);
+//        double totalGST = sgst + cgst;
+//
+//        double totalPayment = itemTotal + totalGST + deliveryCharges;
+//
+//        tvItemTotal.setText("₹ " + itemTotal);
+//        tvRestaurantCharges.setText("₹ " + totalGST);
+//        tvDeliveryFee.setText("₹ " + deliveryCharges);
+//        tvTotalPaymentAmount.setText("₹ " + totalPayment);
+//        tvPaymentButtonAmount.setText("₹ " + totalPayment);
+//    }
+
+    private void setupBillingDetails() {
+        double itemTotal = 0;
+        double deliveryCharges = 0;
+        double sgst = 0;
+        double cgst = 0;
+
+        for (int i = 0; i < Application.listCartItems.size(); i++) {
+            CartObject cartObject = SerializationUtils.clone(Application.listCartItems.get(i));
+
+            itemTotal = itemTotal + getUpdateItemPrice(cartObject);
+            deliveryCharges = cartObject.getDeliveryCharge();
+            sgst = cartObject.getSgst();
+            cgst = cartObject.getCgst();
+        }
+
+
+        sgst = itemTotal * (sgst / 100);
+        cgst = itemTotal * (cgst / 100);
+        double totalGST = sgst + cgst;
+
+        double totalPayment = itemTotal + totalGST + deliveryCharges;
+
+        tvItemTotal.setText("₹ " + itemTotal);
+        tvRestaurantCharges.setText("₹ " + totalGST);
+        tvDeliveryFee.setText("₹ " + deliveryCharges);
+        tvTotalPaymentAmount.setText("₹ " + totalPayment);
+        tvPaymentButtonAmount.setText("₹ " + totalPayment);
+    }
+
+    private double getUpdateItemPrice(CartObject cartObject) {
+        double updatedPrice = cartObject.getProductRate() * cartObject.getProductQuantity();
+        return updatedPrice;
     }
 
 //    private void getTESTUserLikeDishData() {
@@ -149,13 +217,14 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     @Override
     public void onItemChangedInCart(int quantity, int position) {
+        updateItemQuantityInCart(quantity, position);
 
-        if (quantity == 0) {
-            deleteCartItem(quantity, position);
-
-        } else {
-            addItemToCart(quantity, position);
-        }
+//        if (quantity == 0) {
+//            deleteCartItem(quantity, position);
+//
+//        } else {
+//            addItemToCart(quantity, position);
+//        }
     }
 
     private void showEmptyCart() {
@@ -188,54 +257,64 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                             listCartDish = new ArrayList<>();
 
                             JSONArray jsonArray = new JSONArray(responseString);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                double cgst = jsonObj.optDouble("CGST");
-                                int restaurantID = jsonObj.optInt("Clientid");
-                                double deliveryCharge = jsonObj.optDouble("DeliveryCharge");
-                                String restaurantName = jsonObj.optString("HotelName");
-                                boolean isIncludeTax = jsonObj.optBoolean("IsIncludeTax");
-                                boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
-                                double productAmount = jsonObj.optDouble("ProductAmount");
-                                int productID = jsonObj.optInt("ProductId");
-                                String productName = jsonObj.optString("ProductName");
-                                int productQuantity = jsonObj.optInt("ProductQnty");
-                                double productRate = jsonObj.optDouble("ProductRate");
-                                String productSize = jsonObj.optString("ProductSize");
-                                double sgst = jsonObj.optDouble("SGST");
-                                int taxID = jsonObj.optInt("TaxId");
-                                double taxableVal = jsonObj.optDouble("Taxableval");
-                                double totalAmount = jsonObj.optDouble("TotalAmount");
-                                int userID = jsonObj.optInt("Userid");
-                                int cartID = jsonObj.optInt("cartId");
+                            if (jsonArray != null && jsonArray.length() > 0) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-
-                                CartObject cartObject = new CartObject();
-                                cartObject.setCgst(cgst);
-                                cartObject.setRestaurantID(restaurantID);
-                                cartObject.setDeliveryCharge(deliveryCharge);
-                                cartObject.setRestaurantName(restaurantName);
-                                cartObject.setIsIncludeTax(isIncludeTax);
-                                cartObject.setIsTaxApplicable(isTaxApplicable);
-                                cartObject.setProductAmount(productAmount);
-                                cartObject.setProductID(productID);
-                                cartObject.setProductName(productName);
-                                cartObject.setProductQuantity(productQuantity);
-                                cartObject.setProductRate(productRate);
-                                cartObject.setProductSize(productSize);
-                                cartObject.setSgst(sgst);
-                                cartObject.setTaxID(taxID);
-                                cartObject.setTaxableVal(taxableVal);
-                                cartObject.setTotalAmount(totalAmount);
-                                cartObject.setUserID(userID);
-                                cartObject.setCartID(cartID);
+                                    double cgst = jsonObj.optDouble("CGST");
+                                    int restaurantID = jsonObj.optInt("Clientid");
+                                    double deliveryCharge = jsonObj.optDouble("DeliveryCharge");
+                                    String restaurantName = jsonObj.optString("HotelName");
+                                    boolean isIncludeTax = jsonObj.optBoolean("IsIncludeTax");
+                                    boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
+                                    double productAmount = jsonObj.optDouble("ProductAmount");
+                                    int productID = jsonObj.optInt("ProductId");
+                                    String productName = jsonObj.optString("ProductName");
+                                    int productQuantity = jsonObj.optInt("ProductQnty");
+                                    double productRate = jsonObj.optDouble("ProductRate");
+                                    String productSize = jsonObj.optString("ProductSize");
+                                    double sgst = jsonObj.optDouble("SGST");
+                                    int taxID = jsonObj.optInt("TaxId");
+                                    double taxableVal = jsonObj.optDouble("Taxableval");
+                                    double totalAmount = jsonObj.optDouble("TotalAmount");
+                                    int userID = jsonObj.optInt("Userid");
+                                    int cartID = jsonObj.optInt("cartId");
 
 
-                                listCartDish.add(cartObject);
+                                    CartObject cartObject = new CartObject();
+                                    cartObject.setCgst(cgst);
+                                    cartObject.setRestaurantID(restaurantID);
+                                    cartObject.setDeliveryCharge(deliveryCharge);
+                                    cartObject.setRestaurantName(restaurantName);
+                                    cartObject.setIsIncludeTax(isIncludeTax);
+                                    cartObject.setIsTaxApplicable(isTaxApplicable);
+                                    cartObject.setProductAmount(productAmount);
+                                    cartObject.setProductID(productID);
+                                    cartObject.setProductName(productName);
+                                    cartObject.setProductQuantity(productQuantity);
+                                    cartObject.setProductRate(productRate);
+                                    cartObject.setProductSize(productSize);
+                                    cartObject.setSgst(sgst);
+                                    cartObject.setTaxID(taxID);
+                                    cartObject.setTaxableVal(taxableVal);
+                                    cartObject.setTotalAmount(totalAmount);
+                                    cartObject.setUserID(userID);
+                                    cartObject.setCartID(cartID);
+
+
+                                    listCartDish.add(cartObject);
+                                }
+
+                                Application.listCartItems = SerializationUtils.clone(listCartDish);
+
+
+                                setupRecyclerViewOrderedItems();
+                                setupBillingDetails();
+
+                            } else {
+                                showEmptyCart();
                             }
-
-                            setupRecyclerViewOrderedItems();
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -275,13 +354,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-    private JsonObject createJsonCart(CartObject cartObject, int quantity) {
+    private JsonObject createJsonCart(CartObject cartObject) {
         double totalPrice;
 
         RestaurantObject restaurantObject = Application.restaurantObject;
 
-        if(restaurantObject.getTaxable())
-        {
+        if (restaurantObject.getTaxable()) {
             double productPrice = cartObject.getProductAmount();
             double cgst = cartObject.getCgst();
             double sgst = cartObject.getCgst();
@@ -298,10 +376,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             postParam.addProperty("ProductAmount", cartObject.getProductAmount());
             postParam.addProperty("ProductSize", "Regular");
             postParam.addProperty("cartId", cartObject.getCartID());
-            postParam.addProperty("ProductQnty", quantity);
-            postParam.addProperty("Taxableval",  cartObject.getProductAmount());    // doubt
+            postParam.addProperty("ProductQnty", cartObject.getProductQuantity());
+            postParam.addProperty("Taxableval", cartObject.getProductAmount());    // doubt
             postParam.addProperty("CGST", cartObject.getCgst());
-            postParam.addProperty("SGST",cartObject.getSgst());
+            postParam.addProperty("SGST", cartObject.getSgst());
             postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
             postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
             postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
@@ -318,13 +396,15 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
 
-    public void addItemToCart(final int quantity, final int position) {
+    public void updateItemQuantityInCart(final int quantity, final int position) {
         if (InternetConnection.checkConnection(getActivity())) {
 
-            CartObject cartObject = listCartDish.get(position);
+//            final CartObject cartObjectOld = SerializationUtils.clone(listCartDish.get(position));
+            final CartObject cartObjectUpdated = SerializationUtils.clone(listCartDish.get(position));
+            cartObjectUpdated.setProductQuantity(quantity);
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(cartObject, quantity));
+            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(cartObjectUpdated));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -335,8 +415,26 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            adapterOrderedItems.updateCartItemQuantity(quantity);
-                            showCartItemDetails();
+                            if (quantity != 0) {
+                                double price = getUpdateItemPrice(cartObjectUpdated);
+
+                                adapterOrderedItems.updateCartItemQuantity(quantity);
+                                adapterOrderedItems.updateCartItemPrice(price);
+                                showCartItemDetails();
+
+                                Application.listCartItems.set(position, cartObjectUpdated);
+//                                Application.listCartItems.add(cartObject);
+
+                            } else {
+                                adapterOrderedItems.removeAt(position);
+                                Application.listCartItems.remove(position);
+
+                                if (Application.listCartItems != null && Application.listCartItems.size() == 0) {
+                                    showEmptyCart();
+                                }
+                            }
+
+                            setupBillingDetails();
 
 //                            listCartDish = new ArrayList<>();
 
@@ -391,7 +489,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(quantity, position);
+                            updateItemQuantityInCart(quantity, position);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -472,7 +570,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(quantity, position);
+                            deleteCartItem(quantity, position);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -480,35 +578,58 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-    private JsonObject createJsonPlaceOrder(CartObject cartObject) {
+    private JsonObject createJsonPlaceOrder(OrderDetailsObject orderDetailsObject) {
         RestaurantObject restaurantObject = Application.restaurantObject;
 
         JsonObject postParam = new JsonObject();
 
         try {
-            postParam.addProperty("orderID", cartObject.getProductID());
-            postParam.addProperty("orderNumber", cartObject.getProductName());
-            postParam.addProperty("orderDate", cartObject.getProductAmount());
-            postParam.addProperty("orderType", cartObject.getProductAmount());
-            postParam.addProperty("orderStatus", "Regular");
-            postParam.addProperty("orderMode", cartObject.getCartID());
-            postParam.addProperty("ProductQnty", 2);
-            postParam.addProperty("paymentID",  cartObject.getProductAmount());    // doubt
-            postParam.addProperty("productID", cartObject.getCgst());
-            postParam.addProperty("productName",cartObject.getSgst());
-            postParam.addProperty("productRate", restaurantObject.getRestaurantName());
-            postParam.addProperty("productQuantity", restaurantObject.getIncludeTax());
-            postParam.addProperty("taxableVal", restaurantObject.getTaxable());
-            postParam.addProperty("cgst", 30.00);
-            postParam.addProperty("sgst", Application.userDetails.getUserID());
-            postParam.addProperty("userAddress", restaurantObject.getRestaurantID());
-            postParam.addProperty("userID", cartObject.getTotalAmount());
-            postParam.addProperty("restaurantID", 0);
-            postParam.addProperty("restaurantName", 0);
-            postParam.addProperty("totalAmount", 0);
-            postParam.addProperty("taxID", 0);
-            postParam.addProperty("orderPaid", 0);
-            postParam.addProperty("rejectReason", 0);
+
+            postParam.addProperty("orderID", orderDetailsObject.getProductID());
+            postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
+            postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
+            postParam.addProperty("orderType", orderDetailsObject.getOrderType());
+            postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
+            postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
+            postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
+            postParam.addProperty("productID", orderDetailsObject.getProductID());
+            postParam.addProperty("productName", orderDetailsObject.getProductName());
+            postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+            postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+            postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
+            postParam.addProperty("cgst", orderDetailsObject.getCgst());
+            postParam.addProperty("sgst", orderDetailsObject.getSgst());
+            postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+            postParam.addProperty("userID", orderDetailsObject.getUserID());
+            postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
+            postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
+            postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
+            postParam.addProperty("taxID", orderDetailsObject.getTaxID());
+            postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
+            postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
+
+//            postParam.addProperty("OrderId", orderDetailsObject.getOrderID());
+//            postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
+//            postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
+//            postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
+//            postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
+//            postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
+//            postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
+//            postParam.addProperty("ProductId", orderDetailsObject.getProductID());
+//            postParam.addProperty("ProductName", orderDetailsObject.getProductName());
+//            postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
+//            postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+//            postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
+//            postParam.addProperty("CGST", orderDetailsObject.getCgst());
+//            postParam.addProperty("SGST", orderDetailsObject.getSgst());
+//            postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+//            postParam.addProperty("Userid", orderDetailsObject.getUserID());
+//            postParam.addProperty("Clientid", orderDetailsObject.getRestaurantID());
+//            postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
+//            postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
+//            postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
+//            postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
+//            postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
 
 
         } catch (Exception e) {
@@ -521,38 +642,44 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
 
-            UserDetails userDetails = Application.userDetails;
-            RestaurantObject restaurantObj = Application.restaurantObject;
-            CartObject cartObject = Application.cartObject;
-
-            String userTypeID = Application.userDetails.getUserType();
-            String restaurantID = "1";
-
             OrderDetailsObject orderObj = new OrderDetailsObject();
-            orderObj.setOrderID(1);
-            orderObj.setOrderNumber(1);
-            orderObj.setOrderType(1);
-            orderObj.setOrderStatus(1);
-            orderObj.setOrderMode(1);
-            orderObj.setPaymentID(1);
-            orderObj.setProductID(1);
-            orderObj.setProductName(cartObject.getProductName());
-            orderObj.setProductRate(cartObject.getProductRate());
-            orderObj.setProductQuantity(cartObject.getProductQuantity());
-            orderObj.setTaxableVal(cartObject.getTaxableVal());
-            orderObj.setCgst(cartObject.getCgst());
-            orderObj.setSgst(cartObject.getSgst());
-            orderObj.setUserAddress(userDetails.getAddress());
-            orderObj.setUserID(userDetails.getUserID());
-            orderObj.setRestaurantID(restaurantObj.getRestaurantID());
-            orderObj.setRestaurantName(restaurantObj.getRestaurantName());
-            orderObj.setTaxID(cartObject.getTaxID());
-            orderObj.setOrderPaid(true);
-            orderObj.setRejectReason("NO");
-            orderObj.setOrderDate("28-11-2019");
+            try {
+
+                UserDetails userDetails = Application.userDetails;
+                RestaurantObject restaurantObj = Application.restaurantObject;
+                CartObject cartObject = Application.listCartItems.get(0);
+
+                String userTypeID = Application.userDetails.getUserType();
+                String restaurantID = "1";
+
+                orderObj.setOrderID(1);
+                orderObj.setOrderNumber(1);
+                orderObj.setOrderType(1);
+                orderObj.setOrderStatus(1);
+                orderObj.setOrderMode(1);
+                orderObj.setPaymentID(1);
+                orderObj.setProductID(cartObject.getProductID());
+                orderObj.setProductName(cartObject.getProductName());
+                orderObj.setProductRate(cartObject.getProductRate());
+                orderObj.setProductQuantity(cartObject.getProductQuantity());
+                orderObj.setTaxableVal(cartObject.getTaxableVal());
+                orderObj.setCgst(cartObject.getCgst());
+                orderObj.setSgst(cartObject.getSgst());
+                orderObj.setUserAddress(userDetails.getAddress());
+                orderObj.setUserID(userDetails.getUserID());
+                orderObj.setRestaurantID(cartObject.getRestaurantID());
+                orderObj.setRestaurantName(cartObject.getRestaurantName());
+                orderObj.setTaxID(cartObject.getTaxID());
+                orderObj.setOrderPaid(true);
+                orderObj.setRejectReason("NO");
+                orderObj.setOrderDate("28-11-2019");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(cartObject));
+            Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(orderObj));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
