@@ -84,6 +84,10 @@ dependencies {
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
     implementation 'org.apache.commons:commons-text:1.6'
 
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
+
 
 //    implementation 'com.github.Mindinventory:VanillaPlacePicker:0.0.9'
 }
