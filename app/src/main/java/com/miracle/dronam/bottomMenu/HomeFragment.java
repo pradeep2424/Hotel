@@ -220,10 +220,10 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
 
         HashMap<String,Integer> url_maps = new HashMap<String, Integer>();
-        url_maps.put("Hannibal",R.mipmap.temp_hannibal);
-        url_maps.put("Big Bang Theory",R.mipmap.temp_bigbang);
-        url_maps.put("House of Cards",R.mipmap.temp_house);
-        url_maps.put("Game of Thrones", R.mipmap.temp_game_of_thrones);
+        url_maps.put("Hannibal",R.mipmap.temp_img1);
+        url_maps.put("Big Bang Theory",R.mipmap.temp_img2);
+        url_maps.put("House of Cards",R.mipmap.temp_img3);
+        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
 
         for(String name : url_maps.keySet()){
             TextSliderView textSliderView = new TextSliderView(getActivity());
