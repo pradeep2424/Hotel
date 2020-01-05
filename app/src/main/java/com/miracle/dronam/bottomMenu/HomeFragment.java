@@ -14,9 +14,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
@@ -39,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -46,12 +55,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeFragment extends Fragment implements OnRecyclerViewClickListener {
+public class HomeFragment extends Fragment implements OnRecyclerViewClickListener,
+        BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+
     View rootView;
 
     View viewToolbarLocation;
     LinearLayout llToolbarLocation;
     TextView tvToolbarTitle;
+
+    private SliderLayout imageSliderLayout;
 
     private ArrayList<DishObject> listDishObject;
     private TextView tvSeeMoreDish;
@@ -107,6 +120,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         initComponents();
         componentEvents();
         setToolbarLocation();
+        setupSlidingImages();
         setupRecyclerViewUserLikeDish();
         setupRecyclerViewCuisine();
 //        setupRecyclerViewRestaurant();
@@ -122,6 +136,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         viewToolbarLocation = rootView.findViewById(R.id.view_toolbarLocation);
         llToolbarLocation = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
         tvToolbarTitle = viewToolbarLocation.findViewById(R.id.tv_toolbarTitle);
+
+        imageSliderLayout = (SliderLayout)rootView.findViewById(R.id.slider);
 
         rvDishUserLikes = (RecyclerView) rootView.findViewById(R.id.recyclerView_dishUserLike);
         rvCuisines = (RecyclerView) rootView.findViewById(R.id.recyclerView_cuisine);
@@ -193,6 +209,43 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //                startActivityForResult(intent, 50);
             }
         });
+    }
+
+    private void setupSlidingImages()
+    {
+//        HashMap<String,String> url_maps = new HashMap<String, String>();
+//        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+//        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+//        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
+//        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+
+        HashMap<String,Integer> url_maps = new HashMap<String, Integer>();
+        url_maps.put("Hannibal",R.mipmap.temp_img1);
+        url_maps.put("Big Bang Theory",R.mipmap.temp_img2);
+        url_maps.put("House of Cards",R.mipmap.temp_img3);
+        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
+
+        for(String name : url_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(getActivity());
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra",name);
+
+            imageSliderLayout.addSlider(textSliderView);
+        }
+        imageSliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        imageSliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        imageSliderLayout.setCustomAnimation(new DescriptionAnimation());
+        imageSliderLayout.setDuration(4000);
+        imageSliderLayout.addOnPageChangeListener(this);
     }
 
     private void setupRecyclerViewUserLikeDish() {
@@ -391,6 +444,28 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         }
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d("Slider Demo", "Page Changed: " + position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {}
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        Toast.makeText(getActivity(),slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStop() {
+        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
+        imageSliderLayout.stopAutoCycle();
+        super.onStop();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -44,6 +44,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/appBar"
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -56,17 +57,64 @@
 
             <!--            <include layout="@layout/toolbar_home_search" />-->
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+<!--            <FrameLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:background="@drawable/temp_white_img" />
+                    android:layout_height="match_parent">
+
+                    <com.daimajia.slider.library.SliderLayout
+                        android:id="@+id/slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:auto_cycle="true"
+                        android:background="@drawable/temp_white_img"
+                        app:indicator_visibility="visible"
+                        app:pager_animation="Accordion"
+                        app:pager_animation_span="1100" />
+
+<!--                    <com.daimajia.slider.library.Indicators.PagerIndicator-->
+<!--                        android:id="@+id/custom_indicator"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentBottom="true"-->
+<!--                        android:layout_centerHorizontal="true"-->
+<!--                        android:layout_marginBottom="20dp"-->
+<!--                        android:gravity="center"-->
+<!--                        app:selected_color="#0095BF"-->
+<!--                        app:selected_drawable="@drawable/bird"-->
+<!--                        app:selected_height="6dp"-->
+<!--                        app:selected_padding_left="5dp"-->
+<!--                        app:selected_padding_right="5dp"-->
+<!--                        app:selected_width="6dp"-->
+<!--                        app:shape="oval"-->
+<!--                        app:unselected_color="#55333333"-->
+<!--                        app:unselected_height="6dp"-->
+<!--                        app:unselected_padding_left="5dp"-->
+<!--                        app:unselected_padding_right="5dp"-->
+<!--                        app:unselected_width="6dp" />-->
+
+<!--                    <com.daimajia.slider.library.Indicators.PagerIndicator-->
+<!--                        android:id="@+id/custom_indicator2"-->
+<!--                        style="@style/AndroidImageSlider_Corner_Oval_Orange"-->
+<!--                        android:layout_alignParentBottom="true"-->
+<!--                        android:layout_centerHorizontal="true"-->
+<!--                        android:layout_marginBottom="20dp" />-->
+
+
+                </RelativeLayout>
+
+
+                <!--                <ImageView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="170dp"-->
+<!--                    android:background="@drawable/temp_white_img" />-->
+
                 <!--                <include layout="@layout/toolbar_home_search" />-->
 
-            </FrameLayout>
+<!--            </FrameLayout>-->
 
             <!--            <LinearLayout-->
             <!--                android:tag="sticky"-->
