@@ -112,5 +112,6 @@
 
     <string name="incorrect_otp">Incorrect OTP.</string>
     <string name="rupees">₹</string>
+    <string name="success">Success</string>
 
 </resources>

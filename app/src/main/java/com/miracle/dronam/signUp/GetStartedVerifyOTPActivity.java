@@ -384,6 +384,12 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
                             getUserDetails();
 
+                            String referralCode = prefManagerConfig.getReferralCode();
+                            if (referralCode != null && !referralCode.equalsIgnoreCase(prefManagerConfig.SP_DEFAULT_VALUE)) {
+                                addReferral(referralCode);
+                            }
+
+
 //                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
 //                            startActivity(intent);
 //                            finish();
@@ -423,6 +429,58 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                     .show();
         }
     }
+
+    private void addReferral(String referralCode) {
+        if (InternetConnection.checkConnection(this)) {
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.addReferral(mobileNumber, referralCode);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            insertUserDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
 
     private void getUserDetails() {
         if (InternetConnection.checkConnection(this)) {

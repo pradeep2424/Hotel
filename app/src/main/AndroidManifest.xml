@@ -108,11 +108,43 @@
             </intent-filter>
         </activity>
 
+        <!-- used to retried sms -->
         <receiver android:name=".broadcastReceiver.SMSListener">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+        <!--        <receiver-->
+        <!--            android:name=".broadcastReceiver.InstallReferrerReceiver"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="com.android.vending.INSTALL_REFERRER" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
+
+
+        <receiver
+            android:name=".broadcastReceiver.InstallReferrerReceiver"
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <!--        &lt;!&ndash; Used for Google Play Store Campaign Measurement&ndash;&gt;-->
+        <!--        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="com.android.vending.INSTALL_REFERRER" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
+        <!--        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="false" />-->
     </application>
 
 </manifest>

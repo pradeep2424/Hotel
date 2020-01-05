@@ -1,5 +1,6 @@
 package com.miracle.dronam.service.retrofit;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
@@ -76,11 +77,14 @@ public interface ApiInterface {
 //    Call<ResponseBody> addItemToCart(@Body DishObject dishObject);
 
 
+//    @POST("insorder")
+//    Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
+
     @POST("insorder")
-    Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
+    Call<ResponseBody> placeOrder(@Body JsonArray jsonArray);
 
 //    @POST("insertUserDetails")
-//    Call<ResponseBody> insertUserDetails(@Body UserDetails body);
+//    Call<ResponseBody> insertUserDetails(@Body UserDetails body);insHotelDetails
 
 
     @GET("getorderDetails/{userids}")
@@ -97,6 +101,11 @@ public interface ApiInterface {
                                  @Path("message") String smsMessage,
                                  @Path("SenderID") String senderID,
                                  @Path("Campaign") String campaign);
+
+
+    @POST("AddReferal/{NewUserMobNo}/{ReferedMobNo}")
+    Call<ResponseBody> addReferral(@Path("NewUserMobNo") String newMobileNo,
+                                      @Path("ReferedMobNo") String referredMobNo);
 
 //    @Multipart
 //    @POST("UploadFile")
