@@ -25,7 +25,8 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 String referrerString = extras.getString("referrer");
                 Log.e("########### : ", referrerString);
 
-                String referralCode = referrerString.substring(referrerString.indexOf("utm_source="));
+//                String referralCode = referrerString.substring(referrerString.indexOf("utm_source="));
+                String referralCode = referrerString.replace("utm_source=", "");
                 storeReferralParams(context, referralCode);
             }
         } catch (Exception e) {

@@ -102,7 +102,7 @@ public class PastOrdersFragment extends Fragment {
     private void getPastOrderDetails() {
         if (InternetConnection.checkConnection(getActivity())) {
 
-            String userTypeID = Application.userDetails.getUserType();
+            int userTypeID = Application.userDetails.getUserID();
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
             Call<ResponseBody> call = apiService.getPastOrders(userTypeID);
@@ -116,83 +116,59 @@ public class PastOrdersFragment extends Fragment {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
                             listPastOrders = new ArrayList<>();
-
-                            JSONArray jsonArray = new JSONArray(responseString);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
-
-//                                String cgst = jsonObj.optString("CGST");
-//                                String cgstVal = jsonObj.optString("CGSTval");
-//                                String restaurantID = jsonObj.optString("Clientid");
-//                                String discount = jsonObj.optString("Discount");
-//                                String foodType = jsonObj.optString("FoodType");
-//                                String includeTax = jsonObj.optString("IncludeTax");
+//
+//                            JSONArray jsonArray = new JSONArray(responseString);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                double cgst = jsonObj.optDouble("CGST");
+//                                int restaurantID = jsonObj.optInt("Clientid");
 //                                String orderDate = jsonObj.optString("OrderDate");
-//                                String orderID = jsonObj.optString("OrderId");
-//                                String orderMode = jsonObj.optString("OrderMode");
-//                                String orderNumber = jsonObj.optString("OrderNumber");
-//                                String orderStatus = jsonObj.optString("OrderStatus");
-//                                String orderType = jsonObj.optString("OrderType");
-//                                String paymentID = jsonObj.optString("PaymentId");
-//                                String dishAmount = jsonObj.optString("ProductAmount");
-//                                String dishID = jsonObj.optString("ProductId");
+//                                int orderID = jsonObj.optInt("OrderId");
+//                                int orderMode = jsonObj.optInt("OrderMode");
+//                                int orderNumber = jsonObj.optInt("OrderNumber");
+//                                boolean orderPaid = jsonObj.optBoolean("OrderPaid");     // @@@@@@
+//                                int orderStatus = jsonObj.optInt("OrderStatus");
+//                                int orderType = jsonObj.optInt("OrderType");
+//                                int paymentID = jsonObj.optInt("PaymentId");
+//                                int dishID = jsonObj.optInt("ProductId");
 //                                String dishName = jsonObj.optString("ProductName");
-//                                String dishQuantity = jsonObj.optString("ProductQnty");
-//                                String dishRate = jsonObj.optString("ProductRate");
-//                                String dishSize = jsonObj.optString("ProductSize");
+//                                int dishQuantity = jsonObj.optInt("ProductQnty");
+//                                double dishRate = jsonObj.optDouble("ProductRate");
 //                                String rejectReason = jsonObj.optString("RejectReason");
 //                                String restaurantName = jsonObj.optString("RestaurantName");
-//                                String sgst = jsonObj.optString("SGST");
-//                                String sgstVal = jsonObj.optString("SGSTval");
-//                                String subtotal = jsonObj.optString("Subtotal");
-//                                String taxID = jsonObj.optString("TaxId");
-//                                String taxable = jsonObj.optString("Taxable");
-//                                String taxableVal = jsonObj.optString("Taxableval");
-//                                String totalAmount = jsonObj.optString("TotalAmount");
+//                                double sgst = jsonObj.optDouble("SGST");
+//                                int taxID = jsonObj.optInt("TaxId");
+//                                double taxableVal = jsonObj.optDouble("Taxableval");
+//                                double totalAmount = jsonObj.optDouble("TotalAmount");
 //                                String userAddress = jsonObj.optString("UserAddress");
-//                                String userRole = jsonObj.optString("UserRole");
-//                                String userTypeId = jsonObj.optString("UserTypeId");
-//                                String userID = jsonObj.optString("Userid");
-//                                String voucher = jsonObj.optString("Voucher");
+//                                int userID = jsonObj.optInt("Userid");
 //
 //                                OrderDetailsObject orderObj = new OrderDetailsObject();
-//                                orderObj.setCGST(cgst);
-//                                orderObj.setCGSTVal(cgstVal);
+//                                orderObj.setCgst(cgst);
 //                                orderObj.setRestaurantID(restaurantID);
-//                                orderObj.setDiscount(discount);
-//                                orderObj.setFoodType(foodType);
-//                                orderObj.setIncludeTax(includeTax);
 //                                orderObj.setOrderDate(orderDate);
 //                                orderObj.setOrderID(orderID);
 //                                orderObj.setOrderMode(orderMode);
 //                                orderObj.setOrderNumber(orderNumber);
 //                                orderObj.setOrderStatus(orderStatus);
-//
 //                                orderObj.setOrderType(orderType);
 //                                orderObj.setPaymentID(paymentID);
-//                                orderObj.setDishAmount(dishAmount);
-//                                orderObj.setDishID(dishID);
-//                                orderObj.setDishName(dishName);
-//                                orderObj.setDishQuantity(dishQuantity);
-//                                orderObj.setDishRate(dishRate);
-//                                orderObj.setDishSize(dishSize);
+//                                orderObj.setProductID(dishID);
+//                                orderObj.setProductName(dishName);
+//                                orderObj.setProductQuantity(dishQuantity);
+//                                orderObj.setProductRate(dishRate);
 //                                orderObj.setRejectReason(rejectReason);
 //                                orderObj.setRestaurantName(restaurantName);
-//                                orderObj.setSGST(sgst);
-//                                orderObj.setSGSTVal(sgstVal);
-//                                orderObj.setSubtotal(subtotal);
+//                                orderObj.setSgst(sgst);
 //                                orderObj.setTaxID(taxID);
-//                                orderObj.setTaxable(taxable);
 //                                orderObj.setTaxableVal(taxableVal);
 //                                orderObj.setTotalAmount(totalAmount);
 //                                orderObj.setUserAddress(userAddress);
-//                                orderObj.setUserRole(userRole);
-//                                orderObj.setUserTypeID(userTypeId);
 //                                orderObj.setUserID(userID);
-//                                orderObj.setVoucher(voucher);
 //
 //                                listPastOrders.add(orderObj);
-                            }
+//                            }
 
                             getTESTPastOrdersData();
                             setupRecyclerViewPastOrders();

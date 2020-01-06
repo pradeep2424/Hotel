@@ -8,6 +8,8 @@ import com.miracle.dronam.model.UserDetails;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -83,12 +85,16 @@ public interface ApiInterface {
     @POST("insorder")
     Call<ResponseBody> placeOrder(@Body JsonArray jsonArray);
 
+
+//    @POST("insorder")
+//    Call<ResponseBody> placeOrder(@Body ArrayList<OrderDetailsObject> list);
+
 //    @POST("insertUserDetails")
 //    Call<ResponseBody> insertUserDetails(@Body UserDetails body);insHotelDetails
 
 
     @GET("getorderDetails/{userids}")
-    Call<ResponseBody> getPastOrders(@Path("userids") String userID);
+    Call<ResponseBody> getPastOrders(@Path("userids") int userID);
 
     @POST
     Call<ResponseBody> getOtpSMS(@Url String url);

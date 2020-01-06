@@ -27,7 +27,7 @@
                     android:orientation="vertical" />
 
                 <include
-                    android:id="@+id/toolbar"
+                    android:id="@+id/view_toolbar"
                     layout="@layout/toolbar_profile" />
 
                 <LinearLayout
@@ -52,6 +52,7 @@
                         android:orientation="vertical">
 
                         <com.miracle.dronam.custom.MyTextView
+                            android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pradeep Jadhav"
@@ -59,6 +60,7 @@
                             android:textSize="23sp" />
 
                         <com.miracle.dronam.custom.MyTextView
+                            android:id="@+id/tv_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="xyz@gmail.com"
@@ -66,6 +68,7 @@
                             android:textSize="14.4sp" />
 
                         <com.miracle.dronam.custom.MyTextView
+                            android:id="@+id/tv_mobile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="9876543210"

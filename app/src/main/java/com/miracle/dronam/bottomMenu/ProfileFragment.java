@@ -18,12 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.miracle.dronam.BuildConfig;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.ManageAddressesActivity;
@@ -32,6 +28,7 @@ import com.miracle.dronam.adapter.RecycleAdapterProfile;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.main.MainActivity;
 import com.miracle.dronam.model.ProfileObject;
+import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
 
 import java.util.ArrayList;
@@ -40,7 +37,11 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     View rootView;
     MainActivity mainActivity;
 
-    private Toolbar toolbar;
+    private View viewToolbar;
+    TextView tvName;
+    TextView tvEmail;
+    TextView tvMobile;
+
     private RecyclerView rvProfile;
     private LinearLayout llManageAddresses;
 
@@ -58,7 +59,8 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
 
         initComponents();
         componentEvents();
-        setupToolbar();
+        setUserInformation();
+//        setupToolbar();
         setupRecyclerViewProfile();
 
         return rootView;
@@ -66,17 +68,12 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
 
     private void initComponents() {
         rvProfile = rootView.findViewById(R.id.rv_profile);
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         llManageAddresses = rootView.findViewById(R.id.ll_manageAddresses);
+        viewToolbar = rootView.findViewById(R.id.view_toolbar);
 
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-            }
-        };
-        handler.postDelayed(runnable, 400);
-
+        tvName = rootView.findViewById(R.id.tv_name);
+        tvEmail = rootView.findViewById(R.id.tv_email);
+        tvMobile = rootView.findViewById(R.id.tv_mobile);
     }
 
     private void componentEvents() {
@@ -87,13 +84,38 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
                 startActivity(intent);
             }
         });
+
+        viewToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GetStartedActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
-    private void setupToolbar() {
-//        toolbar.setTitle("Your Fragment Title");
-        toolbar.setTitle("");
-        mainActivity.setSupportActionBar(toolbar);
+//    private void setupToolbar() {
+////        toolbar.setTitle("Your Fragment Title");
+//        toolbar.setTitle("");
+//        mainActivity.setSupportActionBar(toolbar);
+//    }
 
+    private void setUserInformation() {
+        if (Application.userDetails != null && Application.userDetails.getFullName() != null) {
+            tvName.setText(Application.userDetails.getFullName());
+        }
+
+        if (Application.userDetails != null && Application.userDetails.getEmail() != null) {
+            tvEmail.setText(Application.userDetails.getEmail());
+
+        } else {
+            tvEmail.setVisibility(View.GONE);
+        }
+
+        if (Application.userDetails != null && Application.userDetails.getMobile() != null) {
+            tvMobile.setText(Application.userDetails.getMobile());
+        }
     }
 
     private void setupRecyclerViewProfile() {

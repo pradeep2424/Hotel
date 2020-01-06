@@ -6,7 +6,7 @@
 
 
     <com.miracle.dronam.custom.MyTextView
-        android:id="@+id/tv_editProfile"
+        android:id="@+id/tv_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

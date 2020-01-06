@@ -311,7 +311,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
                                 Application.listCartItems = SerializationUtils.clone(listCartDish);
 
-
+                                showCartItemDetails();
                                 setupRecyclerViewOrderedItems();
                                 setupBillingDetails();
 
@@ -591,28 +591,52 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                 OrderDetailsObject orderDetailsObject = listOrderItems.get(i);
 
                 JsonObject postParam = new JsonObject();
-                postParam.addProperty("orderID", orderDetailsObject.getProductID());
-                postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
-                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
-                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
-                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
-                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
-                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
-                postParam.addProperty("productID", orderDetailsObject.getProductID());
-                postParam.addProperty("productName", orderDetailsObject.getProductName());
-                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+                postParam.addProperty("OrderId", orderDetailsObject.getProductID());
+                postParam.addProperty("OrderNumber", orderDetailsObject.getProductName());
+                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
+                postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
+                postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
+                postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
+                postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
+                postParam.addProperty("ProductId", orderDetailsObject.getProductID());
+                postParam.addProperty("ProductName", orderDetailsObject.getProductName());
+                postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
                 postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
-                postParam.addProperty("cgst", orderDetailsObject.getCgst());
-                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+                postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
+                postParam.addProperty("CGST", orderDetailsObject.getCgst());
+                postParam.addProperty("SGST", orderDetailsObject.getSgst());
                 postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-                postParam.addProperty("userID", orderDetailsObject.getUserID());
-                postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
-                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
-                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
-                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
-                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
-                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
+                postParam.addProperty("Userid", orderDetailsObject.getUserID());
+                postParam.addProperty("Clientid", orderDetailsObject.getRestaurantID());
+                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
+                postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
+                postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
+                postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
+                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
+
+//                JsonObject postParam = new JsonObject();
+//                postParam.addProperty("orderID", orderDetailsObject.getProductID());
+//                postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
+//                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
+//                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
+//                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
+//                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
+//                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
+//                postParam.addProperty("productID", orderDetailsObject.getProductID());
+//                postParam.addProperty("productName", orderDetailsObject.getProductName());
+//                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+//                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+//                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
+//                postParam.addProperty("cgst", orderDetailsObject.getCgst());
+//                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+//                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+//                postParam.addProperty("userID", orderDetailsObject.getUserID());
+//                postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
+//                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
+//                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
+//                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
+//                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
+//                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
 
                 jsonArray.add(postParam);
             }
@@ -670,6 +694,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
             Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(listOrderDetails));
+//            Call<ResponseBody> call = apiService.placeOrder(listOrderDetails);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -682,6 +707,9 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
                             if (responseString.equalsIgnoreCase(getString(R.string.success))) {
 //                                setupRecyclerViewOrderedItems();
+
+                                showSnackBarErrorMsgWithButton(getString(R.string.order_placed_successfully));
+                                showEmptyCart();
                             }
 
                         } else {
@@ -884,6 +912,22 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         TextView snackTextView = (TextView) snackbarView
                 .findViewById(R.id.snackbar_text);
         snackTextView.setMaxLines(4);
+        snackbar.show();
+    }
+
+    public void showSnackBarErrorMsgWithButton(String erroMsg) {
+        Snackbar snackbar = Snackbar.make(rootView, erroMsg, Snackbar.LENGTH_INDEFINITE);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+
+        snackbar.setAction("OK", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
         snackbar.show();
     }
 }
