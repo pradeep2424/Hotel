@@ -590,53 +590,53 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             for (int i = 0; i < listOrderItems.size(); i++) {
                 OrderDetailsObject orderDetailsObject = listOrderItems.get(i);
 
-                JsonObject postParam = new JsonObject();
-                postParam.addProperty("OrderId", orderDetailsObject.getProductID());
-                postParam.addProperty("OrderNumber", orderDetailsObject.getProductName());
-                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
-                postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
-                postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
-                postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
-                postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
-                postParam.addProperty("ProductId", orderDetailsObject.getProductID());
-                postParam.addProperty("ProductName", orderDetailsObject.getProductName());
-                postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
-                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-                postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
-                postParam.addProperty("CGST", orderDetailsObject.getCgst());
-                postParam.addProperty("SGST", orderDetailsObject.getSgst());
-                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-                postParam.addProperty("Userid", orderDetailsObject.getUserID());
-                postParam.addProperty("Clientid", orderDetailsObject.getRestaurantID());
-                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
-                postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
-                postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
-                postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
-                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
-
 //                JsonObject postParam = new JsonObject();
-//                postParam.addProperty("orderID", orderDetailsObject.getProductID());
-//                postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
-//                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
-//                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
-//                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
-//                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
-//                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
-//                postParam.addProperty("productID", orderDetailsObject.getProductID());
-//                postParam.addProperty("productName", orderDetailsObject.getProductName());
-//                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+//                postParam.addProperty("OrderId", orderDetailsObject.getProductID());
+//                postParam.addProperty("OrderNumber", orderDetailsObject.getProductName());
+//                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
+//                postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
+//                postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
+//                postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
+//                postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
+//                postParam.addProperty("ProductId", orderDetailsObject.getProductID());
+//                postParam.addProperty("ProductName", orderDetailsObject.getProductName());
+//                postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
 //                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-//                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
-//                postParam.addProperty("cgst", orderDetailsObject.getCgst());
-//                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+//                postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
+//                postParam.addProperty("CGST", orderDetailsObject.getCgst());
+//                postParam.addProperty("SGST", orderDetailsObject.getSgst());
 //                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-//                postParam.addProperty("userID", orderDetailsObject.getUserID());
-//                postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
-//                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
-//                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
-//                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
-//                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
-//                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
+//                postParam.addProperty("Userid", orderDetailsObject.getUserID());
+//                postParam.addProperty("Clientid", orderDetailsObject.getRestaurantID());
+//                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
+//                postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
+//                postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
+//                postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
+//                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
+
+                JsonObject postParam = new JsonObject();
+                postParam.addProperty("orderID", orderDetailsObject.getProductID());
+                postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
+                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
+                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
+                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
+                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
+                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
+                postParam.addProperty("productID", orderDetailsObject.getProductID());
+                postParam.addProperty("productName", orderDetailsObject.getProductName());
+                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
+                postParam.addProperty("cgst", orderDetailsObject.getCgst());
+                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+                postParam.addProperty("userID", orderDetailsObject.getUserID());
+                postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
+                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
+                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
+                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
+                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
+                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
 
                 jsonArray.add(postParam);
             }
