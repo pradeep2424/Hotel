@@ -28,6 +28,7 @@ import com.miracle.dronam.adapter.RecycleAdapterProfile;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.main.MainActivity;
 import com.miracle.dronam.model.ProfileObject;
+import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
 
@@ -48,6 +49,8 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     private RecycleAdapterProfile adapterProfile;
     private ArrayList<ProfileObject> listProfile;
 
+    private PrefManagerConfig prefManagerConfig;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,8 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     }
 
     private void initComponents() {
+        prefManagerConfig = new PrefManagerConfig(getActivity());
+
         rvProfile = rootView.findViewById(R.id.rv_profile);
         llManageAddresses = rootView.findViewById(R.id.ll_manageAddresses);
         viewToolbar = rootView.findViewById(R.id.view_toolbar);
@@ -88,6 +93,8 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
         viewToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                prefManagerConfig.clearPrefOnLogout();
+
                 Intent intent = new Intent(getActivity(), GetStartedActivity.class);
                 startActivity(intent);
                 getActivity().finish();
