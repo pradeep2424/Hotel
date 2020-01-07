@@ -53,4 +53,11 @@ public class PrefManagerConfig {
         editor.putString(SP_KEY_REFERRAL_CODE, referralCode);
         editor.commit();
     }
+
+
+    public void clearPrefOnLogout() {
+        editor.clear();
+        editor.commit();
+    }
+
 }
