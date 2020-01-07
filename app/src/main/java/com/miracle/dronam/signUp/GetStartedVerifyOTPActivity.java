@@ -389,7 +389,6 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                                 addReferral(referralCode);
                             }
 
-
 //                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
 //                            startActivity(intent);
 //                            finish();
@@ -430,7 +429,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         }
     }
 
-    private void addReferral(String referralCode) {
+    private void addReferral(final String referralCode) {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);
@@ -473,7 +472,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            insertUserDetails();
+                            addReferral(referralCode);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))

@@ -341,7 +341,7 @@
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_paymentButtonAmount"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/white"
@@ -354,16 +354,29 @@
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_paymentButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/deep_orange"
                 android:gravity="center"
                 android:padding="15dp"
-                android:text="PAYMENT"
+                android:text="ORDER NOW"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
+<!--            <com.miracle.dronam.custom.MyTextView-->
+<!--                android:id="@+id/tv_paymentButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@color/deep_orange"-->
+<!--                android:gravity="center"-->
+<!--                android:padding="15dp"-->
+<!--                android:text="PAYMENT"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textStyle="bold" />-->
         </LinearLayout>
     </RelativeLayout>
 
