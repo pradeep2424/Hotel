@@ -35,6 +35,8 @@ import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.miracle.dronam.utils.SimpleDividerItemDecoration;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONArray;
@@ -591,8 +593,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                 OrderDetailsObject orderDetailsObject = listOrderItems.get(i);
 
 //                JsonObject postParam = new JsonObject();
-//                postParam.addProperty("OrderId", orderDetailsObject.getProductID());
-//                postParam.addProperty("OrderNumber", orderDetailsObject.getProductName());
+//                postParam.addProperty("OrderId", orderDetailsObject.getOrderID());
+//                postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
 //                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
 //                postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
 //                postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
@@ -615,8 +617,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
 
                 JsonObject postParam = new JsonObject();
-                postParam.addProperty("orderID", orderDetailsObject.getProductID());
-                postParam.addProperty("orderNumber", orderDetailsObject.getProductName());
+                postParam.addProperty("orderID", orderDetailsObject.getOrderID());
+                postParam.addProperty("orderNumber", orderDetailsObject.getOrderNumber());
                 postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
                 postParam.addProperty("orderType", orderDetailsObject.getOrderType());
                 postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
@@ -705,12 +707,14 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            if (responseString.equalsIgnoreCase(getString(R.string.success))) {
+//                            if (responseString.equalsIgnoreCase(getString(R.string.success))) {
 //                                setupRecyclerViewOrderedItems();
 
-                                showSnackBarErrorMsgWithButton(getString(R.string.order_placed_successfully));
-                                showEmptyCart();
-                            }
+//                                showSnackBarErrorMsgWithButton(getString(R.string.order_placed_successfully));
+
+                            showSuccessOrderMsg();
+                            showEmptyCart();
+//                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -905,6 +909,22 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //        }
 //    }
 
+    private void showSuccessOrderMsg() {
+        new FancyGifDialog.Builder(getActivity())
+                .setTitle(getString(R.string.order_placed_title))
+                .setMessage(getString(R.string.order_placed_message))
+                .setPositiveBtnText("Ok")
+                .setPositiveBtnBackground("#ff3d00")
+                .setGifResource(R.drawable.gif1)   //Pass your Gif here
+                .isCancellable(true)
+                .OnPositiveClicked(new FancyGifDialogListener() {
+                    @Override
+                    public void OnClick() {
+//                        Toast.makeText(MainActivity.this,"Ok",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .build();
+    }
 
     public void showSnackbarErrorMsg(String erroMsg) {
         Snackbar snackbar = Snackbar.make(rootView, erroMsg, Snackbar.LENGTH_LONG);
