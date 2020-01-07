@@ -114,7 +114,8 @@
     <string name="rupees">₹</string>
     <string name="success">Success</string>
 
-    <string name="order_placed_successfully">You order is placed successfully.
+    <string name="order_placed_title">Order Placed</string>
+    <string name="order_placed_message">You order is placed successfully.
         Delivery master will reach to you soon. Please provide exact change.</string>
 
 </resources>
