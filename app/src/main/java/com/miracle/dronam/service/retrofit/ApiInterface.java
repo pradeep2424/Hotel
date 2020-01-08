@@ -41,6 +41,10 @@ public interface ApiInterface {
     @POST("insUserAddress")
     Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);
 
+    @GET("getSMSDetails")
+    Call<ResponseBody> getSMSDetails();
+
+
     @GET("getUserAddress/{mobileNo}")
     Call<ResponseBody> getUserAddress(@Path("mobileNo") String mobileNo);
 
@@ -83,7 +87,7 @@ public interface ApiInterface {
 //    Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
 
     @POST("insorder")
-    Call<ResponseBody> placeOrder(@Body JsonArray jsonArray);
+    Call<ResponseBody> placeOrder(@Body ArrayList<OrderDetailsObject> listOrder);
 
 
 //    @POST("insorder")

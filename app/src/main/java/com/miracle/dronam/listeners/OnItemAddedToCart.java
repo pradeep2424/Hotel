@@ -7,5 +7,5 @@ import android.view.View;
  */
 
 public interface OnItemAddedToCart {
-    void onItemChangedInCart(int quantity, int position);
+    void onItemChangedInCart(int quantity, int position, String incrementOrDecrement);
 }

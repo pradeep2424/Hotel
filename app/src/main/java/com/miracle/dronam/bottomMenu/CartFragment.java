@@ -221,7 +221,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
     @Override
-    public void onItemChangedInCart(int quantity, int position) {
+    public void onItemChangedInCart(int quantity, int position, String incrementOrDecrement) {
         updateItemQuantityInCart(quantity, position);
 
 //        if (quantity == 0) {
@@ -633,7 +633,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                 postParam.addProperty("sgst", orderDetailsObject.getSgst());
                 postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
                 postParam.addProperty("userID", orderDetailsObject.getUserID());
-                postParam.addProperty("restaurantID", orderDetailsObject.getRestaurantID());
+                postParam.addProperty("restaurantID", orderDetailsObject.getClientID());
                 postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
                 postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
                 postParam.addProperty("taxID", orderDetailsObject.getTaxID());
@@ -680,10 +680,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     orderObj.setSgst(cartObject.getSgst());
                     orderObj.setUserAddress(userDetails.getAddress());
                     orderObj.setUserID(userDetails.getUserID());
-                    orderObj.setRestaurantID(cartObject.getRestaurantID());
+                    orderObj.setClientID(cartObject.getRestaurantID());
                     orderObj.setRestaurantName(cartObject.getRestaurantName());
                     orderObj.setTaxID(cartObject.getTaxID());
-                    orderObj.setOrderPaid(true);
+                    orderObj.setOrderPaid(false);
                     orderObj.setRejectReason("NO");
                     orderObj.setOrderDate(getCurrentDate());
 
@@ -695,8 +695,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             }
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(listOrderDetails));
-//            Call<ResponseBody> call = apiService.placeOrder(listOrderDetails);
+//          Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(listOrderDetails));
+            Call<ResponseBody> call = apiService.placeOrder(listOrderDetails);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

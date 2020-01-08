@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -37,6 +38,7 @@ import retrofit2.Response;
 
 public class RestaurantDetailsActivity extends AppCompatActivity implements OnItemAddedToCart {
     RelativeLayout rlRootLayout;
+
     String[] foodName = {"Navgrah Veg Restaurant", "Saroj Hotel", "Hotel Jewel of Chembur"};
     Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order,
             R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order};
@@ -48,6 +50,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     private RecyclerView rvMenu;
     private RecycleAdapterRestaurantMenu adapterRestaurantMenu;
     private ArrayList<DishObject> listDishProducts;
+
+    private View viewViewCart;
+    private TextView tvItemQuantity;
+    private TextView tvTotalPrice;
+
+    private int quantity;
+    private double totalPrice;
 
     RestaurantObject restaurantObject;
 
@@ -80,6 +89,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         rvPhotos = findViewById(R.id.recyclerView_photos);
         rvMenu = findViewById(R.id.recyclerView_menu);
+
+        viewViewCart = findViewById(R.id.view_bottomViewCart);
+        tvItemQuantity = viewViewCart.findViewById(R.id.tv_itemQuantity);
+        tvTotalPrice = viewViewCart.findViewById(R.id.tv_totalPrice);
+
 //        viewPager = (ViewPager) findViewById(R.id.viewPager_slidingRestaurantImages);
     }
 
@@ -127,9 +141,44 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 //        }
 //    }
 
+    private void calculateViewCartDetails(int itemQuantity, double itemPrice) {
+        quantity = quantity + itemQuantity;
+        double price = itemQuantity * itemPrice;
+        totalPrice = totalPrice + price;
+    }
+
+    private void updateViewCartStrip() {
+        if (quantity == 0) {
+            viewViewCart.setVisibility(View.GONE);
+
+        } else {
+            viewViewCart.setVisibility(View.VISIBLE);
+
+            String strPrice = formatAmount(totalPrice);
+            String itemLabel = "";
+            if (quantity > 1) {
+                itemLabel = getString(R.string.items);
+
+            } else {
+                itemLabel = getString(R.string.item);
+            }
+
+            tvItemQuantity.setText(quantity + " " + itemLabel);
+            tvTotalPrice.setText(getString(R.string.rupees) + " " + strPrice);
+        }
+    }
+
+    private String formatAmount(double amount) {
+        String amt;
+        DecimalFormat df = new DecimalFormat();
+        df.setDecimalSeparatorAlwaysShown(false);
+        amt = df.format(amount);
+
+        return amt;
+    }
 
     @Override
-    public void onItemChangedInCart(int quantity, int position) {
+    public void onItemChangedInCart(int quantity, int position, String incrementOrDecrement) {
         DishObject dishObject = listDishProducts.get(position);
         Application.dishObject = dishObject;
 
@@ -247,8 +296,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
         RestaurantObject restaurantObject = Application.restaurantObject;
 
-        if(restaurantObject.getTaxable())
-        {
+        if (restaurantObject.getTaxable()) {
             double productPrice = dishObject.getPrice();
             double cgst = dishObject.getCgst();
             double sgst = dishObject.getCgst();
@@ -266,9 +314,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
             postParam.addProperty("ProductSize", "Regular");
             postParam.addProperty("cartId", 0);
             postParam.addProperty("ProductQnty", quantity);
-            postParam.addProperty("Taxableval",  dishObject.getPrice());    // doubt
+            postParam.addProperty("Taxableval", dishObject.getPrice());    // doubt
             postParam.addProperty("CGST", dishObject.getCgst());
-            postParam.addProperty("SGST",dishObject.getSgst());
+            postParam.addProperty("SGST", dishObject.getSgst());
             postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
             postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
             postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
@@ -301,7 +349,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                             String responseString = response.body().string();
 
 //                            Application.cartObject = dishObject;
+
+
+                            calculateViewCartDetails(quantity, dishObject.getPrice());
+                            updateViewCartStrip();
                             adapterRestaurantMenu.showHideQuantityAndAddItemButton();
+
 //                            listCartDish = new ArrayList<>();
 
 //                            ada

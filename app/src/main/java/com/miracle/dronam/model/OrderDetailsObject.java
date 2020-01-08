@@ -20,7 +20,8 @@ public class OrderDetailsObject implements Serializable {
     double sgst;
     String userAddress;
     int userID;
-    int restaurantID;
+    int clientID;
+//    int restaurantID;
     double totalAmount;
     int taxID;
     boolean orderPaid;
@@ -166,13 +167,21 @@ public class OrderDetailsObject implements Serializable {
         this.userID = userID;
     }
 
-    public int getRestaurantID() {
-        return restaurantID;
+    public int getClientID() {
+        return clientID;
     }
 
-    public void setRestaurantID(int restaurantID) {
-        this.restaurantID = restaurantID;
+    public void setClientID(int clientID) {
+        this.clientID = clientID;
     }
+
+    //    public int getRestaurantID() {
+//        return restaurantID;
+//    }
+//
+//    public void setRestaurantID(int restaurantID) {
+//        this.restaurantID = restaurantID;
+//    }
 
     public double getTotalAmount() {
         return totalAmount;

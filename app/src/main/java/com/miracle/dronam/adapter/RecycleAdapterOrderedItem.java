@@ -52,12 +52,14 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
         holder.numberPickerQuantity.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
-                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
+//                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
+                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ?
+                        ActionEnum.INCREMENT.toString() :  ActionEnum.DECREMENT.toString());
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
                 viewHolderClickedItem = holder;
                 if (onItemAddedToCart != null) {
-                    onItemAddedToCart.onItemChangedInCart(value, position);
+                    onItemAddedToCart.onItemChangedInCart(value, position, actionText);
                 }
             }
         });
