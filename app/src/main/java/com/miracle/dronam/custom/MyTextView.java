@@ -10,8 +10,8 @@ import android.widget.TextView;
  */
 public class MyTextView extends TextView {
 
-    public MyTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public MyTextView(Context context) {
+        super(context);
         init();
     }
 
@@ -20,16 +20,14 @@ public class MyTextView extends TextView {
         init();
     }
 
-    public MyTextView(Context context) {
-        super(context);
+    public MyTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
         init();
     }
 
     private void init() {
-        if (!isInEditMode()) {
-            Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/Lato-Regular.ttf");
-            setTypeface(tf);
-        }
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/Lato-Regular.ttf");
+        setTypeface(tf);
     }
 
 }

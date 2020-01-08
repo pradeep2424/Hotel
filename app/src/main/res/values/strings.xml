@@ -118,4 +118,8 @@
     <string name="order_placed_message">You order is placed successfully.
         Delivery master will reach to you soon. Please provide exact change.</string>
 
+    <string name="view_cart">View Cart</string>
+    <string name="item">Item</string>
+    <string name="items">Items</string>
+
 </resources>

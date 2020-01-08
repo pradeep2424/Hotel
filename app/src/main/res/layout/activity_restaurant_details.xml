@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-   android:id="@+id/rl_rootLayout"
+    android:id="@+id/rl_rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_above="@+id/view_bottomViewCart">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -461,5 +461,20 @@ tristique senectus et netus et."
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/view_bottomViewCart"
+        layout="@layout/bottom_view_restaurant_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+
+    <!--    <include-->
+    <!--        android:id="@+id/view_bottomViewCart"-->
+    <!--        layout="@layout/bottom_view_restaurant_cart"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentBottom="true" />-->
 
 </RelativeLayout>

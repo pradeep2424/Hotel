@@ -50,13 +50,15 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         holder.tvFoodCategory.setText(dishObject.getCategoryName());
         holder.tvFoodPrice.setText("₹ " + dishObject.getPrice());
 
-
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewHolderClickedItem = holder;
                 if (onItemAddedToCart != null) {
-                    onItemAddedToCart.onItemChangedInCart(1, position);
+//                    onItemAddedToCart.onItemChangedInCart(1, position);
+
+                    int quantity = holder.numberPickerItemQuantity.getValue();
+                    onItemAddedToCart.onItemChangedInCart(quantity, position, ActionEnum.INCREMENT.toString());
                 }
             }
         });
@@ -64,11 +66,15 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         holder.numberPickerItemQuantity.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
-                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
+//                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
+                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ?
+                        ActionEnum.INCREMENT.toString() :  ActionEnum.DECREMENT.toString());
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
                 if (onItemAddedToCart != null) {
-                    onItemAddedToCart.onItemChangedInCart(1, position);
+                    onItemAddedToCart.onItemChangedInCart(1, position, actionText);
+
+//                    onItemAddedToCart.onItemChangedInCart(value, position);
                 }
             }
         });

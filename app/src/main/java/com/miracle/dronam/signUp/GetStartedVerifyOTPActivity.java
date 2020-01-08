@@ -83,7 +83,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
         init();
         events();
-//        sendOTP();
+        sendOTP();
 
         if (requestSMSPermission()) {
         }
