@@ -1,6 +1,7 @@
 package com.miracle.dronam.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,27 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.RestaurantObject;
+import com.miracle.dronam.service.retrofit.ApiInterface;
+import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.InternetConnection;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAdapterRestaurantMenu.ViewHolder> {
 
@@ -26,7 +39,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 
     private OnItemAddedToCart onItemAddedToCart;
 
-    private ViewHolder viewHolderClickedItem;
+//    private ViewHolder viewHolderClickedItem;
 
     public RecycleAdapterRestaurantMenu(RestaurantDetailsActivity activity, ArrayList<DishObject> modelArrayList) {
         this.activity = activity;
@@ -45,7 +58,8 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        DishObject dishObject = modelArrayList.get(position);
+        final DishObject dishObject = modelArrayList.get(position);
+
         holder.tvFoodName.setText(dishObject.getProductName());
         holder.tvFoodCategory.setText(dishObject.getCategoryName());
         holder.tvFoodPrice.setText("₹ " + dishObject.getPrice());
@@ -53,12 +67,14 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         holder.llAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHolderClickedItem = holder;
+//                viewHolderClickedItem = holder;
                 if (onItemAddedToCart != null) {
-//                    onItemAddedToCart.onItemChangedInCart(1, position);
 
-                    int quantity = holder.numberPickerItemQuantity.getValue();
-                    onItemAddedToCart.onItemChangedInCart(quantity, position, ActionEnum.INCREMENT.toString());
+//                    int quantity = holder.numberPickerItemQuantity.getValue();
+//                    DishObject dishObject = modelArrayList.get(position);
+                    addItemToCart(holder, 1, position, ActionEnum.INCREMENT.toString());
+
+//                    onItemAddedToCart.onItemChangedInCart(quantity, position, ActionEnum.INCREMENT.toString());
                 }
             }
         });
@@ -68,14 +84,17 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
             public void valueChanged(int value, ActionEnum action) {
 //                String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ? "incremented" : "decremented");
                 String actionText = action == ActionEnum.MANUAL ? "manually set" : (action == ActionEnum.INCREMENT ?
-                        ActionEnum.INCREMENT.toString() :  ActionEnum.DECREMENT.toString());
+                        ActionEnum.INCREMENT.toString() : ActionEnum.DECREMENT.toString());
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
-                if (onItemAddedToCart != null) {
-                    onItemAddedToCart.onItemChangedInCart(1, position, actionText);
+
+//                    onItemAddedToCart.onItemChangedInCart(1, position, actionText);
+
+//                    int quantity = holder.numberPickerItemQuantity.getValue();
+//                    DishObject dishObject = modelArrayList.get(position);
+                addItemToCart(holder, value, position, actionText);
 
 //                    onItemAddedToCart.onItemChangedInCart(value, position);
-                }
             }
         });
 
@@ -86,22 +105,136 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 //        }
     }
 
-    public void showHideQuantityAndAddItemButton() {
-        if (viewHolderClickedItem.numberPickerItemQuantity.getValue() == 0) {
-            showAddItemButton();
+    public void showHideQuantityAndAddItemButton(ViewHolder holder, int quantity) {
+        if (quantity == 0) {
+//            showAddItemButton();
+
+//            show Add Item Button
+            holder.numberPickerItemQuantity.setVisibility(View.GONE);
+            holder.llAddItem.setVisibility(View.VISIBLE);
+
         } else {
-            showItemQuantityPicker();
+//            showItemQuantityPicker();
+
+//            show number picker
+            holder.numberPickerItemQuantity.setVisibility(View.VISIBLE);
+            holder.llAddItem.setVisibility(View.GONE);
         }
     }
 
-    private void showAddItemButton() {
-        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.GONE);
-        viewHolderClickedItem.llAddItem.setVisibility(View.VISIBLE);
+//    private void showAddItemButton(ViewHolder holder) {
+//        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.GONE);
+//        viewHolderClickedItem.llAddItem.setVisibility(View.VISIBLE);
+//    }
+//
+//    private void showItemQuantityPicker(ViewHolder holder) {
+//        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.VISIBLE);
+//        viewHolderClickedItem.llAddItem.setVisibility(View.GONE);
+//    }
+
+    private JsonObject createJsonCart(DishObject dishObject, int quantity) {
+        double totalPrice;
+
+        RestaurantObject restaurantObject = Application.restaurantObject;
+
+        if (restaurantObject.getTaxable()) {
+            double productPrice = dishObject.getPrice();
+            double cgst = dishObject.getCgst();
+            double sgst = dishObject.getCgst();
+
+//            totalPrice = productPrice * ()
+        }
+
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("ProductId", dishObject.getProductID());
+            postParam.addProperty("ProductName", dishObject.getProductName());
+            postParam.addProperty("ProductRate", dishObject.getPrice());
+            postParam.addProperty("ProductAmount", dishObject.getPrice());
+            postParam.addProperty("ProductSize", "Regular");
+            postParam.addProperty("cartId", 0);
+            postParam.addProperty("ProductQnty", quantity);
+            postParam.addProperty("Taxableval", dishObject.getPrice());    // doubt
+            postParam.addProperty("CGST", dishObject.getCgst());
+            postParam.addProperty("SGST", dishObject.getSgst());
+            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
+            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
+            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
+            postParam.addProperty("DeliveryCharge", 30.00);
+            postParam.addProperty("Userid", Application.userDetails.getUserID());
+            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
+            postParam.addProperty("TotalAmount", dishObject.getPrice());
+            postParam.addProperty("TaxId", 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
     }
 
-    private void showItemQuantityPicker() {
-        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.VISIBLE);
-        viewHolderClickedItem.llAddItem.setVisibility(View.GONE);
+    public void addItemToCart(final ViewHolder holder, final int quantity, final int position, final String incrementOrDecrement) {
+        if (InternetConnection.checkConnection(activity)) {
+
+            final DishObject dishObject = modelArrayList.get(position);
+
+            ApiInterface apiService = RetroClient.getApiService(activity);
+            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+                            showHideQuantityAndAddItemButton(holder, quantity);
+
+                            if (onItemAddedToCart != null) {
+                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
+                            }
+
+//                            calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
+//                            updateViewCartStrip();
+
+
+                        } else {
+                            activity.showSnackbarErrorMsg(activity.getResources().getString(R.string.something_went_wrong));
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        activity.showSnackbarErrorMsg(activity.getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(activity.rlRootLayout, activity.getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addItemToCart(holder, quantity, position, incrementOrDecrement);
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
     }
 
 

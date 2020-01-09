@@ -24,6 +24,7 @@ import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
+import com.travijuu.numberpicker.library.Enums.ActionEnum;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,7 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RestaurantDetailsActivity extends AppCompatActivity implements OnItemAddedToCart {
-    RelativeLayout rlRootLayout;
+    public RelativeLayout rlRootLayout;
 
     String[] foodName = {"Navgrah Veg Restaurant", "Saroj Hotel", "Hotel Jewel of Chembur"};
     Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order,
@@ -55,8 +56,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     private TextView tvItemQuantity;
     private TextView tvTotalPrice;
 
-    private int quantity;
-    private double totalPrice;
+    private int totalCartQuantity;
+    private double totalCartPrice;
 
     RestaurantObject restaurantObject;
 
@@ -141,29 +142,58 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 //        }
 //    }
 
-    private void calculateViewCartDetails(int itemQuantity, double itemPrice) {
-        quantity = quantity + itemQuantity;
-        double price = itemQuantity * itemPrice;
-        totalPrice = totalPrice + price;
+//    private void calculateViewCartDetails(int itemQuantity, double itemPrice, String incrementOrDecrement) {
+//        if (incrementOrDecrement.equalsIgnoreCase(ActionEnum.INCREMENT.toString())) {
+////            increment
+//            totalCartQuantity = totalCartQuantity + itemQuantity;
+//            double price = itemQuantity * itemPrice;
+//            totalCartPrice = totalCartPrice + price;
+//
+//        } else {
+//            if (itemQuantity == 0) {
+//                itemQuantity = 1;
+//            }
+//
+//            totalCartQuantity = totalCartQuantity - itemQuantity;
+//            double price = itemQuantity * itemPrice;
+//            totalCartPrice = totalCartPrice - price;
+//        }
+//    }
+
+    private void calculateViewCartDetails(double itemPrice, String incrementOrDecrement) {
+        int itemQuantity = 1;   // at a time 1 item can be added or removed
+        if (incrementOrDecrement.equalsIgnoreCase(ActionEnum.INCREMENT.toString())) {
+//            increment
+            totalCartQuantity = totalCartQuantity + itemQuantity;
+            double price = itemQuantity * itemPrice;
+            totalCartPrice = totalCartPrice + price;
+
+        } else {
+
+            totalCartQuantity = totalCartQuantity - itemQuantity;
+            double price = itemQuantity * itemPrice;
+            totalCartPrice = totalCartPrice - price;
+        }
     }
 
+
     private void updateViewCartStrip() {
-        if (quantity == 0) {
+        if (totalCartQuantity == 0) {
             viewViewCart.setVisibility(View.GONE);
 
         } else {
             viewViewCart.setVisibility(View.VISIBLE);
 
-            String strPrice = formatAmount(totalPrice);
+            String strPrice = formatAmount(totalCartPrice);
             String itemLabel = "";
-            if (quantity > 1) {
+            if (totalCartQuantity > 1) {
                 itemLabel = getString(R.string.items);
 
             } else {
                 itemLabel = getString(R.string.item);
             }
 
-            tvItemQuantity.setText(quantity + " " + itemLabel);
+            tvItemQuantity.setText(totalCartQuantity + " " + itemLabel);
             tvTotalPrice.setText(getString(R.string.rupees) + " " + strPrice);
         }
     }
@@ -182,7 +212,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         DishObject dishObject = listDishProducts.get(position);
         Application.dishObject = dishObject;
 
-        addItemToCart(quantity, dishObject);
+//        addItemToCart(quantity, dishObject, incrementOrDecrement);
+
+//        calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
+        calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
+        updateViewCartStrip();
     }
 
     private void getProductDetailsData() {
@@ -290,131 +324,131 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                     .show();
         }
     }
-
-    private JsonObject createJsonCart(DishObject dishObject, int quantity) {
-        double totalPrice;
-
-        RestaurantObject restaurantObject = Application.restaurantObject;
-
-        if (restaurantObject.getTaxable()) {
-            double productPrice = dishObject.getPrice();
-            double cgst = dishObject.getCgst();
-            double sgst = dishObject.getCgst();
-
-//            totalPrice = productPrice * ()
-        }
-
-        JsonObject postParam = new JsonObject();
-
-        try {
-            postParam.addProperty("ProductId", dishObject.getProductID());
-            postParam.addProperty("ProductName", dishObject.getProductName());
-            postParam.addProperty("ProductRate", dishObject.getPrice());
-            postParam.addProperty("ProductAmount", dishObject.getPrice());
-            postParam.addProperty("ProductSize", "Regular");
-            postParam.addProperty("cartId", 0);
-            postParam.addProperty("ProductQnty", quantity);
-            postParam.addProperty("Taxableval", dishObject.getPrice());    // doubt
-            postParam.addProperty("CGST", dishObject.getCgst());
-            postParam.addProperty("SGST", dishObject.getSgst());
-            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
-            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
-            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
-            postParam.addProperty("DeliveryCharge", 30.00);
-            postParam.addProperty("Userid", Application.userDetails.getUserID());
-            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
-            postParam.addProperty("TotalAmount", dishObject.getPrice());
-            postParam.addProperty("TaxId", 0);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return postParam;
-    }
-
-
-    public void addItemToCart(final int quantity, final DishObject dishObject) {
-        if (InternetConnection.checkConnection(this)) {
-
-            ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                    try {
-                        int statusCode = response.code();
-
-                        if (response.isSuccessful()) {
-                            String responseString = response.body().string();
-
-//                            Application.cartObject = dishObject;
-
-
-                            calculateViewCartDetails(quantity, dishObject.getPrice());
-                            updateViewCartStrip();
-                            adapterRestaurantMenu.showHideQuantityAndAddItemButton();
-
-//                            listCartDish = new ArrayList<>();
-
-//                            ada
-
-//                            JSONArray jsonArray = new JSONArray(responseString);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 //
-//                                String dishID = jsonObj.optString("ProductId");
-//                                String dishName = jsonObj.optString("ProductName");
-//                                String dishDescription = jsonObj.optString("ProductDesc");
-//                                String dishImage = jsonObj.optString("ProductImage");
-//                                String dishPrice = jsonObj.optString("Price");
+//    private JsonObject createJsonCart(DishObject dishObject, int quantity) {
+//        double totalPrice;
 //
-//                                DishObject dishObject = new DishObject();
-//                                dishObject.setDishID(dishID);
-//                                dishObject.setDishName(dishName);
-//                                dishObject.setDishDescription(dishDescription);
-//                                dishObject.setDishImage(dishImage);
-//                                dishObject.setDishPrice(dishPrice);
+//        RestaurantObject restaurantObject = Application.restaurantObject;
 //
-//                                listCartDish.add(dishObject);
-//                            }
-
-                        } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-                        Log.e("Error onFailure : ", t.toString());
-                        t.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } else {
-//            signOutFirebaseAccounts();
-
-            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            addItemToCart(quantity, dishObject);
-                        }
-                    })
-//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
-                    .show();
-        }
-    }
+//        if (restaurantObject.getTaxable()) {
+//            double productPrice = dishObject.getPrice();
+//            double cgst = dishObject.getCgst();
+//            double sgst = dishObject.getCgst();
+//
+////            totalPrice = productPrice * ()
+//        }
+//
+//        JsonObject postParam = new JsonObject();
+//
+//        try {
+//            postParam.addProperty("ProductId", dishObject.getProductID());
+//            postParam.addProperty("ProductName", dishObject.getProductName());
+//            postParam.addProperty("ProductRate", dishObject.getPrice());
+//            postParam.addProperty("ProductAmount", dishObject.getPrice());
+//            postParam.addProperty("ProductSize", "Regular");
+//            postParam.addProperty("cartId", 0);
+//            postParam.addProperty("ProductQnty", quantity);
+//            postParam.addProperty("Taxableval", dishObject.getPrice());    // doubt
+//            postParam.addProperty("CGST", dishObject.getCgst());
+//            postParam.addProperty("SGST", dishObject.getSgst());
+//            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
+//            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
+//            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
+//            postParam.addProperty("DeliveryCharge", 30.00);
+//            postParam.addProperty("Userid", Application.userDetails.getUserID());
+//            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
+//            postParam.addProperty("TotalAmount", dishObject.getPrice());
+//            postParam.addProperty("TaxId", 0);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return postParam;
+//    }
+//
+//
+//    public void addItemToCart(final int quantity, final DishObject dishObject, final String incrementOrDecrement) {
+//        if (InternetConnection.checkConnection(this)) {
+//
+//            ApiInterface apiService = RetroClient.getApiService(this);
+//            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                    try {
+//                        int statusCode = response.code();
+//
+//                        if (response.isSuccessful()) {
+//                            String responseString = response.body().string();
+//
+////                            Application.cartObject = dishObject;
+//
+//
+//                            calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
+//                            updateViewCartStrip();
+//                            adapterRestaurantMenu.showHideQuantityAndAddItemButton();
+//
+////                            listCartDish = new ArrayList<>();
+//
+////                            ada
+//
+////                            JSONArray jsonArray = new JSONArray(responseString);
+////                            for (int i = 0; i < jsonArray.length(); i++) {
+////                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+////
+////                                String dishID = jsonObj.optString("ProductId");
+////                                String dishName = jsonObj.optString("ProductName");
+////                                String dishDescription = jsonObj.optString("ProductDesc");
+////                                String dishImage = jsonObj.optString("ProductImage");
+////                                String dishPrice = jsonObj.optString("Price");
+////
+////                                DishObject dishObject = new DishObject();
+////                                dishObject.setDishID(dishID);
+////                                dishObject.setDishName(dishName);
+////                                dishObject.setDishDescription(dishDescription);
+////                                dishObject.setDishImage(dishImage);
+////                                dishObject.setDishPrice(dishPrice);
+////
+////                                listCartDish.add(dishObject);
+////                            }
+//
+//                        } else {
+//                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+//                        }
+//
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    try {
+//                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+//                        Log.e("Error onFailure : ", t.toString());
+//                        t.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        } else {
+////            signOutFirebaseAccounts();
+//
+//            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("RETRY", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            addItemToCart(quantity, dishObject, incrementOrDecrement);
+//                        }
+//                    })
+////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+//                    .show();
+//        }
+//    }
 
     public void showDialog() {
         progressIndicator.showProgress(RestaurantDetailsActivity.this);
