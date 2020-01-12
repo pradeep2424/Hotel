@@ -101,7 +101,6 @@
     <string name="pay_on_delivery">PAY ON DELIVERY</string>
     <string name="pay_exact_change">Please provide exact change.</string>
 
-
     <string name="no_internet">No internet connection</string>
     <string name="something_went_wrong">Something went wrong, Please try again.</string>
     <string name="server_conn_lost">Server connection lost, Please try again.</string>

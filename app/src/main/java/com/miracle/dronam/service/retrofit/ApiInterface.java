@@ -85,9 +85,13 @@ public interface ApiInterface {
 
 //    @POST("insorder")
 //    Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
+//
+//    @POST("insorder")
+//    Call<ResponseBody> placeOrder(@Body ArrayList<OrderDetailsObject> listOrder);
+
 
     @POST("insorder")
-    Call<ResponseBody> placeOrder(@Body ArrayList<OrderDetailsObject> listOrder);
+    Call<ResponseBody> placeOrder(@Body OrderDetailsObject orderDetails);
 
 
 //    @POST("insorder")

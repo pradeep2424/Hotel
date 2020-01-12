@@ -583,16 +583,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-    private JsonArray createJsonPlaceOrder(ArrayList<OrderDetailsObject> listOrderItems) {
-//        RestaurantObject restaurantObject = Application.restaurantObject;
-
-        JsonArray jsonArray = new JsonArray();
-        try {
-
-            for (int i = 0; i < listOrderItems.size(); i++) {
-                OrderDetailsObject orderDetailsObject = listOrderItems.get(i);
-
-//                JsonObject postParam = new JsonObject();
+//    private JsonObject createJsonPlaceOrder(OrderDetailsObject orderDetailsObject) {
+//        JsonObject postParam = new JsonObject();
+//
+//        try {
 //                postParam.addProperty("OrderId", orderDetailsObject.getOrderID());
 //                postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
 //                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
@@ -609,57 +603,50 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //                postParam.addProperty("SGST", orderDetailsObject.getSgst());
 //                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
 //                postParam.addProperty("Userid", orderDetailsObject.getUserID());
-//                postParam.addProperty("Clientid", orderDetailsObject.getRestaurantID());
+//                postParam.addProperty("Clientid", orderDetailsObject.getClientID());
 //                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
 //                postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
 //                postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
 //                postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
 //                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
-
-                JsonObject postParam = new JsonObject();
-                postParam.addProperty("orderID", orderDetailsObject.getOrderID());
-                postParam.addProperty("orderNumber", orderDetailsObject.getOrderNumber());
-                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
-                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
-                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
-                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
-                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
-                postParam.addProperty("productID", orderDetailsObject.getProductID());
-                postParam.addProperty("productName", orderDetailsObject.getProductName());
-                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
-                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
-                postParam.addProperty("cgst", orderDetailsObject.getCgst());
-                postParam.addProperty("sgst", orderDetailsObject.getSgst());
-                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-                postParam.addProperty("userID", orderDetailsObject.getUserID());
-                postParam.addProperty("restaurantID", orderDetailsObject.getClientID());
-                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
-                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
-                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
-                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
-                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
-
-                jsonArray.add(postParam);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return jsonArray;
-    }
+//
+////                JsonObject postParam = new JsonObject();
+////                postParam.addProperty("orderID", orderDetailsObject.getOrderID());
+////                postParam.addProperty("orderNumber", orderDetailsObject.getOrderNumber());
+////                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
+////                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
+////                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
+////                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
+////                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
+////                postParam.addProperty("productID", orderDetailsObject.getProductID());
+////                postParam.addProperty("productName", orderDetailsObject.getProductName());
+////                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+////                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+////                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
+////                postParam.addProperty("cgst", orderDetailsObject.getCgst());
+////                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+////                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+////                postParam.addProperty("userID", orderDetailsObject.getUserID());
+////                postParam.addProperty("restaurantID", orderDetailsObject.getClientID());
+////                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
+////                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
+////                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
+////                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
+////                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return jsono;
+//    }
 
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
-            ArrayList<OrderDetailsObject> listOrderDetails = new ArrayList<>();
             try {
 
                 UserDetails userDetails = Application.userDetails;
-                ArrayList<CartObject> listCartItems = Application.listCartItems;
+                final ArrayList<CartObject> listCartItems = Application.listCartItems;
 
-//                RestaurantObject restaurantObj = Application.restaurantObject;
-//                String userTypeID = Application.userDetails.getUserType();
-//                String restaurantID = "1";
 
                 for (int i = 0; i < listCartItems.size(); i++) {
                     CartObject cartObject = listCartItems.get(i);
@@ -687,55 +674,60 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     orderObj.setRejectReason("NO");
                     orderObj.setOrderDate(getCurrentDate());
 
-                    listOrderDetails.add(orderObj);
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+                    final int currentIndex = i;
+
+                    ApiInterface apiService = RetroClient.getApiService(getActivity());
+                    Call<ResponseBody> call = apiService.placeOrder(orderObj);
+//                    Call<ResponseBody> call = apiService.placeOrder(orderObj);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                            try {
+                                int statusCode = response.code();
+
+                                if (response.isSuccessful()) {
+                                    String responseString = response.body().string();
+
+                                    if (currentIndex == listCartItems.size() - 1) {
+                                        showSuccessOrderMsg();
+                                        showEmptyCart();
+                                    }
+
+                                } else {
+                                    showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            try {
+                                showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                                Log.e("Error onFailure : ", t.toString());
+                                t.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            ApiInterface apiService = RetroClient.getApiService(getActivity());
-//          Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(listOrderDetails));
-            Call<ResponseBody> call = apiService.placeOrder(listOrderDetails);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                    try {
-                        int statusCode = response.code();
-
-                        if (response.isSuccessful()) {
-                            String responseString = response.body().string();
-
-//                            if (responseString.equalsIgnoreCase(getString(R.string.success))) {
-//                                setupRecyclerViewOrderedItems();
-
-//                                showSnackBarErrorMsgWithButton(getString(R.string.order_placed_successfully));
-
-                            showSuccessOrderMsg();
-                            showEmptyCart();
-//                            }
-
-                        } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-                        Log.e("Error onFailure : ", t.toString());
-                        t.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
         } else {
 //            signOutFirebaseAccounts();
 
@@ -751,6 +743,110 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .show();
         }
     }
+
+
+//    private void placeOrder() {
+//        if (InternetConnection.checkConnection(getActivity())) {
+//            ArrayList<OrderDetailsObject> listOrderDetails = new ArrayList<>();
+//            try {
+//
+//                UserDetails userDetails = Application.userDetails;
+//                ArrayList<CartObject> listCartItems = Application.listCartItems;
+//
+////                RestaurantObject restaurantObj = Application.restaurantObject;
+////                String userTypeID = Application.userDetails.getUserType();
+////                String restaurantID = "1";
+//
+//                for (int i = 0; i < listCartItems.size(); i++) {
+//                    CartObject cartObject = listCartItems.get(i);
+//
+//                    OrderDetailsObject orderObj = new OrderDetailsObject();
+//                    orderObj.setOrderID(i + 1);
+//                    orderObj.setOrderNumber(i + 1);
+//                    orderObj.setOrderType(i + 1);
+//                    orderObj.setOrderStatus(i + 1);
+//                    orderObj.setOrderMode(i + 1);
+//                    orderObj.setPaymentID(i + 1);
+//                    orderObj.setProductID(cartObject.getProductID());
+//                    orderObj.setProductName(cartObject.getProductName());
+//                    orderObj.setProductRate(cartObject.getProductRate());
+//                    orderObj.setProductQuantity(cartObject.getProductQuantity());
+//                    orderObj.setTaxableVal(cartObject.getTaxableVal());
+//                    orderObj.setCgst(cartObject.getCgst());
+//                    orderObj.setSgst(cartObject.getSgst());
+//                    orderObj.setUserAddress(userDetails.getAddress());
+//                    orderObj.setUserID(userDetails.getUserID());
+//                    orderObj.setClientID(cartObject.getRestaurantID());
+//                    orderObj.setRestaurantName(cartObject.getRestaurantName());
+//                    orderObj.setTaxID(cartObject.getTaxID());
+//                    orderObj.setOrderPaid(false);
+//                    orderObj.setRejectReason("NO");
+//                    orderObj.setOrderDate(getCurrentDate());
+//
+//                    listOrderDetails.add(orderObj);
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            ApiInterface apiService = RetroClient.getApiService(getActivity());
+////          Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(listOrderDetails));
+//            Call<ResponseBody> call = apiService.placeOrder(listOrderDetails);
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                    try {
+//                        int statusCode = response.code();
+//
+//                        if (response.isSuccessful()) {
+//                            String responseString = response.body().string();
+//
+////                            if (responseString.equalsIgnoreCase(getString(R.string.success))) {
+////                                setupRecyclerViewOrderedItems();
+//
+////                                showSnackBarErrorMsgWithButton(getString(R.string.order_placed_successfully));
+//
+//                            showSuccessOrderMsg();
+//                            showEmptyCart();
+////                            }
+//
+//                        } else {
+//                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+//                        }
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    try {
+//                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+//                        Log.e("Error onFailure : ", t.toString());
+//                        t.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        } else {
+////            signOutFirebaseAccounts();
+//
+//            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction("RETRY", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            getCartItems();
+//                        }
+//                    })
+////                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+//                    .show();
+//        }
+//    }
 
     private String getCurrentDate() {
         Calendar c = Calendar.getInstance();
