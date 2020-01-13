@@ -76,6 +76,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private TextView tvTotalPaymentAmount;
     private TextView tvPaymentButtonAmount;
 
+    double totalPayment;
+
     private ArrayList<CartObject> listCartDish;
 
     int userID;
@@ -187,7 +189,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         cgst = itemTotal * (cgst / 100);
         double totalGST = sgst + cgst;
 
-        double totalPayment = itemTotal + totalGST + deliveryCharges;
+        totalPayment = itemTotal + totalGST + deliveryCharges;
 
         tvItemTotal.setText("₹ " + itemTotal);
         tvRestaurantCharges.setText("₹ " + totalGST);
@@ -502,7 +504,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-    public void deleteCartItem(final int quantity, final int position) {
+    public void deleteCartItem() {
         if (InternetConnection.checkConnection(getActivity())) {
 
 //            CartObject cartObject = listCartDish.get(position);
@@ -519,7 +521,6 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            adapterOrderedItems.removeAt(position);
                             showEmptyCart();
 
 //                            listCartDish = new ArrayList<>();
@@ -575,7 +576,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            deleteCartItem(quantity, position);
+                            deleteCartItem();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -583,62 +584,64 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-//    private JsonObject createJsonPlaceOrder(OrderDetailsObject orderDetailsObject) {
-//        JsonObject postParam = new JsonObject();
-//
-//        try {
+    private JsonObject createJsonPlaceOrder(OrderDetailsObject orderDetailsObject) {
+        JsonObject postParam = new JsonObject();
+
+        try {
 //                postParam.addProperty("OrderId", orderDetailsObject.getOrderID());
-//                postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
+            postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
 //                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
-//                postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
-//                postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
-//                postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
+            postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
+            postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
+            postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
 //                postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
-//                postParam.addProperty("ProductId", orderDetailsObject.getProductID());
-//                postParam.addProperty("ProductName", orderDetailsObject.getProductName());
-//                postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
-//                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-//                postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
-//                postParam.addProperty("CGST", orderDetailsObject.getCgst());
-//                postParam.addProperty("SGST", orderDetailsObject.getSgst());
+            postParam.addProperty("PaymentId", 1);    // cash
+            postParam.addProperty("ProductId", orderDetailsObject.getProductID());
+            postParam.addProperty("ProductName", orderDetailsObject.getProductName());
+            postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
+            postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+            postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
+            postParam.addProperty("CGST", orderDetailsObject.getCgst());
+            postParam.addProperty("SGST", orderDetailsObject.getSgst());
 //                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-//                postParam.addProperty("Userid", orderDetailsObject.getUserID());
-//                postParam.addProperty("Clientid", orderDetailsObject.getClientID());
+            postParam.addProperty("UserAddress", "ABCD");
+            postParam.addProperty("Userid", orderDetailsObject.getUserID());
+            postParam.addProperty("Clientid", orderDetailsObject.getClientID());
 //                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
-//                postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
-//                postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
-//                postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
-//                postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
-//
+            postParam.addProperty("TotalAmount", orderDetailsObject.getTotalAmount());
+            postParam.addProperty("TaxId", orderDetailsObject.getTaxID());
+            postParam.addProperty("OrderPaid", orderDetailsObject.getOrderPaid());
+            postParam.addProperty("RejectReason", orderDetailsObject.getRejectReason());
+
 ////                JsonObject postParam = new JsonObject();
 ////                postParam.addProperty("orderID", orderDetailsObject.getOrderID());
-////                postParam.addProperty("orderNumber", orderDetailsObject.getOrderNumber());
+//                postParam.addProperty("orderNumber", orderDetailsObject.getOrderNumber());
 ////                postParam.addProperty("orderDate", orderDetailsObject.getOrderDate());
-////                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
-////                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
-////                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
+//                postParam.addProperty("orderType", orderDetailsObject.getOrderType());
+//                postParam.addProperty("orderStatus", orderDetailsObject.getOrderStatus());
+//                postParam.addProperty("orderMode", orderDetailsObject.getOrderMode());
 ////                postParam.addProperty("paymentID", orderDetailsObject.getPaymentID());    // doubt
-////                postParam.addProperty("productID", orderDetailsObject.getProductID());
-////                postParam.addProperty("productName", orderDetailsObject.getProductName());
-////                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
-////                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
-////                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
-////                postParam.addProperty("cgst", orderDetailsObject.getCgst());
-////                postParam.addProperty("sgst", orderDetailsObject.getSgst());
-////                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-////                postParam.addProperty("userID", orderDetailsObject.getUserID());
-////                postParam.addProperty("restaurantID", orderDetailsObject.getClientID());
+//                postParam.addProperty("productID", orderDetailsObject.getProductID());
+//                postParam.addProperty("productName", orderDetailsObject.getProductName());
+//                postParam.addProperty("productRate", orderDetailsObject.getProductRate());
+//                postParam.addProperty("ProductQnty", orderDetailsObject.getProductQuantity());
+//                postParam.addProperty("taxableVal", orderDetailsObject.getTaxableVal());
+//                postParam.addProperty("cgst", orderDetailsObject.getCgst());
+//                postParam.addProperty("sgst", orderDetailsObject.getSgst());
+//                postParam.addProperty("UserAddress", "ABCD");
+//                postParam.addProperty("userID", orderDetailsObject.getUserID());
+//                postParam.addProperty("restaurantID", orderDetailsObject.getClientID());
 ////                postParam.addProperty("restaurantName", orderDetailsObject.getRestaurantName());
-////                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
-////                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
-////                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
-////                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return jsono;
-//    }
+//                postParam.addProperty("totalAmount", orderDetailsObject.getTotalAmount());
+//                postParam.addProperty("taxID", orderDetailsObject.getTaxID());
+//                postParam.addProperty("orderPaid", orderDetailsObject.getOrderPaid());
+//                postParam.addProperty("rejectReason", orderDetailsObject.getRejectReason());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
 
     private void placeOrder() {
         if (InternetConnection.checkConnection(getActivity())) {
@@ -652,12 +655,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     CartObject cartObject = listCartItems.get(i);
 
                     OrderDetailsObject orderObj = new OrderDetailsObject();
-                    orderObj.setOrderID(i + 1);
+//                    orderObj.setOrderID(i + 1);
                     orderObj.setOrderNumber(i + 1);
                     orderObj.setOrderType(i + 1);
                     orderObj.setOrderStatus(i + 1);
                     orderObj.setOrderMode(i + 1);
-                    orderObj.setPaymentID(i + 1);
+                    orderObj.setPaymentID(1);   //  cash
                     orderObj.setProductID(cartObject.getProductID());
                     orderObj.setProductName(cartObject.getProductName());
                     orderObj.setProductRate(cartObject.getProductRate());
@@ -665,14 +668,16 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     orderObj.setTaxableVal(cartObject.getTaxableVal());
                     orderObj.setCgst(cartObject.getCgst());
                     orderObj.setSgst(cartObject.getSgst());
-                    orderObj.setUserAddress(userDetails.getAddress());
+                    orderObj.setTotalAmount(totalPayment);
+//                    orderObj.setUserAddress(userDetails.getAddress());
+                    orderObj.setUserAddress("ABCD");
                     orderObj.setUserID(userDetails.getUserID());
                     orderObj.setClientID(cartObject.getRestaurantID());
-                    orderObj.setRestaurantName(cartObject.getRestaurantName());
+//                    orderObj.setRestaurantName(cartObject.getRestaurantName());
                     orderObj.setTaxID(cartObject.getTaxID());
                     orderObj.setOrderPaid(false);
                     orderObj.setRejectReason("NO");
-                    orderObj.setOrderDate(getCurrentDate());
+//                    orderObj.setOrderDate(getCurrentDate());
 
 //                }
 //
@@ -683,7 +688,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     final int currentIndex = i;
 
                     ApiInterface apiService = RetroClient.getApiService(getActivity());
-                    Call<ResponseBody> call = apiService.placeOrder(orderObj);
+                    Call<ResponseBody> call = apiService.placeOrder(createJsonPlaceOrder(orderObj));
 //                    Call<ResponseBody> call = apiService.placeOrder(orderObj);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
@@ -696,8 +701,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     String responseString = response.body().string();
 
                                     if (currentIndex == listCartItems.size() - 1) {
+                                        deleteCartItem();
                                         showSuccessOrderMsg();
-                                        showEmptyCart();
                                     }
 
                                 } else {
