@@ -55,7 +55,7 @@
                             android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Pradeep Jadhav"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="23sp" />
 
@@ -63,7 +63,7 @@
                             android:id="@+id/tv_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="xyz@gmail.com"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="14.4sp" />
 
@@ -71,7 +71,7 @@
                             android:id="@+id/tv_mobile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="9876543210"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="14.4sp" />
                     </LinearLayout>

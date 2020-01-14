@@ -1,25 +1,49 @@
 package com.miracle.dronam.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
 import com.miracle.dronam.bottomMenu.CartFragment;
 import com.miracle.dronam.bottomMenu.HomeFragment;
 import com.miracle.dronam.bottomMenu.ProfileFragment;
 import com.miracle.dronam.bottomMenu.SearchFragment;
 import com.miracle.dronam.fragments.PastOrdersFragment;
+import com.miracle.dronam.listeners.TriggerTabChangeListener;
+import com.miracle.dronam.model.CartObject;
+import com.miracle.dronam.service.retrofit.ApiInterface;
+import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.InternetConnection;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class MainActivity extends AppCompatActivity implements TriggerTabChangeListener {
+    CoordinatorLayout clRootLayout;
     FrameLayout frameLayout;
     BottomBar bottomBar;
 
@@ -31,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         componentEvents();
+        getCartItems();
     }
 
     private void init() {
+        clRootLayout = (CoordinatorLayout) findViewById(R.id.cl_rootLayout);
         frameLayout = (FrameLayout) findViewById(R.id.framelayout);
         bottomBar = (BottomBar) findViewById(R.id.bottombar);
 
@@ -73,10 +99,156 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.framelayout, fragment);
         transaction.commit();
+    }
+
+    private void getCartItems() {
+        if (InternetConnection.checkConnection(this)) {
+
+            int userID = Application.userDetails.getUserID();
+            int restaurantID = Application.restaurantObject.getRestaurantID();
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getCartItem(userID, restaurantID);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+                            JSONArray jsonArray = new JSONArray(responseString);
+
+                            int noOfCartItems = jsonArray.length();
+                            setCartItemsBadgeCount(noOfCartItems);
+
+//                            if (jsonArray != null && jsonArray.length() > 0) {
+//                                for (int i = 0; i < jsonArray.length(); i++) {
+//                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
+//
+//                                    double cgst = jsonObj.optDouble("CGST");
+//                                    int restaurantID = jsonObj.optInt("Clientid");
+//                                    double deliveryCharge = jsonObj.optDouble("DeliveryCharge");
+//                                    String restaurantName = jsonObj.optString("HotelName");
+//                                    boolean isIncludeTax = jsonObj.optBoolean("IsIncludeTax");
+//                                    boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
+//                                    double productAmount = jsonObj.optDouble("ProductAmount");
+//                                    int productID = jsonObj.optInt("ProductId");
+//                                    String productName = jsonObj.optString("ProductName");
+//                                    int productQuantity = jsonObj.optInt("ProductQnty");
+//                                    double productRate = jsonObj.optDouble("ProductRate");
+//                                    String productSize = jsonObj.optString("ProductSize");
+//                                    double sgst = jsonObj.optDouble("SGST");
+//                                    int taxID = jsonObj.optInt("TaxId");
+//                                    double taxableVal = jsonObj.optDouble("Taxableval");
+//                                    double totalAmount = jsonObj.optDouble("TotalAmount");
+//                                    int userID = jsonObj.optInt("Userid");
+//                                    int cartID = jsonObj.optInt("cartId");
+//
+//
+//                                    CartObject cartObject = new CartObject();
+//                                    cartObject.setCgst(cgst);
+//                                    cartObject.setRestaurantID(restaurantID);
+//                                    cartObject.setDeliveryCharge(deliveryCharge);
+//                                    cartObject.setRestaurantName(restaurantName);
+//                                    cartObject.setIsIncludeTax(isIncludeTax);
+//                                    cartObject.setIsTaxApplicable(isTaxApplicable);
+//                                    cartObject.setProductAmount(productAmount);
+//                                    cartObject.setProductID(productID);
+//                                    cartObject.setProductName(productName);
+//                                    cartObject.setProductQuantity(productQuantity);
+//                                    cartObject.setProductRate(productRate);
+//                                    cartObject.setProductSize(productSize);
+//                                    cartObject.setSgst(sgst);
+//                                    cartObject.setTaxID(taxID);
+//                                    cartObject.setTaxableVal(taxableVal);
+//                                    cartObject.setTotalAmount(totalAmount);
+//                                    cartObject.setUserID(userID);
+//                                    cartObject.setCartID(cartID);
+//
+//
+//                                    listCartDish.add(cartObject);
+//                                }
+//
+//                                Application.listCartItems = SerializationUtils.clone(listCartDish);
+//
+//                                showCartItemDetails();
+//                                setupRecyclerViewOrderedItems();
+//                                setupBillingDetails();
+//
+//                            } else {
+//                                showEmptyCart();
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+//                        getTESTUserLikeDishData();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(clRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getCartItems();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    public void showSnackbarErrorMsg(String erroMsg) {
+//        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
+
+        Snackbar snackbar = Snackbar.make(clRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        TextView snackTextView = (TextView) snackbarView
+                .findViewById(R.id.snackbar_text);
+        snackTextView.setMaxLines(4);
+        snackbar.show();
+    }
+
+    private void setCartItemsBadgeCount(int count) {
+        BottomBarTab cartItems = bottomBar.getTabWithId(R.id.tab_cart);
+        cartItems.setBadgeCount(count);
+    }
+
+    @Override
+    public void setTab(int position) {
+        if (bottomBar != null) {
+            bottomBar.selectTabAtPosition(position, true);
+        }
+    }
+
+    @Override
+    public void setBadgeCount(int count) {
+//        getCartItems();
+        setCartItemsBadgeCount(count);
     }
 }

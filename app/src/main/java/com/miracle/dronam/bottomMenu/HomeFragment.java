@@ -1,6 +1,7 @@
 package com.miracle.dronam.bottomMenu;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -34,6 +35,7 @@ import com.miracle.dronam.adapter.RecycleAdapterCuisine;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
+import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.CuisineObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
@@ -56,7 +58,7 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment implements OnRecyclerViewClickListener,
-        BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+        BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
     View rootView;
 
@@ -96,10 +98,20 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private ViewPager viewPager;
     private PagerAdapterBanner pagerAdapterForBanner;
 
+    TriggerTabChangeListener triggerTabChangeListener;
+
     private final int REQUEST_CODE_LOCATION = 99;
     private final int REQUEST_CODE_SEE_MORE_DISH = 100;
     private final int REQUEST_CODE_SEE_MORE_CUISINE = 101;
     private final int REQUEST_CODE_SEE_MORE_RESTAURANT = 102;
+    private final int REQUEST_CODE_RESTAURANT_DETAILS = 103;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        triggerTabChangeListener = (TriggerTabChangeListener) context;
+    }
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -137,7 +149,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         llToolbarLocation = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
         tvToolbarTitle = viewToolbarLocation.findViewById(R.id.tv_toolbarTitle);
 
-        imageSliderLayout = (SliderLayout)rootView.findViewById(R.id.slider);
+        imageSliderLayout = (SliderLayout) rootView.findViewById(R.id.slider);
 
         rvDishUserLikes = (RecyclerView) rootView.findViewById(R.id.recyclerView_dishUserLike);
         rvCuisines = (RecyclerView) rootView.findViewById(R.id.recyclerView_cuisine);
@@ -211,21 +223,20 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         });
     }
 
-    private void setupSlidingImages()
-    {
+    private void setupSlidingImages() {
 //        HashMap<String,String> url_maps = new HashMap<String, String>();
 //        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
 //        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
 //        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
 //        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
 
-        HashMap<String,Integer> url_maps = new HashMap<String, Integer>();
-        url_maps.put("Hannibal",R.mipmap.temp_img1);
-        url_maps.put("Big Bang Theory",R.mipmap.temp_img2);
-        url_maps.put("House of Cards",R.mipmap.temp_img3);
+        HashMap<String, Integer> url_maps = new HashMap<String, Integer>();
+        url_maps.put("Hannibal", R.mipmap.temp_img1);
+        url_maps.put("Big Bang Theory", R.mipmap.temp_img2);
+        url_maps.put("House of Cards", R.mipmap.temp_img3);
         url_maps.put("Game of Thrones", R.mipmap.temp_img4);
 
-        for(String name : url_maps.keySet()){
+        for (String name : url_maps.keySet()) {
             TextSliderView textSliderView = new TextSliderView(getActivity());
             // initialize a SliderLayout
             textSliderView
@@ -237,7 +248,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
             //add your extra information
             textSliderView.bundle(new Bundle());
             textSliderView.getBundle()
-                    .putString("extra",name);
+                    .putString("extra", name);
 
             imageSliderLayout.addSlider(textSliderView);
         }
@@ -329,7 +340,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
         Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
         intent.putExtra("RestaurantObject", restaurantObject);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
     }
 
     public void showSnackbarErrorMsg(String erroMsg) {
@@ -445,7 +456,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
 
     @Override
     public void onPageSelected(int position) {
@@ -453,11 +465,12 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {}
+    public void onPageScrollStateChanged(int state) {
+    }
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(getActivity(),slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -477,6 +490,18 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         } else if (requestCode == REQUEST_CODE_SEE_MORE_CUISINE) {
             if (resultCode == Activity.RESULT_OK && data != null) {
 
+            }
+        } else if (requestCode == REQUEST_CODE_RESTAURANT_DETAILS) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+
+                String flag = data.getExtras().getString("MESSAGE");
+                if (flag.equalsIgnoreCase("VIEW_CART")) {
+                    triggerTabChangeListener.setTab(2);
+
+                } else if (flag.equalsIgnoreCase("UPDATE_CART_COUNT")) {
+                    int noOfItems = data.getExtras().getInt("CART_ITEM_COUNT");
+                    triggerTabChangeListener.setBadgeCount(noOfItems);
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

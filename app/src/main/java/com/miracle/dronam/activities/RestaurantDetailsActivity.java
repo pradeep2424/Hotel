@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -78,6 +79,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         }
 
         initComponents();
+        componentEvents();
         setupRecyclerViewPhotos();
 //        setupRecyclerViewMenu();
 
@@ -96,6 +98,18 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         tvTotalPrice = viewViewCart.findViewById(R.id.tv_totalPrice);
 
 //        viewPager = (ViewPager) findViewById(R.id.viewPager_slidingRestaurantImages);
+    }
+
+    private void componentEvents() {
+        viewViewCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("MESSAGE", "VIEW_CART");
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 
     private void setupRecyclerViewPhotos() {
@@ -479,4 +493,18 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 //        indicator.setViewPager(viewPager);
 //        loginPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
 //    }
+
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        int totalItems = Application.listCartItems.size() + totalCartQuantity;
+
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", "UPDATE_CART_COUNT");
+        intent.putExtra("CART_ITEM_COUNT", totalItems);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

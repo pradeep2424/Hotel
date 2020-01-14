@@ -103,10 +103,12 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         otpView = (OtpView) findViewById(R.id.otp_view);
 //        btnGetStarted = (Button) findViewById(R.id.btn_getStartedNow);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mobileNumber = extras.getString("Mobile");
-        }
+//        Bundle extras = getIntent().getExtras();
+//        if (extras != null) {
+//            mobileNumber = extras.getString("Mobile");
+//        }
+
+        mobileNumber = Application.userDetails.getMobile();
 
         String titleText = getResources().getString(R.string.login_verify_otp_text)
                 .concat(" ").concat(mobileNumber);
@@ -528,9 +530,12 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                             String sendSMS = jsonObj.optString("SendSMS");
                             String senderID = jsonObj.optString("SenderID");
 
+                            String fullName = fname.concat(" ").concat(lname);
+
                             UserDetails userDetails = new UserDetails();
                             userDetails.setFirstName(fname);
                             userDetails.setLastName(lname);
+                            userDetails.setFullName(fullName);
                             userDetails.setUserType(userType);
                             userDetails.setEmail(email);
                             userDetails.setMobile(mobile);
@@ -547,16 +552,17 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                             userDetails.setCityName(cityName);
                             userDetails.setStateName(stateName);
                             userDetails.setZipCode(zipCode);
+
                             Application.userDetails = userDetails;
 
-                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
-                            smsGatewayObject.setUrl(url);
-                            smsGatewayObject.setSmsUsername(smsUsername);
-                            smsGatewayObject.setSmsPass(smsPass);
-                            smsGatewayObject.setChannel(channel);
-                            smsGatewayObject.setSendSMS(sendSMS);
-                            smsGatewayObject.setSenderID(senderID);
-                            Application.smsGatewayObject = smsGatewayObject;
+//                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
+//                            smsGatewayObject.setUrl(url);
+//                            smsGatewayObject.setSmsUsername(smsUsername);
+//                            smsGatewayObject.setSmsPass(smsPass);
+//                            smsGatewayObject.setChannel(channel);
+//                            smsGatewayObject.setSendSMS(sendSMS);
+//                            smsGatewayObject.setSenderID(senderID);
+//                            Application.smsGatewayObject = smsGatewayObject;
 
                             Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
                             startActivity(intent);

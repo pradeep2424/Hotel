@@ -87,6 +87,13 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                         ActionEnum.INCREMENT.toString() : ActionEnum.DECREMENT.toString());
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
+//                if (value == 0) {
+//                    showAddItemButton(holder);
+//
+//                } else {
+//                    hideAddItemButton(holder);
+//                }
+
 
 //                    onItemAddedToCart.onItemChangedInCart(1, position, actionText);
 
@@ -105,21 +112,32 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 //        }
     }
 
-    public void showHideQuantityAndAddItemButton(ViewHolder holder, int quantity) {
-        if (quantity == 0) {
-//            showAddItemButton();
+//    public void showHideQuantityAndAddItemButton(ViewHolder holder, int quantity) {
+////        if (quantity == 0) {
+//////            showAddItemButton();
+////
+//////            show Add Item Button
+////            holder.numberPickerItemQuantity.setVisibility(View.GONE);
+////            holder.llAddItem.setVisibility(View.VISIBLE);
+////
+////        } else {
+//////            showItemQuantityPicker();
+////
+//////            show number picker
+////            holder.numberPickerItemQuantity.setVisibility(View.VISIBLE);
+////            holder.llAddItem.setVisibility(View.GONE);
+////        }
+////    }
 
-//            show Add Item Button
-            holder.numberPickerItemQuantity.setVisibility(View.GONE);
-            holder.llAddItem.setVisibility(View.VISIBLE);
+    public void showAddItemButton(ViewHolder holder) {
+        holder.numberPickerItemQuantity.setVisibility(View.GONE);
+        holder.llAddItem.setVisibility(View.VISIBLE);
+    }
 
-        } else {
-//            showItemQuantityPicker();
-
+    public void hideAddItemButton(ViewHolder holder) {
 //            show number picker
-            holder.numberPickerItemQuantity.setVisibility(View.VISIBLE);
-            holder.llAddItem.setVisibility(View.GONE);
-        }
+        holder.numberPickerItemQuantity.setVisibility(View.VISIBLE);
+        holder.llAddItem.setVisibility(View.GONE);
     }
 
 //    private void showAddItemButton(ViewHolder holder) {
@@ -176,6 +194,14 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     public void addItemToCart(final ViewHolder holder, final int quantity, final int position, final String incrementOrDecrement) {
         if (InternetConnection.checkConnection(activity)) {
 
+            holder.numberPickerItemQuantity.setValue(quantity);
+            if (quantity == 0) {
+                showAddItemButton(holder);
+
+            } else {
+                hideAddItemButton(holder);
+            }
+
             final DishObject dishObject = modelArrayList.get(position);
 
             ApiInterface apiService = RetroClient.getApiService(activity);
@@ -190,7 +216,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            showHideQuantityAndAddItemButton(holder, quantity);
+//                            showHideQuantityAndAddItemButton(holder, quantity);
 
                             if (onItemAddedToCart != null) {
                                 onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);

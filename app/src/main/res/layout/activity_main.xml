@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_rootLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,12 +25,13 @@
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottombar"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:gravity="bottom"
         app:bb_activeTabColor="@color/white"
         android:layout_gravity="bottom"
+        app:bb_badgeBackgroundColor="@color/colorAccent"
         app:bb_badgesHideWhenActive="false"
         app:bb_inActiveTabColor="#a4ebfe"
         app:bb_showShadow="true"
@@ -37,6 +39,23 @@
         app:bb_tabXmlResource="@xml/tab"
         app:bb_titleTypeFace="fonts/Lato-Regular.ttf"
         app:paddingStart="10dp" />
+
+<!--    <com.roughike.bottombar.BottomBar-->
+<!--        android:id="@+id/bottombar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="55dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:background="@color/white"-->
+<!--        android:gravity="bottom"-->
+<!--        app:bb_activeTabColor="@color/white"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        app:bb_badgesHideWhenActive="false"-->
+<!--        app:bb_inActiveTabColor="#a4ebfe"-->
+<!--        app:bb_showShadow="true"-->
+<!--        app:bb_behavior="iconsOnly"-->
+<!--        app:bb_tabXmlResource="@xml/tab"-->
+<!--        app:bb_titleTypeFace="fonts/Lato-Regular.ttf"-->
+<!--        app:paddingStart="10dp" />-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

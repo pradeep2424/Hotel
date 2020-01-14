@@ -1,5 +1,6 @@
 package com.miracle.dronam.bottomMenu;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
+import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
@@ -78,10 +80,19 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     double totalPayment;
 
+    TriggerTabChangeListener triggerTabChangeListener;
+
     private ArrayList<CartObject> listCartDish;
 
     int userID;
     int restaurantID;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        triggerTabChangeListener = (TriggerTabChangeListener) context;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,7 +133,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         llBrowseMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switchToHomeFragment1();
+                triggerTabChangeListener.setTab(0);
             }
         });
 
@@ -214,13 +225,6 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //            listCartDish.add(dishObject);
 //        }
 //    }
-
-
-    public void switchToHomeFragment1() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.framelayout, new HomeFragment());
-        transaction.commit();
-    }
 
     @Override
     public void onItemChangedInCart(int quantity, int position, String incrementOrDecrement) {
@@ -314,6 +318,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                 }
 
                                 Application.listCartItems = SerializationUtils.clone(listCartDish);
+                                int noOfCartItems = Application.listCartItems.size();
+                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
 
                                 showCartItemDetails();
                                 setupRecyclerViewOrderedItems();
@@ -435,6 +441,9 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                             } else {
                                 adapterOrderedItems.removeAt(position);
                                 Application.listCartItems.remove(position);
+
+                                int noOfCartItems = Application.listCartItems.size();
+                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
 
                                 if (Application.listCartItems != null && Application.listCartItems.size() == 0) {
                                     showEmptyCart();

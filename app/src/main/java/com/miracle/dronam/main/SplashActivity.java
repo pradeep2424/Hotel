@@ -204,14 +204,14 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setZipCode(zipCode);
                             Application.userDetails = userDetails;
 
-                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
-                            smsGatewayObject.setUrl(url);
-                            smsGatewayObject.setSmsUsername(smsUsername);
-                            smsGatewayObject.setSmsPass(smsPass);
-                            smsGatewayObject.setChannel(channel);
-                            smsGatewayObject.setSendSMS(sendSMS);
-                            smsGatewayObject.setSenderID(senderID);
-                            Application.smsGatewayObject = smsGatewayObject;
+//                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
+//                            smsGatewayObject.setUrl(url);
+//                            smsGatewayObject.setSmsUsername(smsUsername);
+//                            smsGatewayObject.setSmsPass(smsPass);
+//                            smsGatewayObject.setChannel(channel);
+//                            smsGatewayObject.setSendSMS(sendSMS);
+//                            smsGatewayObject.setSenderID(senderID);
+//                            Application.smsGatewayObject = smsGatewayObject;
 
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                             startActivity(intent);
