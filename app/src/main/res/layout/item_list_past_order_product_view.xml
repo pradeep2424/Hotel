@@ -29,17 +29,17 @@
                 android:layout_height="wrap_content"
                 android:text="1"
                 android:textColor="@color/light_gray_hint"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
         </RelativeLayout>
 
         <com.miracle.dronam.custom.MyTextView
             android:id="@+id/tv_itemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:text="Tandoori Roti"
             android:textColor="@color/main_text"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 

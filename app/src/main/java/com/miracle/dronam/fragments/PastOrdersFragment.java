@@ -32,6 +32,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,6 +81,14 @@ public class PastOrdersFragment extends Fragment {
     private void setupRecyclerViewPastOrders() {
 //        getTESTPastOrdersData();
         ArrayList<OrderDetailsObject> listPastOrders = formatPastOrderData();
+
+        Collections.sort(listPastOrders, new Comparator<OrderDetailsObject>() {
+            public int compare(OrderDetailsObject o1, OrderDetailsObject o2) {
+                if (o1.getOrderDate() == null || o2.getOrderDate() == null)
+                    return 0;
+                return o2.getOrderDate().compareTo(o1.getOrderDate());
+            }
+        });
 
         adapterPastOrders = new RecycleAdapterPastOrders(getActivity(), listPastOrders);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

@@ -216,7 +216,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             totalPayment = itemTotal + totalGST + deliveryCharges;
 
             tvDeliveryFreeText.setVisibility(View.GONE);
-            tvDeliveryFreeText.setPaintFlags(tvDeliveryFreeText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
         tvItemTotal.setText("₹ " + itemTotal);
@@ -687,8 +687,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             postParam.addProperty("Taxableval", orderDetailsObject.getTaxableVal());
             postParam.addProperty("CGST", orderDetailsObject.getCgst());
             postParam.addProperty("SGST", orderDetailsObject.getSgst());
-//                postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
-            postParam.addProperty("UserAddress", "ABCD");
+            postParam.addProperty("UserAddress", orderDetailsObject.getUserAddress());
+//            postParam.addProperty("UserAddress", "ABCD");
             postParam.addProperty("Userid", orderDetailsObject.getUserID());
             postParam.addProperty("Clientid", orderDetailsObject.getClientID());
 //                postParam.addProperty("RestaurantName", orderDetailsObject.getRestaurantName());
@@ -753,8 +753,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     orderObj.setCgst(cartObject.getCgst());
                     orderObj.setSgst(cartObject.getSgst());
                     orderObj.setTotalAmount(totalPayment);
-//                    orderObj.setUserAddress(userDetails.getAddress());
-                    orderObj.setUserAddress("ABCD");
+                    orderObj.setUserAddress(userDetails.getAddress());
+//                    orderObj.setUserAddress("ABCD");
                     orderObj.setUserID(userDetails.getUserID());
                     orderObj.setClientID(cartObject.getRestaurantID());
 //                    orderObj.setRestaurantName(cartObject.getRestaurantName());
