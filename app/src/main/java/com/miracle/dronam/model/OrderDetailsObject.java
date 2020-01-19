@@ -1,6 +1,7 @@
 package com.miracle.dronam.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class OrderDetailsObject implements Serializable {
     String restaurantName;
@@ -27,6 +28,15 @@ public class OrderDetailsObject implements Serializable {
     boolean orderPaid;
     String rejectReason;
 
+    ArrayList<DishObject> listProducts;
+
+    public ArrayList<DishObject> getListProducts() {
+        return listProducts;
+    }
+
+    public void setListProducts(ArrayList<DishObject> listProducts) {
+        this.listProducts = listProducts;
+    }
 //    double deliveryCharge;
 //    boolean isIncludeTax;
 //    boolean isTaxApplicable;

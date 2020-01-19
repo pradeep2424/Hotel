@@ -120,5 +120,7 @@
     <string name="view_cart">View Cart</string>
     <string name="item">Item</string>
     <string name="items">Items</string>
+    <string name="free">( Free )</string>
+    <string name="free_delivery_for_orders_above_200">Now get free delivery for order above ₹ 200.</string>
 
 </resources>

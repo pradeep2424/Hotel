@@ -183,9 +183,12 @@ public class SplashActivity extends AppCompatActivity {
                             String sendSMS = jsonObj.optString("SendSMS");
                             String senderID = jsonObj.optString("SenderID");
 
+                            String fullName = fname.concat(" ").concat(lname);
+
                             UserDetails userDetails = new UserDetails();
                             userDetails.setFirstName(fname);
                             userDetails.setLastName(lname);
+                            userDetails.setFullName(fullName);
                             userDetails.setUserType(userType);
                             userDetails.setEmail(email);
                             userDetails.setMobile(mobile);

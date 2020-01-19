@@ -1,6 +1,8 @@
 package com.miracle.dronam.bottomMenu;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,8 @@ import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
+import com.miracle.dronam.main.MainActivity;
+import com.miracle.dronam.main.SplashActivity;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
@@ -75,17 +79,17 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private TextView tvItemTotal;
     private TextView tvRestaurantCharges;
     private TextView tvDeliveryFee;
+    private TextView tvDeliveryFreeText;
     private TextView tvTotalPaymentAmount;
     private TextView tvPaymentButtonAmount;
 
-    double totalPayment;
-
     TriggerTabChangeListener triggerTabChangeListener;
-
     private ArrayList<CartObject> listCartDish;
 
+    double totalPayment;
     int userID;
     int restaurantID;
+    int orderNumber;
 
     @Override
     public void onAttach(Context context) {
@@ -110,6 +114,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         componentEvents();
 //        setupRecyclerViewOrderedItems();
 
+        getOrderNumber();
         getCartItems();
 
         return rootView;
@@ -125,6 +130,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         tvItemTotal = rootView.findViewById(R.id.tv_itemTotalText);
         tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
         tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
+        tvDeliveryFreeText = rootView.findViewById(R.id.tv_deliveryFeeTextFree);
         tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
         tvPaymentButtonAmount = rootView.findViewById(R.id.tv_paymentButtonAmount);
     }
@@ -195,18 +201,30 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             cgst = cartObject.getCgst();
         }
 
-
         sgst = itemTotal * (sgst / 100);
         cgst = itemTotal * (cgst / 100);
         double totalGST = sgst + cgst;
 
-        totalPayment = itemTotal + totalGST + deliveryCharges;
+
+        if (itemTotal > 200) {
+            totalPayment = itemTotal + totalGST;
+
+            tvDeliveryFreeText.setVisibility(View.VISIBLE);
+            tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        } else {
+            totalPayment = itemTotal + totalGST + deliveryCharges;
+
+            tvDeliveryFreeText.setVisibility(View.GONE);
+            tvDeliveryFreeText.setPaintFlags(tvDeliveryFreeText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         tvItemTotal.setText("₹ " + itemTotal);
         tvRestaurantCharges.setText("₹ " + totalGST);
         tvDeliveryFee.setText("₹ " + deliveryCharges);
         tvTotalPaymentAmount.setText("₹ " + totalPayment);
         tvPaymentButtonAmount.setText("₹ " + totalPayment);
+
     }
 
     private double getUpdateItemPrice(CartObject cartObject) {
@@ -247,6 +265,63 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         viewEmptyCart.setVisibility(View.GONE);
         rlCartItemDetails.setVisibility(View.VISIBLE);
     }
+
+    private void getOrderNumber() {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            String strRestaurantID = String.valueOf(restaurantID);
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.getOrderNo(strRestaurantID);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String strOrderNumber = response.body().string();
+                            if (strOrderNumber != null) {
+                                orderNumber = Integer.parseInt(strOrderNumber);
+                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getOrderNumber();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
 
     private void getCartItems() {
         if (InternetConnection.checkConnection(getActivity())) {
@@ -601,10 +676,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             postParam.addProperty("OrderNumber", orderDetailsObject.getOrderNumber());
 //                postParam.addProperty("OrderDate", orderDetailsObject.getOrderDate());
             postParam.addProperty("OrderType", orderDetailsObject.getOrderType());
-            postParam.addProperty("OrderStatus", orderDetailsObject.getOrderStatus());
+            postParam.addProperty("OrderStatus", 0);       // order placed
             postParam.addProperty("OrderMode", orderDetailsObject.getOrderMode());
 //                postParam.addProperty("PaymentId", orderDetailsObject.getPaymentID());    // doubt
-            postParam.addProperty("PaymentId", 1);    // cash
+            postParam.addProperty("PaymentId", 1);     // cash
             postParam.addProperty("ProductId", orderDetailsObject.getProductID());
             postParam.addProperty("ProductName", orderDetailsObject.getProductName());
             postParam.addProperty("ProductRate", orderDetailsObject.getProductRate());
@@ -665,11 +740,11 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
                     OrderDetailsObject orderObj = new OrderDetailsObject();
 //                    orderObj.setOrderID(i + 1);
-                    orderObj.setOrderNumber(i + 1);
+                    orderObj.setOrderNumber(orderNumber);
                     orderObj.setOrderType(i + 1);
-                    orderObj.setOrderStatus(i + 1);
+                    orderObj.setOrderStatus(0);     // order placed
                     orderObj.setOrderMode(i + 1);
-                    orderObj.setPaymentID(1);   //  cash
+                    orderObj.setPaymentID(1);      //  cash
                     orderObj.setProductID(cartObject.getProductID());
                     orderObj.setProductName(cartObject.getProductName());
                     orderObj.setProductRate(cartObject.getProductRate());
@@ -710,6 +785,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     String responseString = response.body().string();
 
                                     if (currentIndex == listCartItems.size() - 1) {
+                                        triggerTabChangeListener.setBadgeCount(0);
                                         deleteCartItem();
                                         showSuccessOrderMsg();
                                     }

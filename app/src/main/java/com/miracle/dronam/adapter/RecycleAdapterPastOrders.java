@@ -7,9 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miracle.dronam.R;
+import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 
 import java.util.ArrayList;
@@ -42,14 +46,15 @@ public class RecycleAdapterPastOrders extends RecyclerView.Adapter<RecycleAdapte
         holder.tvOrderPrice.setText("₹ " + orderDetailsObject.getTotalAmount());
 //        holder.ivFoodImage.setImageResource(Integer.parseInt(orderDetailsObject.getDishImage()));
 
+        setupRecyclerViewPastOrders(holder.rvProductList, orderDetailsObject.getListProducts());
+    }
 
-//        TextDrawable drawable = TextDrawable.builder()
-//                .beginConfig()
-//                .withBorder(4) /* thickness in px */
-//                .endConfig()
-//                .buildRoundRect(String.valueOf(new Random().nextInt(5 + 1 - 1) + 1), ContextCompat.getColor(context, R.color.light_gray_hint), 10);
-//
-//        holder.ivFoodQuantity.setImageDrawable(drawable);
+    private void setupRecyclerViewPastOrders(RecyclerView recyclerView, ArrayList<DishObject> listDish) {
+        RecycleAdapterPastOrderProductView  adapter = new RecycleAdapterPastOrderProductView(context, listDish);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -65,8 +70,7 @@ public class RecycleAdapterPastOrders extends RecyclerView.Adapter<RecycleAdapte
         TextView tvOrderDate;
         TextView tvOrderPrice;
         ImageView ivFoodImage;
-
-        ImageView ivFoodQuantity;
+        RecyclerView rvProductList;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -77,8 +81,7 @@ public class RecycleAdapterPastOrders extends RecyclerView.Adapter<RecycleAdapte
             tvOrderDate = itemView.findViewById(R.id.tv_date);
             tvOrderPrice = itemView.findViewById(R.id.tv_price);
             ivFoodImage = itemView.findViewById(R.id.iv_foodImage);
-
-            ivFoodQuantity = itemView.findViewById(R.id.iv_item0);
+            rvProductList = itemView.findViewById(R.id.recyclerView_productView);
         }
     }
 }

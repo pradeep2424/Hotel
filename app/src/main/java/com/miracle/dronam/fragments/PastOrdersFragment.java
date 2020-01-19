@@ -22,11 +22,19 @@ import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
+import com.miracle.dronam.utils.Utils;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,16 +44,16 @@ import retrofit2.Response;
 public class PastOrdersFragment extends Fragment {
     View rootView;
 
-    String[] restaurantName  = {"Cocobolo Poolside Bar + Grill","Palm Beach Seafood Restaurant","Shin Minori Japanese Restaurant","Shin Minori Japanese Restaurant"};
-    String[] orderAddress = {"Chembur","Ghatkopar","Thane","Sion"};
-    String[] restaurantReviews ={"238 reviews","200 reviews","556 reviews","240 reviews"};
-    String[] orderDate = {"25 Nov 2017 10 : 30 AM","27 Nov 2017 10 : 30 AM","28 Nov 2017 10 : 30 AM","29 Nov 2017 10 : 30 AM"};
-    double[] orderPrice={199.00, 249.00, 149.00, 399.00};
-    Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order};
+//    String[] restaurantName  = {"Cocobolo Poolside Bar + Grill","Palm Beach Seafood Restaurant","Shin Minori Japanese Restaurant","Shin Minori Japanese Restaurant"};
+//    String[] orderAddress = {"Chembur","Ghatkopar","Thane","Sion"};
+//    String[] restaurantReviews ={"238 reviews","200 reviews","556 reviews","240 reviews"};
+//    String[] orderDate = {"25 Nov 2017 10 : 30 AM","27 Nov 2017 10 : 30 AM","28 Nov 2017 10 : 30 AM","29 Nov 2017 10 : 30 AM"};
+//    double[] orderPrice={199.00, 249.00, 149.00, 399.00};
+//    Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order, R.mipmap.temp_order};
 
     private RecyclerView rvPastOrders;
     private RecycleAdapterPastOrders adapterPastOrders;
-    private ArrayList<OrderDetailsObject> listPastOrders;
+    private ArrayList<OrderDetailsObject> listAllOrders;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +76,9 @@ public class PastOrdersFragment extends Fragment {
         rvPastOrders = rootView.findViewById(R.id.recyclerView_pastOrders);
     }
 
-    private void setupRecyclerViewPastOrders()
-    {
+    private void setupRecyclerViewPastOrders() {
 //        getTESTPastOrdersData();
+        ArrayList<OrderDetailsObject> listPastOrders = formatPastOrderData();
 
         adapterPastOrders = new RecycleAdapterPastOrders(getActivity(), listPastOrders);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -79,24 +87,81 @@ public class PastOrdersFragment extends Fragment {
         rvPastOrders.setAdapter(adapterPastOrders);
     }
 
-    private void getTESTPastOrdersData() {
-        listPastOrders = new ArrayList<>();
+//    private void getTESTPastOrdersData() {
+//        listPastOrders = new ArrayList<>();
+//
+//        for (int i=0; i<restaurantName.length; i++){
+////            OrderDetailsObject food7_model = new OrderDetailsObject(restaurantName[i], orderAddress[i],
+////                    restaurantReviews[i], orderDate[i], orderPrice[i], foodImage[i]);
+////            listPastOrders.add(food7_model);
+//
+//            OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
+//            orderDetailsObject.setRestaurantName(restaurantName[i]);
+//            orderDetailsObject.setUserAddress(orderAddress[i]);
+////            orderDetailsObject.setRestaurantReviews(restaurantReviews[i]);
+//            orderDetailsObject.setOrderDate(orderDate[i]);
+//            orderDetailsObject.setTotalAmount(orderPrice[i]);
+////            orderDetailsObject.setDishImage(String.valueOf(foodImage[i]));
+//
+//            listPastOrders.add(orderDetailsObject);
+//        }
+//    }
 
-        for (int i=0; i<restaurantName.length; i++){
-//            OrderDetailsObject food7_model = new OrderDetailsObject(restaurantName[i], orderAddress[i],
-//                    restaurantReviews[i], orderDate[i], orderPrice[i], foodImage[i]);
-//            listPastOrders.add(food7_model);
+//    private String convertJsonDate(String jsonDate) {
+//        String dateTime = "";
+//        try {
+//            String timeString = jsonDate.substring(jsonDate.indexOf("(") + 1, jsonDate.indexOf(")"));
+//            String[] timeSegments = timeString.split("\\+");
+//            // May have to handle negative timezones
+//            int timeZoneOffSet = Integer.valueOf(timeSegments[1]) * 36000; // (("0100" / 100) * 3600 * 1000)
+//            long millis = Long.valueOf(timeSegments[0]);
+//            Date date = new Date(millis + timeZoneOffSet);
+//
+//            //It Will Be in format 29-OCT-2014 2:26 PM
+//            dateTime = new SimpleDateFormat("dd-MMM-yyyy h:mm tt").format(date);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return dateTime;
+//    }
 
-            OrderDetailsObject orderDetailsObject = new OrderDetailsObject();
-            orderDetailsObject.setRestaurantName(restaurantName[i]);
-            orderDetailsObject.setUserAddress(orderAddress[i]);
-//            orderDetailsObject.setRestaurantReviews(restaurantReviews[i]);
-            orderDetailsObject.setOrderDate(orderDate[i]);
-            orderDetailsObject.setTotalAmount(orderPrice[i]);
-//            orderDetailsObject.setDishImage(String.valueOf(foodImage[i]));
+    private ArrayList<OrderDetailsObject> formatPastOrderData() {
+        ArrayList<OrderDetailsObject> listPastOrders = new ArrayList<>();
 
-            listPastOrders.add(orderDetailsObject);
+        ArrayList<OrderDetailsObject> tempAllOrders = SerializationUtils.clone(listAllOrders);
+
+        for (int i = 0; i < listAllOrders.size(); i++) {
+            int orderNo = listAllOrders.get(i).getOrderNumber();
+            int orderNoInList = 0;
+
+            ArrayList<DishObject> listProducts = new ArrayList<>();
+            for (int j = 0; j < tempAllOrders.size(); ) {
+                orderNoInList = tempAllOrders.get(j).getOrderNumber();
+
+                if (orderNo == orderNoInList) {
+                    DishObject dishObject = new DishObject();
+                    dishObject.setProductName(tempAllOrders.get(j).getProductName());
+                    dishObject.setProductQuantity(tempAllOrders.get(j).getProductQuantity());
+
+                    listProducts.add(dishObject);
+                    tempAllOrders.remove(j);
+                    j = 0;
+                } else {
+                    j++;
+                }
+            }
+
+            if (listProducts != null && listProducts.size() > 0) {
+                listAllOrders.get(i).setListProducts(listProducts);
+
+                OrderDetailsObject orderDetailsObject = SerializationUtils.clone(listAllOrders.get(i));
+                listPastOrders.add(orderDetailsObject);
+            }
         }
+
+        return listPastOrders;
     }
 
     private void getPastOrderDetails() {
@@ -115,62 +180,64 @@ public class PastOrdersFragment extends Fragment {
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
-                            listPastOrders = new ArrayList<>();
+                            listAllOrders = new ArrayList<>();
 //
-//                            JSONArray jsonArray = new JSONArray(responseString);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
-//
-//                                double cgst = jsonObj.optDouble("CGST");
-//                                int restaurantID = jsonObj.optInt("Clientid");
-//                                String orderDate = jsonObj.optString("OrderDate");
-//                                int orderID = jsonObj.optInt("OrderId");
-//                                int orderMode = jsonObj.optInt("OrderMode");
-//                                int orderNumber = jsonObj.optInt("OrderNumber");
-//                                boolean orderPaid = jsonObj.optBoolean("OrderPaid");     // @@@@@@
-//                                int orderStatus = jsonObj.optInt("OrderStatus");
-//                                int orderType = jsonObj.optInt("OrderType");
-//                                int paymentID = jsonObj.optInt("PaymentId");
-//                                int dishID = jsonObj.optInt("ProductId");
-//                                String dishName = jsonObj.optString("ProductName");
-//                                int dishQuantity = jsonObj.optInt("ProductQnty");
-//                                double dishRate = jsonObj.optDouble("ProductRate");
-//                                String rejectReason = jsonObj.optString("RejectReason");
-//                                String restaurantName = jsonObj.optString("RestaurantName");
-//                                double sgst = jsonObj.optDouble("SGST");
-//                                int taxID = jsonObj.optInt("TaxId");
-//                                double taxableVal = jsonObj.optDouble("Taxableval");
-//                                double totalAmount = jsonObj.optDouble("TotalAmount");
-//                                String userAddress = jsonObj.optString("UserAddress");
-//                                int userID = jsonObj.optInt("Userid");
-//
-//                                OrderDetailsObject orderObj = new OrderDetailsObject();
-//                                orderObj.setCgst(cgst);
-//                                orderObj.setRestaurantID(restaurantID);
-//                                orderObj.setOrderDate(orderDate);
-//                                orderObj.setOrderID(orderID);
-//                                orderObj.setOrderMode(orderMode);
-//                                orderObj.setOrderNumber(orderNumber);
-//                                orderObj.setOrderStatus(orderStatus);
-//                                orderObj.setOrderType(orderType);
-//                                orderObj.setPaymentID(paymentID);
-//                                orderObj.setProductID(dishID);
-//                                orderObj.setProductName(dishName);
-//                                orderObj.setProductQuantity(dishQuantity);
-//                                orderObj.setProductRate(dishRate);
-//                                orderObj.setRejectReason(rejectReason);
-//                                orderObj.setRestaurantName(restaurantName);
-//                                orderObj.setSgst(sgst);
-//                                orderObj.setTaxID(taxID);
-//                                orderObj.setTaxableVal(taxableVal);
-//                                orderObj.setTotalAmount(totalAmount);
-//                                orderObj.setUserAddress(userAddress);
-//                                orderObj.setUserID(userID);
-//
-//                                listPastOrders.add(orderObj);
-//                            }
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                            getTESTPastOrdersData();
+                                double cgst = jsonObj.optDouble("CGST");
+                                int restaurantID = jsonObj.optInt("Clientid");
+                                String orderDate = jsonObj.optString("OrderDate");
+                                int orderID = jsonObj.optInt("OrderId");
+                                int orderMode = jsonObj.optInt("OrderMode");
+                                int orderNumber = jsonObj.optInt("OrderNumber");
+                                boolean orderPaid = jsonObj.optBoolean("OrderPaid");     // @@@@@@
+                                int orderStatus = jsonObj.optInt("OrderStatus");
+                                int orderType = jsonObj.optInt("OrderType");
+                                int paymentID = jsonObj.optInt("PaymentId");
+                                int dishID = jsonObj.optInt("ProductId");
+                                String dishName = jsonObj.optString("ProductName");
+                                int dishQuantity = jsonObj.optInt("ProductQnty");
+                                double dishRate = jsonObj.optDouble("ProductRate");
+                                String rejectReason = jsonObj.optString("RejectReason");
+                                String restaurantName = jsonObj.optString("RestaurantName");
+                                double sgst = jsonObj.optDouble("SGST");
+                                int taxID = jsonObj.optInt("TaxId");
+                                double taxableVal = jsonObj.optDouble("Taxableval");
+                                double totalAmount = jsonObj.optDouble("TotalAmount");
+                                String userAddress = jsonObj.optString("UserAddress");
+                                int userID = jsonObj.optInt("Userid");
+
+                                String convertedOrderDate = Utils.convertJsonDate(orderDate);
+
+                                OrderDetailsObject orderObj = new OrderDetailsObject();
+                                orderObj.setCgst(cgst);
+                                orderObj.setClientID(restaurantID);
+                                orderObj.setOrderDate(convertedOrderDate);
+                                orderObj.setOrderID(orderID);
+                                orderObj.setOrderMode(orderMode);
+                                orderObj.setOrderNumber(orderNumber);
+                                orderObj.setOrderStatus(orderStatus);
+                                orderObj.setOrderType(orderType);
+                                orderObj.setPaymentID(paymentID);
+                                orderObj.setProductID(dishID);
+                                orderObj.setProductName(dishName);
+                                orderObj.setProductQuantity(dishQuantity);
+                                orderObj.setProductRate(dishRate);
+                                orderObj.setRejectReason(rejectReason);
+                                orderObj.setRestaurantName(restaurantName);
+                                orderObj.setSgst(sgst);
+                                orderObj.setTaxID(taxID);
+                                orderObj.setTaxableVal(taxableVal);
+                                orderObj.setTotalAmount(totalAmount);
+                                orderObj.setUserAddress(userAddress);
+                                orderObj.setUserID(userID);
+
+                                listAllOrders.add(orderObj);
+                            }
+
+//                            getTESTPastOrdersData();
                             setupRecyclerViewPastOrders();
 
                         } else {

@@ -22,6 +22,15 @@ public class DishObject implements Serializable {
     double sgst;
     int taxID;
     String taxName;
+    int productQuantity;
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
 
     public double getCgst() {
         return cgst;

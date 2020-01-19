@@ -55,8 +55,8 @@ public interface ApiInterface {
     Call<ResponseBody> getAreaDetails();
 
 
-    @GET("getRestaurantDetails/{Zip}")
-    Call<ResponseBody> getRestaurantDetails(@Path("Zip") String zipCode);
+    @GET("getOrderNo/{hotelID}")
+    Call<ResponseBody> getOrderNo(@Path("hotelID") String restaurantID);
 
 //    @GET("getProductDetails/{ClientID}/{foodtypeid}/{CategoryID}")
 //    Call<ResponseBody> getProductDetailsData(@Path("ClientID") int clientID,
@@ -85,6 +85,10 @@ public interface ApiInterface {
 
     @POST("insorder")
     Call<ResponseBody> placeOrder(@Body JsonObject jsonObj);
+
+
+    @GET("getRestaurantDetails/{Zip}")
+    Call<ResponseBody> getRestaurantDetails(@Path("Zip") String zipCode);
 
 //    @POST("insorder")
 //    Call<ResponseBody> placeOrder(@Body ArrayList<OrderDetailsObject> listOrder);
