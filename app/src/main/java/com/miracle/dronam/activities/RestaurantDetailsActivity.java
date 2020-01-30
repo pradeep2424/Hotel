@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +61,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     private TextView tvItemQuantity;
     private TextView tvTotalPrice;
 
+    private TextView tvRestaurantName;
+    private TextView tvRestaurantAddress;
+    private TextView tvRestaurantReviews;
+    private RatingBar ratingBarReviews;
+    private LinearLayout llRestaurantContactNo;
+
     private int totalCartQuantity;
     private double totalCartPrice;
 
@@ -80,6 +90,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
         initComponents();
         componentEvents();
+        setupRestaurantDetails();
         setupRecyclerViewPhotos();
 //        setupRecyclerViewMenu();
 
@@ -92,6 +103,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         rvPhotos = findViewById(R.id.recyclerView_photos);
         rvMenu = findViewById(R.id.recyclerView_menu);
+
+        tvRestaurantName = findViewById(R.id.tv_restaurantName);
+        tvRestaurantAddress = findViewById(R.id.tv_restaurantAddress);
+        llRestaurantContactNo = findViewById(R.id.ll_restaurantContactNo);
+        tvRestaurantReviews = findViewById(R.id.tv_restaurantReviews);
+        ratingBarReviews = findViewById(R.id.ratingBar_restaurantReviews);
 
         viewViewCart = findViewById(R.id.view_bottomViewCart);
         tvItemQuantity = viewViewCart.findViewById(R.id.tv_itemQuantity);
@@ -110,6 +127,39 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                 finish();
             }
         });
+
+        llRestaurantContactNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (restaurantObject != null && restaurantObject.getContact() != null) {
+                    String contact = "tel:" + restaurantObject.getContact();
+
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse(contact));
+
+                    PackageManager packageManager = getPackageManager();
+                    if (intent.resolveActivity(packageManager) != null) {
+                        startActivity(intent);
+
+                    } else {
+                        showSnackBarErrorMsgWithButton(getString(R.string.no_intent_available));
+                    }
+
+                } else {
+                    showSnackBarErrorMsgWithButton(getString(R.string.contact_not_found));
+                }
+            }
+        });
+    }
+
+    private void setupRestaurantDetails() {
+        if (restaurantObject != null) {
+            tvRestaurantName.setText(restaurantObject.getRestaurantName());
+            tvRestaurantAddress.setText(restaurantObject.getRestaurantAddress());
+//            tvRestaurantReviews.setText(restaurantObject.ge());
+//            ratingBarReviews.setText(restaurantObject.getRestaurantName());
+        }
     }
 
     private void setupRecyclerViewPhotos() {
@@ -484,6 +534,18 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         snackTextView.setMaxLines(4);
         snackbar.show();
     }
+
+    public void showSnackBarErrorMsgWithButton(String erroMsg) {
+        Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                })
+                .setActionTextColor(getResources().getColor(R.color.colorAccent))
+                .show();
+    }
+
 
 //    private void setupViewPagerSlidingRestaurantImages()
 //    {

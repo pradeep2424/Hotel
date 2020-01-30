@@ -122,5 +122,7 @@
     <string name="items">Items</string>
     <string name="free">( Free )</string>
     <string name="free_delivery_for_orders_above_200">Now get free delivery for order above ₹ 200.</string>
+    <string name="contact_not_found">Contact number not found.</string>
+    <string name="no_intent_available">No application available to handle this action.</string>
 
 </resources>

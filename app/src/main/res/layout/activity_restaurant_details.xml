@@ -24,12 +24,17 @@
 
                 <!--viewpager used-->
 
-
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewPager_slidingRestaurantImages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <ImageView
+                    android:id="@+id/iv_restaurantImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/temp_img5" />
 
                 <!--circleindicator used-->
 
@@ -57,6 +62,7 @@
                 android:paddingLeft="13.4dp">
 
                 <com.miracle.dronam.custom.MyTextView
+                    android:id="@+id/tv_restaurantName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cocobolo Poolside Bar + Grill"
@@ -64,6 +70,7 @@
                     android:textSize="19.2dp" />
 
                 <com.miracle.dronam.custom.MyTextView
+                    android:id="@+id/tv_restaurantAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -72,13 +79,14 @@
                     android:textSize="14.4sp" />
 
                 <LinearLayout
+                    android:id="@+id/ll_restaurantReviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <RatingBar
-                        android:id="@+id/RatingBar_Id"
+                        android:id="@+id/ratingBar_restaurantReviews"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -87,7 +95,7 @@
                         android:rating="4" />
 
                     <com.miracle.dronam.custom.MyTextView
-                        android:id="@+id/Reviews_Id"
+                        android:id="@+id/tv_restaurantReviews"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8.4dp"
@@ -128,6 +136,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_restaurantContactNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -171,7 +180,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-
                 android:paddingTop="15dp">
 
                 <com.miracle.dronam.custom.MyTextView
@@ -193,37 +201,36 @@
 
             </LinearLayout>
 
+            <!--            <fragment-->
+            <!--                android:id="@+id/googleMap"-->
+            <!--                android:name="com.google.android.gms.maps.MapFragment"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="197.7dp" />-->
 
-            <fragment
-                android:id="@+id/googleMap"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="197.7dp" />
+            <!--            <com.miracle.dronam.custom.MyTextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginLeft="15dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:text="DESCRIPTIONS"-->
+            <!--                android:textColor="#c1c5c6"-->
+            <!--                android:textSize="16.7sp" />-->
 
-            <com.miracle.dronam.custom.MyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="DESCRIPTIONS"
-                android:textColor="#c1c5c6"
-                android:textSize="16.7sp" />
-
-            <com.miracle.dronam.custom.MyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,
- sed do eiusmod tempor incididunt ut labore et dolore
- magna aliqua.Lorem ipsum dolor sit amet, consectetur
-adipiscing elit, sed do eiusmod tempor incididunt ut
- labore et dolore magna aliqua. Rhoncus dolor purus non
- enim praesent elementum. Pellentesque massa
-placerat duis ultricies lacus sed turpis tincidunt id.Morbi
-tristique senectus et netus et."
-                android:textColor="#000000"
-                android:textSize="16.7sp" />
+            <!--            <com.miracle.dronam.custom.MyTextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginLeft="15dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,-->
+            <!-- sed do eiusmod tempor incididunt ut labore et dolore-->
+            <!-- magna aliqua.Lorem ipsum dolor sit amet, consectetur-->
+            <!--adipiscing elit, sed do eiusmod tempor incididunt ut-->
+            <!-- labore et dolore magna aliqua. Rhoncus dolor purus non-->
+            <!-- enim praesent elementum. Pellentesque massa-->
+            <!--placerat duis ultricies lacus sed turpis tincidunt id.Morbi-->
+            <!--tristique senectus et netus et."-->
+            <!--                android:textColor="#000000"-->
+            <!--                android:textSize="16.7sp" />-->
 
 
             <!--Descriptions-->
@@ -251,13 +258,13 @@ tristique senectus et netus et."
                     android:textColor="#c2c4ca"
                     android:textSize="14.4sp" />
 
-                <com.miracle.dronam.custom.MyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
-                    android:text="See all categories"
-                    android:textColor="#d22532"
-                    android:textSize="14.4sp" />
+                <!--                <com.miracle.dronam.custom.MyTextView-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginRight="15dp"-->
+                <!--                    android:text="See all categories"-->
+                <!--                    android:textColor="#d22532"-->
+                <!--                    android:textSize="14.4sp" />-->
 
 
             </LinearLayout>
