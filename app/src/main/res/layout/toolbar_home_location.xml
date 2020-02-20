@@ -14,24 +14,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="4"
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@mipmap/ic_places" />
-
-        <com.miracle.dronam.custom.MyTextView
-            android:id="@+id/tv_toolbarTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_address"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:text="Home - 7, Karnatak School, Chembur"
-            android:textColor="@color/main_text"
-            android:textSize="16sp" />
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/ic_places" />
+
+            <com.miracle.dronam.custom.MyTextView
+                android:id="@+id/tv_toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Home - 7, Karnatak School, Chembur"
+                android:textColor="@color/main_text"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_referralPoints"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_temp_coin2" />
+
+            <com.miracle.dronam.custom.MyTextView
+                android:id="@+id/tv_referralPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="250 ₹"
+                android:textColor="@color/main_text"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
