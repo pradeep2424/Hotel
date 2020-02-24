@@ -79,10 +79,10 @@ dependencies {
 
 //    implementation 'com.github.aabhasr1:otpview:1.0.0'
 
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
-
 //    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 //    implementation 'swarajsaaj:otpreader:1.1'
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
 
     implementation 'com.github.travijuu:numberpicker:1.0.7'
