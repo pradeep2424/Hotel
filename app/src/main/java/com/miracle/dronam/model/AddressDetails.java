@@ -10,6 +10,16 @@ public class AddressDetails implements Serializable {
     public String latitude;
     public String longitude;
 
+//    public String addressTitle;
+//
+//    public String getAddressTitle() {
+//        return addressTitle;
+//    }
+//
+//    public void setAddressTitle(String addressTitle) {
+//        this.addressTitle = addressTitle;
+//    }
+
     public int getAddressID() {
         return addressID;
     }

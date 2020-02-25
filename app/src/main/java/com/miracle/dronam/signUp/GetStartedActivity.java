@@ -40,6 +40,7 @@ import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.miracle.dronam.utils.Utils;
 
@@ -111,8 +112,9 @@ public class GetStartedActivity extends AppCompatActivity {
         llSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(GetStartedActivity.this, LocationGoogleMapActivity.class);
-                startActivity(it);
+                Intent intent = new Intent(GetStartedActivity.this, LocationGoogleMapActivity.class);
+                intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_ACTION_SKIP);
+                startActivity(intent);
                 finish();
             }
         });

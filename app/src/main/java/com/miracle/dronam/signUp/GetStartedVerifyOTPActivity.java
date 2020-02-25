@@ -35,6 +35,7 @@ import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
@@ -565,6 +566,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 //                            Application.smsGatewayObject = smsGatewayObject;
 
                             Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+                            intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_ACTION_OTP);
                             startActivity(intent);
                             finish();
 

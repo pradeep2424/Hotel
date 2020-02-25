@@ -1,13 +1,18 @@
 package com.miracle.dronam.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -15,8 +20,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.miracle.dronam.R;
+import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -25,14 +32,20 @@ import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.ConstantValues;
+import com.miracle.dronam.utils.GPSTracker;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
+import com.sucho.placepicker.AddressData;
+import com.sucho.placepicker.PlacePicker;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -55,6 +68,7 @@ public class SplashActivity extends AppCompatActivity {
 //        printHashKey();8
 
         init();
+        getCurrentLocation();
         getSmsDetails();
 
 //        if (isUserLoggedIn && !mobileNumber.equalsIgnoreCase(ConstantValues.SP_DEFAULT_VALUE)) {
@@ -135,6 +149,62 @@ public class SplashActivity extends AppCompatActivity {
 //        }
 //        return postParam;
 //    }
+
+    private void getCurrentLocation() {
+        if (requestLocationPermission()) {
+            getLatitudeLongitude();
+        }
+    }
+
+    private boolean requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+            List<String> listPermissionsNeeded = new ArrayList<>();
+            if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+
+            if (!listPermissionsNeeded.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private void getLatitudeLongitude() {
+        try {
+            double latitude;
+            double longitude;
+
+            GPSTracker tracker = new GPSTracker(this);
+            if (!tracker.canGetLocation()) {
+                tracker.showSettingsAlert();
+            } else {
+                latitude = tracker.getLatitude();
+                longitude = tracker.getLongitude();
+
+                getAddressFromMap(latitude, longitude);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getAddressFromMap(double latitude, double longitude) throws IOException {
+        Geocoder gCoder = new Geocoder(this);
+        List<Address> addresses = gCoder.getFromLocation(latitude, longitude, 1);
+        if (addresses != null && addresses.size() > 0) {
+
+            AddressData addressData = new AddressData(latitude, longitude, addresses);
+            Application.locationAddressData = addressData;
+
+//            Toast.makeText(myContext, "country: " + addresses.get(0).getCountryName(), Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void getUserDetails() {
         if (InternetConnection.checkConnection(this)) {
@@ -303,8 +373,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void getSmsDetails()
-    {
+    private void getSmsDetails() {
         if (InternetConnection.checkConnection(this)) {
 
             ApiInterface apiService = RetroClient.getApiService(this);

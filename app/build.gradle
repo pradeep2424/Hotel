@@ -83,8 +83,8 @@ dependencies {
 //    implementation 'swarajsaaj:otpreader:1.1'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
-    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
 
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.0'
     implementation 'com.github.travijuu:numberpicker:1.0.7'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
     implementation 'org.apache.commons:commons-text:1.6'

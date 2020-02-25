@@ -1,5 +1,10 @@
 package com.miracle.dronam.utils;
 
+import android.content.Context;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
+
 import com.miracle.dronam.model.AddressDetails;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
@@ -41,5 +46,12 @@ public class Application extends android.app.Application {
 //        AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
 //        appSignatureHelper.getAppSignatures();
     }
+
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
+//        MultiDex.install(this);
+//    }
+
 }
 

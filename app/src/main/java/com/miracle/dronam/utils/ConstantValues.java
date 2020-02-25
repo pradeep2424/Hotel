@@ -15,4 +15,8 @@ public class ConstantValues {
 //    public static final String SP_KEY_EMAIL_ID = "EmailID";
 //    public static final String SP_KEY_PASSWORD = "Password";
 //    public static final String SP_KEY_MOBILE_NO = "MobileNo";
+
+    public static final String ACTIVITY_ACTION_SKIP = "ActivityActionSkip";
+    public static final String ACTIVITY_ACTION_OTP = "ActivityActionOTP";
+    public static final String ACTIVITY_ACTION_HOME = "ActivityActionHome";
 }

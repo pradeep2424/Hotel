@@ -183,6 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/see_more"
+                        android:visibility="gone"
                         android:textColor="#a5a5a5"
                         android:textSize="14sp" />
 
@@ -234,6 +235,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/see_more"
+                        android:visibility="gone"
                         android:textColor="#a5a5a5"
                         android:textSize="14sp" />
 
@@ -286,6 +288,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/see_more"
+                        android:visibility="gone"
                         android:textColor="#a5a5a5"
                         android:textSize="14sp" />
 

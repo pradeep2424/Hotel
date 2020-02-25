@@ -42,6 +42,7 @@ import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -69,7 +70,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private SliderLayout imageSliderLayout;
 
     private ArrayList<DishObject> listDishObject;
-    private TextView tvSeeMoreDish;
+//    private TextView tvSeeMoreDish;
     private RecyclerView rvDishUserLikes;
     private RecycleAdapterDish adapterDish;
     Integer image[] = {R.drawable.temp_paneer, R.drawable.temp_paratha, R.drawable.temp_paneer,
@@ -79,7 +80,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
 
     private ArrayList<CuisineObject> listCuisineObject;
-    private TextView tvSeeMoreCuisines;
+//    private TextView tvSeeMoreCuisines;
     private RecyclerView rvCuisines;
     private RecycleAdapterCuisine adapterCuisine;
     Integer image1[] = {R.drawable.temp_kesar, R.drawable.temp_ice_cream, R.drawable.temp_kesar,
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
     private ArrayList<RestaurantObject> listRestaurantObject;
-    private TextView tvSeeMoreRestaurants;
+//    private TextView tvSeeMoreRestaurants;
     private RecyclerView rvRestaurants;
     private RecycleAdapterRestaurant adapterRestaurant;
     Integer image2[] = {R.mipmap.temp_img1, R.mipmap.temp_img2, R.mipmap.temp_img3,
@@ -156,50 +157,42 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         rvRestaurants = (RecyclerView) rootView.findViewById(R.id.rv_restaurant);
         viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
 
-        tvSeeMoreDish = (TextView) rootView.findViewById(R.id.tv_seeMoreDish);
-        tvSeeMoreCuisines = (TextView) rootView.findViewById(R.id.tv_seeMoreCuisine);
-        tvSeeMoreRestaurants = (TextView) rootView.findViewById(R.id.tv_seeMoreRestaurant);
-
-//        btnAddLogo = (Button) viewButtonAddLogo.findViewById(R.id.btn_addSurveyLogo);
+//        tvSeeMoreDish = (TextView) rootView.findViewById(R.id.tv_seeMoreDish);
+//        tvSeeMoreCuisines = (TextView) rootView.findViewById(R.id.tv_seeMoreCuisine);
+//        tvSeeMoreRestaurants = (TextView) rootView.findViewById(R.id.tv_seeMoreRestaurant);
     }
 
     private void componentEvents() {
-//        viewToolbarLocation.setOnClickListener(new View.OnClickListener() {
+//        tvSeeMoreDish.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), LocationGoogleMapActivity.class);
-//                startActivityForResult(intent, REQUEST_CODE_LOCATION);
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_DISH);
+//            }
+//        });
+//
+//        tvSeeMoreCuisines.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_CUISINE);
+//            }
+//        });
+//
+//        tvSeeMoreRestaurants.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_RESTAURANT);
 //            }
 //        });
 
-        tvSeeMoreDish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_DISH);
-            }
-        });
-
-        tvSeeMoreCuisines.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_CUISINE);
-            }
-        });
-
-        tvSeeMoreRestaurants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_RESTAURANT);
-            }
-        });
 
         llToolbarLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LocationGoogleMapActivity.class);
+                intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_ACTION_HOME);
                 startActivityForResult(intent, REQUEST_CODE_LOCATION);
 
 //                Intent intent = new VanillaPlacePicker.Builder(getActivity())

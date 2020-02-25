@@ -33,6 +33,7 @@ import com.miracle.dronam.main.MainActivity;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.sharedPreference.PrefManagerConfig;
+import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.signUp.GetStartedMobileNumberActivity;
 import com.miracle.dronam.signUp.GetStartedVerifyOTPActivity;
 import com.miracle.dronam.utils.Application;
@@ -40,6 +41,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.miracle.dronam.utils.ConstantValues;
+import com.miracle.dronam.utils.GPSTracker;
 import com.miracle.dronam.utils.InternetConnection;
 import com.sucho.placepicker.AddressData;
 import com.sucho.placepicker.Constants;
@@ -80,6 +82,7 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     private PrefManagerConfig prefManagerConfig;
 
     String mobileNumber;
+    String calledFrom;
 
     double latitude = 0;
     double longitude = 0;
@@ -91,6 +94,11 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_google_map);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            calledFrom = extras.getString("CalledFrom");
+        }
 
         init();
         setupSearchLocation();
@@ -116,7 +124,25 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
             @Override
             public void onClick(View view) {
                 if (requestLocationPermission()) {
-                    openGoogleMaps(0, 0);
+//                    openGoogleMaps(0, 0);
+
+                    try {
+                        double latitude;
+                        double longitude;
+
+                        GPSTracker tracker = new GPSTracker(LocationGoogleMapActivity.this);
+                        if (!tracker.canGetLocation()) {
+                            tracker.showSettingsAlert();
+                        } else {
+                            latitude = tracker.getLatitude();
+                            longitude = tracker.getLongitude();
+
+                            openGoogleMaps(latitude, longitude);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -256,8 +282,6 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 
     private void saveUserLocationData(AddressData addressData) {
         try {
-
-
             Application.locationAddressData = addressData;
 
             Address address = addressData.getAddressList().get(0);
@@ -520,8 +544,22 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent it = new Intent(LocationGoogleMapActivity.this, GetStartedMobileNumberActivity.class);
-        startActivity(it);
-        finish();
+        if (calledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_ACTION_SKIP)) {
+            Intent intent = new Intent(LocationGoogleMapActivity.this, GetStartedActivity.class);
+            startActivity(intent);
+            finish();
+
+        } else if (calledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_ACTION_OTP)) {
+            Intent intent = new Intent(LocationGoogleMapActivity.this, GetStartedMobileNumberActivity.class);
+            startActivity(intent);
+            finish();
+
+        } else if (calledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_ACTION_HOME)) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+
     }
 }
