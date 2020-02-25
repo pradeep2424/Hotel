@@ -8,8 +8,10 @@
     <!--    <string name="app_name">Dronam Food Delivery</string>-->
     <string name="app_name">Hotel</string>
     <string name="powered_by">Powered by</string>
+    <string name="powered_by_hotel">HOTEL</string>
+
     <string name="powered_by_name">
-        <font fgcolor="#000000">MANO</font><font fgcolor="#13c7ac">R</font><font fgcolor="#000000">A</font>
+        <font fgcolor="#000000">MANO</font> <font fgcolor="#13c7ac">R</font><font fgcolor="#000000">A</font>
     </string>
 
     <string name="status_success">SUCCESS</string>

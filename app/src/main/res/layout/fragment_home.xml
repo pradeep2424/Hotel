@@ -334,10 +334,19 @@
                     android:textColor="@color/light_gray_hint"
                     android:textSize="12sp" />
 
+
                 <com.miracle.dronam.custom.MyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="@string/powered_by_hotel"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <com.miracle.dronam.custom.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
                     android:text="@string/powered_by_name"
                     android:textSize="17sp"
