@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.roughike:bottom-bar:2.3.1'
 //    implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
 //    implementation 'com.gauravk.bubblenavigation:bubblenavigation:1.0.7'
+
+    implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.github.bumptech.glide:glide:4.9.0'

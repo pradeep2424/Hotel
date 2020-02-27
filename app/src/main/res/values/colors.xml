@@ -12,7 +12,7 @@
     <color name="dark_orange">#f05421</color>
     <color name="light_orange">#FF9E80</color>
     <color name="orange">#FF9800</color>
-<!--    <color name="orange_50">#fbe9e7</color>-->
+    <color name="card_bg_light">#fffbf5</color>
     <color name="orange_50">#fff3e0</color>
     <color name="link_orange">#b96f19</color>
 
@@ -32,6 +32,7 @@
     <color name="light_gray_hint">#9b9b9b</color>
     <color name="main_text">#4a4a4a</color>
     <color name="main_dark_text">#2f2f39</color>
+    <color name="colorBackgroundWhite">#f0f2ea</color>
 
     <color name="view_cart_strip">#7bc242</color>  <!--  5fb709 -->
     <color name="view_cart_strip1">#5fb709</color>

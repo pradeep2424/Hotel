@@ -1,6 +1,10 @@
 package com.miracle.dronam.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +13,12 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
+import com.miracle.dronam.adapter.RecycleAdapterCuisine;
+import com.miracle.dronam.adapter.RecycleAdapterReferralPoints;
 import com.miracle.dronam.dialog.DialogLoadingIndicator;
+import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
+import com.miracle.dronam.model.ReferralDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
@@ -19,7 +27,10 @@ import com.miracle.dronam.utils.InternetConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Random;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -28,8 +39,13 @@ import retrofit2.Response;
 
 public class RewardCreditsActivity extends AppCompatActivity {
     private RelativeLayout rlRootLayout;
+    private DialogLoadingIndicator progressIndicator;
 
-    DialogLoadingIndicator progressIndicator;
+    private TextView tvBalanceReferralPoints;
+    private RecyclerView rvReferralPoints;
+    private RecycleAdapterReferralPoints adapterReferralPoints;
+
+    private ArrayList<ReferralDetails> listReferralDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +54,51 @@ public class RewardCreditsActivity extends AppCompatActivity {
 
         initComponents();
         getReferralDetails();
+
+        setupRecyclerViewReferralPoints();
+
     }
 
     private void initComponents() {
         progressIndicator = DialogLoadingIndicator.getInstance();
 
         rlRootLayout = findViewById(R.id.rl_rootLayout);
+        tvBalanceReferralPoints = findViewById(R.id.tv_balanceReferralPoints);
+        rvReferralPoints = findViewById(R.id.rv_referredUsers);
+
+        double totalReferralPoints = Application.userDetails.getTotalReferralPoints();
+        String formattedPoints = getFormattedNumberDouble(totalReferralPoints);
+        tvBalanceReferralPoints.setText(formattedPoints + " " + getString(R.string.rupees));
+    }
+
+    private void setupRecyclerViewReferralPoints() {
+        getDummyReferralData();
+
+        adapterReferralPoints = new RecycleAdapterReferralPoints(this, listReferralDetails);
+        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(this);
+        rvReferralPoints.setLayoutManager(mLayoutManager1);
+        rvReferralPoints.setItemAnimator(new DefaultItemAnimator());
+        rvReferralPoints.setAdapter(adapterReferralPoints);
+    }
+
+    private void getDummyReferralData() {
+        listReferralDetails = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            Random random = new Random();
+            int amount = random.nextInt(900) + 100;
+
+            ReferralDetails referralDetails = new ReferralDetails();
+            referralDetails.setFirstName("FName");
+            referralDetails.setLastName("LName");
+            referralDetails.setTotalAmount(amount);
+
+            listReferralDetails.add(referralDetails);
+        }
+    }
+
+    private String getFormattedNumberDouble(double amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
     private void getReferralDetails() {
@@ -62,9 +117,9 @@ public class RewardCreditsActivity extends AppCompatActivity {
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
+                            listReferralDetails = new ArrayList<>();
 
                             JSONArray jsonArray = new JSONArray(responseString);
-
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 
@@ -89,7 +144,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
 //                            setupRecyclerViewProducts();
 
                         } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                            showSnackBarErrorMsg(getResources().getString(R.string.something_went_wrong));
                         }
 
                     } catch (Exception e) {
@@ -100,7 +155,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        showSnackBarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
                     } catch (Exception e) {
@@ -124,7 +179,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
         }
     }
 
-    public void showSnackbarErrorMsg(String erroMsg) {
+    public void showSnackBarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
 
         Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);

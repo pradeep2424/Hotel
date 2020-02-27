@@ -5,6 +5,85 @@
     android:id="@+id/rl_rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/smokegray"
     tools:context=".activities.RewardCreditsActivity">
+
+    <include
+        android:id="@+id/id_toolbarRewardCredits"
+        layout="@layout/toolbar_back_arrow_black" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_toolbarRewardCredits">
+
+        <LinearLayout
+            android:id="@+id/ll_rewardCredits"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:tag="cards main container">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="3dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp">
+
+                    <com.miracle.dronam.custom.MyTextViewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/balance_referral_points"
+                        android:textColor="@color/main_text"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <com.miracle.dronam.custom.MyTextView
+                        android:id="@+id/tv_balanceReferralPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:text="250 ₹"
+                        android:textAllCaps="true"
+                        android:textColor="@color/main_dark_text"
+                        android:textSize="24sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <com.miracle.dronam.custom.MyTextView
+                android:id="@+id/tv_billDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/earnings_through_friends"
+                android:textColor="@color/main_dark_text"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_referredUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
