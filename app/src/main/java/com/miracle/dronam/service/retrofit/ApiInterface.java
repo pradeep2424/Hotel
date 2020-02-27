@@ -125,6 +125,15 @@ public interface ApiInterface {
     Call<ResponseBody> addReferral(@Path("NewUserMobNo") String newMobileNo,
                                       @Path("ReferedMobNo") String referredMobNo);
 
+    @POST("setReferrelPoint/{UserID}/{amount}")
+    Call<ResponseBody> setReferrelPoint(@Path("UserID") int userID,
+                                        @Path("amount") double amount);
+
+
+    @GET("getReferralDetails/{UserID}")
+    Call<ResponseBody> getReferralDetails(@Path("UserID") int userID);
+
+
 //    @Multipart
 //    @POST("UploadFile")
 //    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file);

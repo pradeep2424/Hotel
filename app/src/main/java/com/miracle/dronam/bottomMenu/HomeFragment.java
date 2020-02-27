@@ -29,6 +29,7 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
+import com.miracle.dronam.activities.RewardCreditsActivity;
 import com.miracle.dronam.activities.SeeMoreActivity;
 import com.miracle.dronam.adapter.PagerAdapterBanner;
 import com.miracle.dronam.adapter.RecycleAdapterCuisine;
@@ -49,8 +50,10 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -65,12 +68,15 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     View viewToolbarLocation;
     LinearLayout llToolbarLocation;
+    LinearLayout llToolbarAddress;
+    LinearLayout llToolbarReferralPoints;
     TextView tvToolbarTitle;
+    TextView tvReferralPoints;
 
     private SliderLayout imageSliderLayout;
 
     private ArrayList<DishObject> listDishObject;
-//    private TextView tvSeeMoreDish;
+    //    private TextView tvSeeMoreDish;
     private RecyclerView rvDishUserLikes;
     private RecycleAdapterDish adapterDish;
     Integer image[] = {R.drawable.temp_paneer, R.drawable.temp_paratha, R.drawable.temp_paneer,
@@ -80,7 +86,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
 
     private ArrayList<CuisineObject> listCuisineObject;
-//    private TextView tvSeeMoreCuisines;
+    //    private TextView tvSeeMoreCuisines;
     private RecyclerView rvCuisines;
     private RecycleAdapterCuisine adapterCuisine;
     Integer image1[] = {R.drawable.temp_kesar, R.drawable.temp_ice_cream, R.drawable.temp_kesar,
@@ -90,7 +96,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
     private ArrayList<RestaurantObject> listRestaurantObject;
-//    private TextView tvSeeMoreRestaurants;
+    //    private TextView tvSeeMoreRestaurants;
     private RecyclerView rvRestaurants;
     private RecycleAdapterRestaurant adapterRestaurant;
     Integer image2[] = {R.mipmap.temp_img1, R.mipmap.temp_img2, R.mipmap.temp_img3,
@@ -132,7 +138,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
         initComponents();
         componentEvents();
-        setToolbarLocation();
+        setToolbarDetails();
         setupSlidingImages();
         setupRecyclerViewUserLikeDish();
         setupRecyclerViewCuisine();
@@ -147,8 +153,12 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     private void initComponents() {
         viewToolbarLocation = rootView.findViewById(R.id.view_toolbarLocation);
+
         llToolbarLocation = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
+        llToolbarAddress = viewToolbarLocation.findViewById(R.id.ll_toolbarAddress);
+        llToolbarReferralPoints = viewToolbarLocation.findViewById(R.id.ll_toolbarReferralPoints);
         tvToolbarTitle = viewToolbarLocation.findViewById(R.id.tv_toolbarTitle);
+        tvReferralPoints = viewToolbarLocation.findViewById(R.id.tv_referralPoints);
 
         imageSliderLayout = (SliderLayout) rootView.findViewById(R.id.slider);
 
@@ -163,32 +173,15 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     }
 
     private void componentEvents() {
-//        tvSeeMoreDish.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_DISH);
-//            }
-//        });
-//
-//        tvSeeMoreCuisines.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_CUISINE);
-//            }
-//        });
-//
-//        tvSeeMoreRestaurants.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), SeeMoreActivity.class);
-//                startActivityForResult(intent, REQUEST_CODE_SEE_MORE_RESTAURANT);
-//            }
-//        });
+        llToolbarReferralPoints.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RewardCreditsActivity.class);
+                startActivity(intent);
+            }
+        });
 
-
-        llToolbarLocation.setOnClickListener(new View.OnClickListener() {
+        llToolbarAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LocationGoogleMapActivity.class);
@@ -318,11 +311,24 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         viewPager.setAdapter(pagerAdapterForBanner);
     }
 
-    private void setToolbarLocation() {
+    private void setToolbarDetails() {
         if (Application.locationAddressData != null) {
             tvToolbarTitle.setText(Application.locationAddressData.getAddressList().get(0).getSubLocality());
         } else {
             tvToolbarTitle.setText(getString(R.string.set_location));
+        }
+
+        if (Application.userDetails != null) {
+            double referralPoints = Application.userDetails.getTotalReferralPoints();
+            String formattedPoints = getFormattedNumberDouble(referralPoints)
+                    .concat(" ")
+                    .concat(getString(R.string.rupees));
+            tvReferralPoints.setText(formattedPoints);
+
+        } else {
+            tvReferralPoints.setText("0"
+                    .concat(" ")
+                    .concat(getString(R.string.rupees)));
         }
     }
 
@@ -446,6 +452,14 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
                     .show();
         }
+    }
+
+    private String getFormattedNumber(int amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
+    }
+
+    private String getFormattedNumberDouble(double amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
     @Override

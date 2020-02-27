@@ -1,7 +1,6 @@
 package com.miracle.dronam.bottomMenu;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,26 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
-import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
-import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
-import com.miracle.dronam.main.MainActivity;
-import com.miracle.dronam.main.SplashActivity;
 import com.miracle.dronam.model.CartObject;
-import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.model.UserDetails;
@@ -40,17 +30,19 @@ import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.InternetConnection;
-import com.miracle.dronam.utils.SimpleDividerItemDecoration;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
+import com.suke.widget.SwitchButton;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -66,12 +58,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     RelativeLayout rlCartItemDetails;
     View viewEmptyCart;
 
-    String dish_name[] = {"Paratha", "Cheese Butter", "Paneer Handi", "Paneer Kopta", "Chiken"};
-    String dish_type[] = {"Punjabi", "Maxican", "Punjabi", "Punjabi", "Non Veg"};
-    String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
-
-    Integer image[] = {R.drawable.temp_paneer, R.drawable.temp_paratha, R.drawable.temp_paneer,
-            R.drawable.temp_paratha, R.drawable.temp_paneer};
+    LinearLayout llReferralPointsLayout;
+    SwitchButton switchButtonApplyPoints;
+    TextView tvBalancePoints;
+    TextView tvSaveReferralPointsMessage;
 
     private RecyclerView rvOrderedItems;
     private RecycleAdapterOrderedItem adapterOrderedItems;
@@ -88,6 +78,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     double totalPayment;
     int userID;
+    double referralPoints;
     int restaurantID;
     int orderNumber;
 
@@ -104,6 +95,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
         userID = Application.userDetails.getUserID();
         restaurantID = Application.restaurantObject.getRestaurantID();
+        referralPoints = Application.userDetails.getTotalReferralPoints();
     }
 
     @Override
@@ -112,7 +104,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
         init();
         componentEvents();
-//        setupRecyclerViewOrderedItems();
+        setupReferralPointsLayout();
 
         getOrderNumber();
         getCartItems();
@@ -127,12 +119,19 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         tvPaymentButton = rootView.findViewById(R.id.tv_paymentButton);
         rvOrderedItems = (RecyclerView) rootView.findViewById(R.id.recyclerView_orderedItems);
 
+        llReferralPointsLayout = rootView.findViewById(R.id.ll_referralPointsLayout);
+        switchButtonApplyPoints = rootView.findViewById(R.id.switchButton_applyPoints);
+        tvBalancePoints = rootView.findViewById(R.id.tv_balanceReferralPoints);
+        tvSaveReferralPointsMessage = rootView.findViewById(R.id.tv_referralPointsSaveMessage);
+
         tvItemTotal = rootView.findViewById(R.id.tv_itemTotalText);
         tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
         tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
         tvDeliveryFreeText = rootView.findViewById(R.id.tv_deliveryFeeTextFree);
         tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
         tvPaymentButtonAmount = rootView.findViewById(R.id.tv_paymentButtonAmount);
+
+
     }
 
     private void componentEvents() {
@@ -151,6 +150,26 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         });
     }
 
+    private void setupReferralPointsLayout() {
+        String formattedPoints = getFormattedNumberDouble(referralPoints);
+
+        if (referralPoints == 0) {
+            llReferralPointsLayout.setVisibility(View.GONE);
+
+        } else {
+            llReferralPointsLayout.setVisibility(View.VISIBLE);
+
+            String balanceText = getString(R.string.referral_points_you_will_save)
+                    + " " + getString(R.string.rupees)
+                    + " " + formattedPoints
+                    + " " + getString(R.string.using)
+                    + " " + formattedPoints
+                    + " " + getString(R.string.referral_points);
+
+            tvBalancePoints.setText(formattedPoints + " " + getString(R.string.rupees));
+            tvSaveReferralPointsMessage.setText(balanceText);
+        }
+    }
 
     private void setupRecyclerViewOrderedItems() {
         adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(), listCartDish);
@@ -787,6 +806,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     if (currentIndex == listCartItems.size() - 1) {
                                         triggerTabChangeListener.setBadgeCount(0);
                                         deleteCartItem();
+                                        sendAppliedReferrelPoints();
                                         showSuccessOrderMsg();
                                     }
 
@@ -832,6 +852,61 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
                     .show();
         }
+    }
+
+    public void sendAppliedReferrelPoints() {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.setReferrelPoint(userID, referralPoints);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            deleteCartItem();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    private String getFormattedNumberDouble(double amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
 

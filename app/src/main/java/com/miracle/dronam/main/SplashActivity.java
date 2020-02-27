@@ -246,6 +246,11 @@ public class SplashActivity extends AppCompatActivity {
                             String stateName = jsonObj.optString("StateName");
                             int zipCode = jsonObj.optInt("ZipCode");
 
+                            double totalPoints = jsonObj.optDouble("TotalPoints");
+                            if (Double.isNaN(totalPoints)) {
+                                totalPoints = 0;
+                            }
+
                             String url = jsonObj.optString("URL");
                             String smsUsername = jsonObj.optString("SMSUsername");
                             String smsPass = jsonObj.optString("SMSPass");
@@ -275,6 +280,7 @@ public class SplashActivity extends AppCompatActivity {
                             userDetails.setCityName(cityName);
                             userDetails.setStateName(stateName);
                             userDetails.setZipCode(zipCode);
+                            userDetails.setTotalReferralPoints(totalPoints);
                             Application.userDetails = userDetails;
 
 //                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();

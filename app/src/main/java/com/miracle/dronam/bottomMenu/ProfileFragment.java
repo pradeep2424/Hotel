@@ -24,6 +24,7 @@ import com.miracle.dronam.BuildConfig;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.ManageAddressesActivity;
 import com.miracle.dronam.activities.PaymentMethodsActivity;
+import com.miracle.dronam.activities.RewardCreditsActivity;
 import com.miracle.dronam.adapter.RecycleAdapterProfile;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.main.MainActivity;
@@ -237,8 +238,13 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     public void onClick(View view, int position) {
         switch (position) {
             case 0:
-                Intent intent = new Intent(getActivity(), PaymentMethodsActivity.class);
-                startActivity(intent);
+                Intent intent0 = new Intent(getActivity(), PaymentMethodsActivity.class);
+                startActivity(intent0);
+                break;
+
+            case 1:
+                Intent intent1 = new Intent(getActivity(), RewardCreditsActivity.class);
+                startActivity(intent1);
                 break;
 
             case 3:

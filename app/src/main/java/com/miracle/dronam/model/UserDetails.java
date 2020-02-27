@@ -8,7 +8,7 @@ public class UserDetails implements Serializable {
     String fName;
     String lName;
     String fullName;
-        String gender;
+    String gender;
     String userType;
     String email;
     String mobile;
@@ -25,6 +25,16 @@ public class UserDetails implements Serializable {
     String stateName;
     String status;
     String password;
+
+    double totalReferralPoints;
+
+    public double getTotalReferralPoints() {
+        return totalReferralPoints;
+    }
+
+    public void setTotalReferralPoints(double totalReferralPoints) {
+        this.totalReferralPoints = totalReferralPoints;
+    }
 
     public String getFirstName() {
         return fName;

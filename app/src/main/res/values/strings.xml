@@ -57,7 +57,7 @@
     <string name="toolbar_set_delivery_location">Set you delivery location</string>
     <string name="location_search_box_text">Search for area or street...</string>
 
-<!--    <string name="toolbar_manage_addresses">Manage Addresses</string>-->
+    <!--    <string name="toolbar_manage_addresses">Manage Addresses</string>-->
     <string name="saved_addresses">Saved Addresses</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -126,5 +126,11 @@
     <string name="free_delivery_for_orders_above_200">Now get free delivery for order above ₹ 200.</string>
     <string name="contact_not_found">Contact number not found.</string>
     <string name="no_intent_available">No application available to handle this action.</string>
+
+    <string name="pay_using_referral_points">Pay using Referral Points</string>
+    <string name="balance">Balance : </string>
+    <string name="referral_points_you_will_save">You will save</string>
+    <string name="using">using</string>
+    <string name="referral_points">Referral Points</string>
 
 </resources>

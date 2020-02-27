@@ -163,6 +163,156 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/smokegray" />
 
+
+                <LinearLayout
+                    android:id="@+id/ll_referralPointsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/orange_50">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.miracle.dronam.custom.MyTextView
+                                    android:id="@+id/tv_payUsingReferralPointsText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/pay_using_referral_points"
+                                    android:textColor="@color/main_text"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <com.suke.widget.SwitchButton
+                                    android:id="@+id/switchButton_applyPoints"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    app:sb_checked="false"
+                                    app:sb_enable_effect="true"
+                                    app:sb_shadow_effect="true"
+                                    app:sb_show_indicator="true" />
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_below="@+id/tv_payUsingReferralPointsText"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp">
+
+                                    <com.miracle.dronam.custom.MyTextView
+                                        android:id="@+id/tv_balanceText"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="right"
+                                        android:text="@string/balance"
+                                        android:textColor="@color/main_text"
+                                        android:textSize="14sp" />
+
+                                    <ImageView
+                                        android:id="@+id/iv_referralPointsIcon"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_toRightOf="@+id/tv_balanceText"
+                                        android:src="@drawable/ic_temp_coin2" />
+
+                                    <com.miracle.dronam.custom.MyTextView
+                                        android:id="@+id/tv_balanceReferralPoints"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="8dp"
+                                        android:layout_toRightOf="@+id/iv_referralPointsIcon"
+                                        android:ellipsize="end"
+                                        android:maxLines="1"
+                                        android:text="₹"
+                                        android:textColor="@color/main_text"
+                                        android:textSize="14sp" />
+
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+<!--                            <RelativeLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="5dp">-->
+
+<!--                                <com.miracle.dronam.custom.MyTextView-->
+<!--                                    android:id="@+id/tv_balanceText"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:gravity="right"-->
+<!--                                    android:text="@string/balance"-->
+<!--                                    android:textColor="@color/main_text"-->
+<!--                                    android:textSize="14sp" />-->
+
+<!--                                <ImageView-->
+<!--                                    android:id="@+id/iv_referralPointsIcon"-->
+<!--                                    android:layout_width="20dp"-->
+<!--                                    android:layout_height="20dp"-->
+<!--                                    android:layout_marginLeft="8dp"-->
+<!--                                    android:layout_toRightOf="@+id/tv_balanceText"-->
+<!--                                    android:src="@drawable/ic_temp_coin2" />-->
+
+<!--                                <com.miracle.dronam.custom.MyTextView-->
+<!--                                    android:id="@+id/tv_balanceReferralPoints"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_marginLeft="8dp"-->
+<!--                                    android:layout_toRightOf="@+id/iv_referralPointsIcon"-->
+<!--                                    android:ellipsize="end"-->
+<!--                                    android:maxLines="1"-->
+<!--                                    android:text="₹"-->
+<!--                                    android:textColor="@color/main_text"-->
+<!--                                    android:textSize="14sp" />-->
+
+<!--                            </RelativeLayout>-->
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical">
+
+                        <com.miracle.dronam.custom.MyTextView
+                            android:id="@+id/tv_referralPointsSaveMessage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:text="@string/referral_points_you_will_save"
+                            android:textColor="@color/light_green_700"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_below="@+id/ll_orderDetails"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/smokegray" />
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_billDetails"
                     android:layout_width="match_parent"
@@ -278,10 +428,10 @@
                                     android:id="@+id/tv_deliveryFeeTextFree"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginRight="10dp"
                                     android:gravity="right"
                                     android:text="@string/free"
                                     android:textColor="@color/light_green_700"
-                                    android:layout_marginRight="10dp"
                                     android:textSize="16sp" />
 
                                 <com.miracle.dronam.custom.MyTextView
