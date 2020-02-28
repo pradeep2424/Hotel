@@ -14,8 +14,10 @@ import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.model.CuisineObject;
 import com.miracle.dronam.model.ReferralDetails;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class RecycleAdapterReferralPoints extends RecyclerView.Adapter<RecycleAdapterReferralPoints.MyViewHolder> {
     Context context;
@@ -51,13 +53,19 @@ public class RecycleAdapterReferralPoints extends RecyclerView.Adapter<RecycleAd
         ReferralDetails referralDetails = listReferralDetails.get(position);
 
         String name = referralDetails.getFirstName() + " " + referralDetails.getLastName();
+        String amount = getFormattedNumberDouble(referralDetails.getTotalAmount());
+
         holder.tvName.setText(name);
-        holder.tvAmount.setText(referralDetails.getTotalAmount() + " " + context.getString(R.string.rupees));
+        holder.tvAmount.setText(amount + " " + context.getString(R.string.rupees));
     }
 
     @Override
     public int getItemCount() {
         return listReferralDetails.size();
+    }
+
+    private String getFormattedNumberDouble(double amount) {
+        return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 }
 

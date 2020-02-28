@@ -49,7 +49,9 @@
                     app:ci_height="7dp"
                     app:ci_width="7dp" />
 
-                <include layout="@layout/toolbar_restaurant_detail" />
+                <include
+                    android:id="@+id/view_toolbarRestaurantDetails"
+                    layout="@layout/toolbar_restaurant_detail" />
 
             </FrameLayout>
 

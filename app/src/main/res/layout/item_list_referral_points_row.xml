@@ -47,7 +47,7 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jessyka swan"
+                        android:text=""
                         android:textColor="@color/main_dark_text"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="Team leader"
+                        android:text=""
                         android:textColor="@color/main_text"
                         android:textSize="15sp" />
                 </LinearLayout>

@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,9 +40,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RewardCreditsActivity extends AppCompatActivity {
-    private RelativeLayout rlRootLayout;
     private DialogLoadingIndicator progressIndicator;
 
+    private LinearLayout llRootLayout;
+
+    View viewToolbar;
+    TextView tvToolbarTitle;
+    ImageView ivBack;
+
+    private LinearLayout llReferredUsers;
     private TextView tvBalanceReferralPoints;
     private RecyclerView rvReferralPoints;
     private RecycleAdapterReferralPoints adapterReferralPoints;
@@ -53,16 +61,23 @@ public class RewardCreditsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reward_credits);
 
         initComponents();
+        componentEvents();
         getReferralDetails();
 
-        setupRecyclerViewReferralPoints();
+//        setupRecyclerViewReferralPoints();
 
     }
 
     private void initComponents() {
         progressIndicator = DialogLoadingIndicator.getInstance();
+        llRootLayout = findViewById(R.id.rl_rootLayout);
 
-        rlRootLayout = findViewById(R.id.rl_rootLayout);
+        viewToolbar = findViewById(R.id.view_toolbarRewardCredits);
+        ivBack = viewToolbar.findViewById(R.id.iv_back);
+        tvToolbarTitle = findViewById(R.id.tv_toolbarTitle);
+        tvToolbarTitle.setText(getString(R.string.referral_credits));
+
+        llReferredUsers = findViewById(R.id.ll_referredUsersLayout);
         tvBalanceReferralPoints = findViewById(R.id.tv_balanceReferralPoints);
         rvReferralPoints = findViewById(R.id.rv_referredUsers);
 
@@ -71,8 +86,18 @@ public class RewardCreditsActivity extends AppCompatActivity {
         tvBalanceReferralPoints.setText(formattedPoints + " " + getString(R.string.rupees));
     }
 
+    private void componentEvents() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
     private void setupRecyclerViewReferralPoints() {
-        getDummyReferralData();
+        llReferredUsers.setVisibility(View.VISIBLE);
+//        getDummyReferralData();
 
         adapterReferralPoints = new RecycleAdapterReferralPoints(this, listReferralDetails);
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(this);
@@ -103,11 +128,12 @@ public class RewardCreditsActivity extends AppCompatActivity {
 
     private void getReferralDetails() {
         if (InternetConnection.checkConnection(this)) {
+            showDialog();
 
             int userTypeID = Application.userDetails.getUserID();
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getReferralDetails(0);
+            Call<ResponseBody> call = apiService.getReferralDetails(1);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -120,28 +146,30 @@ public class RewardCreditsActivity extends AppCompatActivity {
                             listReferralDetails = new ArrayList<>();
 
                             JSONArray jsonArray = new JSONArray(responseString);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+                            if (jsonArray != null) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                double cgst = jsonObj.optDouble("CGST");
-                                int categoryID = jsonObj.optInt("CategoryID");
-                                String categoryName = jsonObj.optString("CategoryName");
-                                String foodType = jsonObj.optString("FoodType");
-                                int foodTypeID = jsonObj.optInt("FoodTypeId");
-                                int dishID = jsonObj.optInt("HaveRuntimeRate");
-                                String isDiscounted = jsonObj.optString("IsDiscounted");
-                                double price = jsonObj.optDouble("Price");
-                                String productDesc = jsonObj.optString("ProductDesc");
-                                int productID = jsonObj.optInt("ProductId");
-                                String productImage = jsonObj.optString("ProductImage");
-                                String productName = jsonObj.optString("ProductName");
-                                double sgst = jsonObj.optDouble("SGST");
-                                int taxID = jsonObj.optInt("TaxID");
-                                String taxName = jsonObj.optString("TaxName");
+                                    String firstName = jsonObj.optString("FirstName");
+                                    String lastName = jsonObj.optString("LastName");
+                                    int newUserID = jsonObj.optInt("NewUserID");
+                                    int pointID = jsonObj.optInt("PointID");
+                                    double totalAmount = jsonObj.optDouble("TotalAmount");
 
+                                    ReferralDetails referralDetails = new ReferralDetails();
+                                    referralDetails.setFirstName(firstName);
+                                    referralDetails.setLastName(lastName);
+                                    referralDetails.setNewUserID(newUserID);
+                                    referralDetails.setReferralID(pointID);
+                                    referralDetails.setTotalAmount(totalAmount);
+                                    listReferralDetails.add(referralDetails);
+                                }
+
+                                setupRecyclerViewReferralPoints();
+
+                            } else {
+                                llReferredUsers.setVisibility(View.GONE);
                             }
-
-//                            setupRecyclerViewProducts();
 
                         } else {
                             showSnackBarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -150,11 +178,14 @@ public class RewardCreditsActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackBarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -166,7 +197,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
         } else {
 //            signOutFirebaseAccounts();
 
-            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+            Snackbar.make(llRootLayout, getResources().getString(R.string.no_internet),
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
@@ -182,7 +213,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
     public void showSnackBarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
 
-        Snackbar snackbar = Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(llRootLayout, erroMsg, Snackbar.LENGTH_LONG);
         View snackbarView = snackbar.getView();
         TextView snackTextView = (TextView) snackbarView
                 .findViewById(R.id.snackbar_text);
@@ -191,7 +222,7 @@ public class RewardCreditsActivity extends AppCompatActivity {
     }
 
     public void showSnackBarErrorMsgWithButton(String erroMsg) {
-        Snackbar.make(rlRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(llRootLayout, erroMsg, Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -209,5 +240,10 @@ public class RewardCreditsActivity extends AppCompatActivity {
         if (progressIndicator != null) {
             progressIndicator.hideProgress();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

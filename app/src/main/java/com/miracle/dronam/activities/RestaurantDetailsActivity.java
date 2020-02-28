@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -44,6 +45,9 @@ import retrofit2.Response;
 
 public class RestaurantDetailsActivity extends AppCompatActivity implements OnItemAddedToCart {
     public RelativeLayout rlRootLayout;
+
+    View viewToolbar;
+    ImageView ivBack;
 
     String[] foodName = {"Navgrah Veg Restaurant", "Saroj Hotel", "Hotel Jewel of Chembur"};
     Integer[] foodImage = {R.mipmap.temp_order, R.mipmap.temp_order,
@@ -101,6 +105,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         progressIndicator = DialogLoadingIndicator.getInstance();
 
         rlRootLayout = findViewById(R.id.rl_rootLayout);
+        viewToolbar = findViewById(R.id.view_toolbarRestaurantDetails);
+        ivBack = viewToolbar.findViewById(R.id.iv_back);
+
         rvPhotos = findViewById(R.id.recyclerView_photos);
         rvMenu = findViewById(R.id.recyclerView_menu);
 
@@ -118,6 +125,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     }
 
     private void componentEvents() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         viewViewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
