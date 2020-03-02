@@ -133,7 +133,8 @@ public class RewardCreditsActivity extends AppCompatActivity {
             int userTypeID = Application.userDetails.getUserID();
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getReferralDetails(1);
+//            Call<ResponseBody> call = apiService.getReferralDetails(1);
+            Call<ResponseBody> call = apiService.getReferralDetails(userTypeID);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

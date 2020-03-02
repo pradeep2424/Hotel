@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,6 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterAddresses;
 import com.miracle.dronam.adapter.RecycleAdapterProfile;
+import com.miracle.dronam.listeners.OnManageAddressClickListener;
+import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.model.AddressDetails;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.ProfileObject;
@@ -37,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ManageAddressesActivity extends AppCompatActivity {
+public class ManageAddressesActivity extends AppCompatActivity implements OnRecyclerViewClickListener {
     RelativeLayout rlRootLayout;
     RecyclerView rvAddresses;
 
@@ -80,7 +83,7 @@ public class ManageAddressesActivity extends AppCompatActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onBackPressed();
             }
         });
 
@@ -93,10 +96,16 @@ public class ManageAddressesActivity extends AppCompatActivity {
 
         adapterAddresses = new RecycleAdapterAddresses(this, listAddress);
         rvAddresses.setAdapter(adapterAddresses);
-//        adapterAddresses.setClickListener(this);
+        adapterAddresses.setClickListener(this);
     }
 
-//    private void getProfileData() {
+    @Override
+    public void onClick(View view, int position) {
+        AddressDetails addressDetails = listAddress.get(position);
+        deleteUserAddress(position, addressDetails);
+    }
+
+    //    private void getProfileData() {
 //        String[] title = {getString(R.string.profile_payment_methods),
 //                getString(R.string.profile_reward_credits),
 //                getString(R.string.profile_settings),
@@ -117,7 +126,7 @@ public class ManageAddressesActivity extends AppCompatActivity {
             String mobileNo = Application.userDetails.getMobile();
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getUserAddress( "9665175415");
+            Call<ResponseBody> call = apiService.getUserAddress("9665175415");
 //            Call<ResponseBody> call = apiService.getUserAddress(mobileNumber);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -187,6 +196,73 @@ public class ManageAddressesActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteUserAddress(final int position, final AddressDetails addressDetails) {
+        if (InternetConnection.checkConnection(this)) {
+            int addressID = addressDetails.getAddressID();
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.deleteUserAddress(addressID);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+                            listAddress.remove(position);
+                            adapterAddresses.notifyDataSetChanged();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            deleteUserAddress(position, addressDetails);
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+//
+//    @Override
+//    public void onEditAddress(View view, int position) {
+//
+//    }
+//
+//    @Override
+//    public void onDeleteAddress(View view, int position) {
+//        AddressDetails addressDetails = listAddress.get(position);
+//        deleteUserAddress(position, addressDetails);
+//    }
+
     public void showSnackbarErrorMsg(String erroMsg) {
 //        Snackbar.make(fragmentRootView, erroMsg, Snackbar.LENGTH_LONG).show();
 
@@ -198,4 +274,8 @@ public class ManageAddressesActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

@@ -54,31 +54,45 @@
                 android:orientation="horizontal">
 
                 <com.miracle.dronam.custom.MyTextView
-                    android:id="@+id/tv_editAddress"
+                    android:id="@+id/tv_deleteAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/edit"
+                    android:text="@string/delete"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp" />
 
-                <com.miracle.dronam.custom.MyTextView
-                    android:id="@+id/tv_deleteAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="40dp"
-                    android:padding="10dp"
-                    android:textAllCaps="true"
-                    android:textStyle="bold"
-                    android:text="@string/delete"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp" />
+<!--                <com.miracle.dronam.custom.MyTextView-->
+<!--                    android:id="@+id/tv_editAddress"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:paddingTop="10dp"-->
+<!--                    android:paddingRight="10dp"-->
+<!--                    android:paddingBottom="10dp"-->
+<!--                    android:text="@string/edit"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="@color/colorAccent"-->
+<!--                    android:textSize="14sp" />-->
+
+<!--                <com.miracle.dronam.custom.MyTextView-->
+<!--                    android:id="@+id/tv_deleteAddress"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_marginLeft="40dp"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:textAllCaps="true"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:text="@string/delete"-->
+<!--                    android:textColor="@color/colorAccent"-->
+<!--                    android:textSize="14sp" />-->
 
             </LinearLayout>
 

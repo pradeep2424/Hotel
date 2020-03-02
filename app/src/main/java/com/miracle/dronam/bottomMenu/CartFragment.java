@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,8 +64,10 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     TextView tvBalancePoints;
     TextView tvSaveReferralPointsMessage;
 
-    private RecyclerView rvOrderedItems;
-    private RecycleAdapterOrderedItem adapterOrderedItems;
+    private RelativeLayout rlAddReferralBalBillDetails;
+    private RelativeLayout rlAddReferralBalTotalPay;
+    private TextView tvAddReferralMoneyBillDetails;
+    private TextView tvAddReferralMoneyTotalPay;
 
     private TextView tvItemTotal;
     private TextView tvRestaurantCharges;
@@ -73,14 +76,20 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private TextView tvTotalPaymentAmount;
     private TextView tvPaymentButtonAmount;
 
+    private RecyclerView rvOrderedItems;
+    private RecycleAdapterOrderedItem adapterOrderedItems;
+
     TriggerTabChangeListener triggerTabChangeListener;
     private ArrayList<CartObject> listCartDish;
 
+    double appliedReferralPoints;
     double totalPayment;
     int userID;
     double referralPoints;
     int restaurantID;
     int orderNumber;
+
+    private final int MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 200;
 
     @Override
     public void onAttach(Context context) {
@@ -104,10 +113,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
         init();
         componentEvents();
-        setupReferralPointsLayout();
+//        setupReferralPointsLayout();
 
         getOrderNumber();
         getCartItems();
+
+//        referralPoints = 500;
 
         return rootView;
     }
@@ -124,14 +135,17 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         tvBalancePoints = rootView.findViewById(R.id.tv_balanceReferralPoints);
         tvSaveReferralPointsMessage = rootView.findViewById(R.id.tv_referralPointsSaveMessage);
 
+        rlAddReferralBalBillDetails = rootView.findViewById(R.id.rl_addReferralPointsBillDetails);
+        rlAddReferralBalTotalPay = rootView.findViewById(R.id.rl_addReferralPointsTotalPay);
+        tvAddReferralMoneyBillDetails = rootView.findViewById(R.id.tv_addReferralMoneyBillDetails);
+        tvAddReferralMoneyTotalPay = rootView.findViewById(R.id.tv_addReferralMoneyTotalPay);
+
         tvItemTotal = rootView.findViewById(R.id.tv_itemTotalText);
         tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
         tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
         tvDeliveryFreeText = rootView.findViewById(R.id.tv_deliveryFeeTextFree);
         tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
         tvPaymentButtonAmount = rootView.findViewById(R.id.tv_paymentButtonAmount);
-
-
     }
 
     private void componentEvents() {
@@ -139,6 +153,19 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             @Override
             public void onClick(View view) {
                 triggerTabChangeListener.setTab(0);
+            }
+        });
+
+        switchButtonApplyPoints.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                setupBillingDetails();
+
+//                if (isChecked) {
+//
+//                } else {
+//
+//                }
             }
         });
 
@@ -207,6 +234,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     private void setupBillingDetails() {
         double itemTotal = 0;
+        double remainingItemTotal;
         double deliveryCharges = 0;
         double sgst = 0;
         double cgst = 0;
@@ -219,31 +247,68 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
             sgst = cartObject.getSgst();
             cgst = cartObject.getCgst();
         }
+        remainingItemTotal = itemTotal;
 
         sgst = itemTotal * (sgst / 100);
         cgst = itemTotal * (cgst / 100);
         double totalGST = sgst + cgst;
 
+//       logic for calculating referral points
+        if (referralPoints != 0 && switchButtonApplyPoints.isChecked()) {
+            double remainingReferralPoints;
 
-        if (itemTotal > 200) {
-            totalPayment = itemTotal + totalGST;
+            if (referralPoints >= itemTotal) {
+                remainingReferralPoints = referralPoints - itemTotal;
+                appliedReferralPoints = itemTotal;
+                remainingItemTotal = 0;
+
+            } else {
+                remainingReferralPoints = 0;
+                appliedReferralPoints = referralPoints;
+                remainingItemTotal = itemTotal - referralPoints;
+            }
+
+//            itemTotal = remainingItemTotal;
+
+//            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
+//            formattedTotalPayment = getFormattedNumberDouble(totalPayment);
+
+            rlAddReferralBalBillDetails.setVisibility(View.VISIBLE);
+            rlAddReferralBalTotalPay.setVisibility(View.VISIBLE);
+
+            String formattedAppliedPoints = getFormattedNumberDouble(appliedReferralPoints);
+            tvAddReferralMoneyBillDetails.setText(formattedAppliedPoints);
+            tvAddReferralMoneyTotalPay.setText(formattedAppliedPoints);
+
+        } else {
+            rlAddReferralBalBillDetails.setVisibility(View.GONE);
+            rlAddReferralBalTotalPay.setVisibility(View.GONE);
+        }
+
+        // 200 rupees minimum delivery charge
+        if (itemTotal > MINIMUM_AMOUNT_FOR_FREE_DELIVERY) {
+            totalPayment = remainingItemTotal + totalGST;
 
             tvDeliveryFreeText.setVisibility(View.VISIBLE);
             tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         } else {
-            totalPayment = itemTotal + totalGST + deliveryCharges;
+            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
 
             tvDeliveryFreeText.setVisibility(View.GONE);
             tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        tvItemTotal.setText("₹ " + itemTotal);
-        tvRestaurantCharges.setText("₹ " + totalGST);
-        tvDeliveryFee.setText("₹ " + deliveryCharges);
-        tvTotalPaymentAmount.setText("₹ " + totalPayment);
-        tvPaymentButtonAmount.setText("₹ " + totalPayment);
+        String formattedItemTotal = getFormattedNumberDouble(remainingItemTotal);
+        String formattedTotalGST = getFormattedNumberDouble(totalGST);
+        String formattedDeliveryCharges = getFormattedNumberDouble(deliveryCharges);
+        String formattedTotalPayment = getFormattedNumberDouble(totalPayment);
 
+        tvItemTotal.setText("₹ " + formattedItemTotal);
+        tvRestaurantCharges.setText("₹ " + formattedTotalGST);
+        tvDeliveryFee.setText("₹ " + formattedDeliveryCharges);
+        tvTotalPaymentAmount.setText("₹ " + formattedTotalPayment);
+        tvPaymentButtonAmount.setText("₹ " + formattedTotalPayment);
     }
 
     private double getUpdateItemPrice(CartObject cartObject) {
@@ -417,6 +482,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
                                 showCartItemDetails();
                                 setupRecyclerViewOrderedItems();
+
+                                setupReferralPointsLayout();
                                 setupBillingDetails();
 
                             } else {
@@ -804,9 +871,12 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     String responseString = response.body().string();
 
                                     if (currentIndex == listCartItems.size() - 1) {
+                                        if (referralPoints != 0) {
+                                            sendAppliedReferralPoints();
+                                        }
+
                                         triggerTabChangeListener.setBadgeCount(0);
                                         deleteCartItem();
-                                        sendAppliedReferrelPoints();
                                         showSuccessOrderMsg();
                                     }
 
@@ -854,7 +924,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         }
     }
 
-    public void sendAppliedReferrelPoints() {
+    public void sendAppliedReferralPoints() {
         if (InternetConnection.checkConnection(getActivity())) {
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());

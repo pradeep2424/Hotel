@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miracle.dronam.R;
+import com.miracle.dronam.listeners.OnManageAddressClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.model.AddressDetails;
 import com.miracle.dronam.model.ProfileObject;
@@ -37,10 +38,54 @@ public class RecycleAdapterAddresses extends RecyclerView.Adapter<RecycleAdapter
         this.clickListener = clickListener;
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivIcon;
+        TextView tvAddressTitle;
+        TextView tvAddressText;
+//        TextView tvEdit;
+        TextView tvDelete;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ivIcon = itemView.findViewById(R.id.iv_icon);
+            tvAddressTitle = itemView.findViewById(R.id.tv_addressTitle);
+            tvAddressText = itemView.findViewById(R.id.tv_addressText);
+//            tvEdit = itemView.findViewById(R.id.tv_editAddress);
+            tvDelete = itemView.findViewById(R.id.tv_deleteAddress);
+
+//            tvEdit.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (clickListener != null) {
+//                        clickListener.onEditAddress(view, getAdapterPosition());
+//                    }
+//                }
+//            });
+
+            tvDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        clickListener.onClick(view, getAdapterPosition());
+                    }
+                }
+            });
+
+//            itemView.setOnClickListener(this);
+        }
+
+//        @Override
+//        public void onClick(View view) {
+//            if (clickListener != null) {
+//                clickListener.onClick(view, getAdapterPosition());
+//            }
+//        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_manage_addresses,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_manage_addresses, parent, false);
         return new ViewHolder(view);
     }
 
@@ -56,31 +101,9 @@ public class RecycleAdapterAddresses extends RecyclerView.Adapter<RecycleAdapter
     }
 
     @Override
-    public int getItemCount() {return listAddress.size();}
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView ivIcon;
-        TextView tvAddressTitle;
-        TextView tvAddressText;
-        TextView tvEdit;
-        TextView tvDelete;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            ivIcon = itemView.findViewById(R.id.iv_icon);
-            tvAddressTitle = itemView.findViewById(R.id.tv_addressTitle);
-            tvAddressText = itemView.findViewById(R.id.tv_addressText);
-            tvEdit = itemView.findViewById(R.id.tv_editAddress);
-            tvDelete = itemView.findViewById(R.id.tv_deleteAddress);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) {
-                clickListener.onClick(view, getAdapterPosition());
-            }
-        }
+    public int getItemCount() {
+        return listAddress.size();
     }
+
+
 }

@@ -38,18 +38,18 @@ public interface ApiInterface {
     Call<ResponseBody> getUserDetails(@Path("Username") String username,
                                       @Path("Password") String password);
 
-    @POST("insUserAddress")
-    Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);
-
     @GET("getSMSDetails")
     Call<ResponseBody> getSMSDetails();
 
+
+    @POST("insUserAddress")
+    Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);
 
     @GET("getUserAddress/{mobileNo}")
     Call<ResponseBody> getUserAddress(@Path("mobileNo") String mobileNo);
 
     @POST("delUserAddress/{AddressID}")
-    Call<ResponseBody> deleteUserAddress(@Path("AddressID") String addressID);
+    Call<ResponseBody> deleteUserAddress(@Path("AddressID") int addressID);
 
     @GET("getAreaDetails")
     Call<ResponseBody> getAreaDetails();
