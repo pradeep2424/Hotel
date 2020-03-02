@@ -1,5 +1,6 @@
 package com.miracle.dronam.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -100,6 +101,8 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         rvPastOrders.setLayoutManager(layoutManager);
         rvPastOrders.setItemAnimator(new DefaultItemAnimator());
         rvPastOrders.setAdapter(adapterPastOrders);
+
+        adapterPastOrders.setClickListener(this);
     }
 
 //    private void getTESTPastOrdersData() {
@@ -189,10 +192,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         OrderDetailsObject orderDetailsObject = listAllOrders.get(position);
         ArrayList<DishObject> listProducts = orderDetailsObject.getListProducts();
 
-        for (int i = 0; i < listProducts.size(); i++) {
-            DishObject dishObject = listProducts.get(i);
-            addItemToCart(dishObject);
-        }
+        addItemToCart(listProducts);
     }
 
     private void getPastOrderDetails() {
@@ -338,46 +338,56 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         return postParam;
     }
 
-    public void addItemToCart(final DishObject dishObject) {
+    public void addItemToCart(final ArrayList<DishObject> listProducts) {
         if (InternetConnection.checkConnection(getActivity())) {
 
-            ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject));
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            for (int i = 0; i < listProducts.size(); i++) {
+                final int currentIndex = i;
+                DishObject dishObject = listProducts.get(i);
 
-                    try {
-                        int statusCode = response.code();
+                ApiInterface apiService = RetroClient.getApiService(getActivity());
+                Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject));
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                        if (response.isSuccessful()) {
-                            String responseString = response.body().string();
+                        try {
+                            int statusCode = response.code();
+
+                            if (response.isSuccessful()) {
+                                String responseString = response.body().string();
+
+                                if (currentIndex == listProducts.size() - 1) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra("MESSAGE", "VIEW_CART");
+                                    getActivity().setResult(getActivity().RESULT_OK, intent);
+                                }
 
 //                            if (onItemAddedToCart != null) {
 //                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
 //                            }
 
-                        } else {
-                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                            } else {
+                                showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    try {
-                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
-                        Log.e("Error onFailure : ", t.toString());
-                        t.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        try {
+                            showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                            Log.e("Error onFailure : ", t.toString());
+                            t.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            });
+                });
+            }
         } else {
 //            signOutFirebaseAccounts();
 
@@ -386,7 +396,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(dishObject);
+                            addItemToCart(listProducts);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
