@@ -14,10 +14,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterPastOrders;
+import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
+import com.miracle.dronam.listeners.OnPastOrderOptionsClickListener;
+import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
+import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
@@ -43,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PastOrdersFragment extends Fragment {
+public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsClickListener {
     View rootView;
 
 //    String[] restaurantName  = {"Cocobolo Poolside Bar + Grill","Palm Beach Seafood Restaurant","Shin Minori Japanese Restaurant","Shin Minori Japanese Restaurant"};
@@ -174,6 +179,22 @@ public class PastOrdersFragment extends Fragment {
         return listPastOrders;
     }
 
+    @Override
+    public void onClickReceipt(View view, int position) {
+
+    }
+
+    @Override
+    public void onClickReorder(View view, int position) {
+        OrderDetailsObject orderDetailsObject = listAllOrders.get(position);
+        ArrayList<DishObject> listProducts = orderDetailsObject.getListProducts();
+
+        for (int i = 0; i < listProducts.size(); i++) {
+            DishObject dishObject = listProducts.get(i);
+            addItemToCart(dishObject);
+        }
+    }
+
     private void getPastOrderDetails() {
         if (InternetConnection.checkConnection(getActivity())) {
 
@@ -286,6 +307,94 @@ public class PastOrdersFragment extends Fragment {
         }
     }
 
+    private JsonObject createJsonCart(DishObject dishObject) {
+        RestaurantObject restaurantObject = Application.restaurantObject;
+
+        JsonObject postParam = new JsonObject();
+
+        try {
+            postParam.addProperty("ProductId", dishObject.getProductID());
+            postParam.addProperty("ProductName", dishObject.getProductName());
+            postParam.addProperty("ProductRate", dishObject.getPrice());
+            postParam.addProperty("ProductAmount", dishObject.getPrice());
+            postParam.addProperty("ProductSize", "Regular");
+            postParam.addProperty("cartId", 0);
+            postParam.addProperty("ProductQnty", dishObject.getProductQuantity());
+            postParam.addProperty("Taxableval", dishObject.getPrice());    // doubt
+            postParam.addProperty("CGST", dishObject.getCgst());
+            postParam.addProperty("SGST", dishObject.getSgst());
+            postParam.addProperty("HotelName", restaurantObject.getRestaurantName());
+            postParam.addProperty("IsIncludeTax", restaurantObject.getIncludeTax());
+            postParam.addProperty("IsTaxApplicable", restaurantObject.getTaxable());
+            postParam.addProperty("DeliveryCharge", 20);
+            postParam.addProperty("Userid", Application.userDetails.getUserID());
+            postParam.addProperty("Clientid", restaurantObject.getRestaurantID());
+            postParam.addProperty("TotalAmount", dishObject.getPrice());
+            postParam.addProperty("TaxId", 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postParam;
+    }
+
+    public void addItemToCart(final DishObject dishObject) {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+
+//                            if (onItemAddedToCart != null) {
+//                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
+//                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addItemToCart(dishObject);
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+
     public void showSnackbarErrorMsg(String erroMsg) {
         Snackbar snackbar = Snackbar.make(rootView, erroMsg, Snackbar.LENGTH_LONG);
         View snackbarView = snackbar.getView();
@@ -294,7 +403,5 @@ public class PastOrdersFragment extends Fragment {
         snackTextView.setMaxLines(4);
         snackbar.show();
     }
-
-
 }
 
