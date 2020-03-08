@@ -1,5 +1,7 @@
 package com.miracle.dronam.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -21,6 +25,7 @@ import com.miracle.dronam.adapter.RecycleAdapterPastOrders;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
 import com.miracle.dronam.listeners.OnPastOrderOptionsClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
+import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
@@ -52,6 +57,13 @@ import retrofit2.Response;
 public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsClickListener {
     View rootView;
 
+    View viewEmptyPastOrders;
+    LinearLayout llPastOrdersLayout;
+    LinearLayout llBrowseMenu;
+
+
+    TriggerTabChangeListener triggerTabChangeListener;
+
 //    String[] restaurantName  = {"Cocobolo Poolside Bar + Grill","Palm Beach Seafood Restaurant","Shin Minori Japanese Restaurant","Shin Minori Japanese Restaurant"};
 //    String[] orderAddress = {"Chembur","Ghatkopar","Thane","Sion"};
 //    String[] restaurantReviews ={"238 reviews","200 reviews","556 reviews","240 reviews"};
@@ -64,6 +76,12 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     private ArrayList<OrderDetailsObject> listAllOrders;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        triggerTabChangeListener = (TriggerTabChangeListener) context;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -73,6 +91,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         rootView = inflater.inflate(R.layout.fragment_past_orders, container, false);
 
         initComponents();
+        componentEvents();
 //        setupRecyclerViewPastOrders();
 
         getPastOrderDetails();
@@ -81,7 +100,21 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     }
 
     private void initComponents() {
+        llPastOrdersLayout = rootView.findViewById(R.id.ll_pastOrdersLayout);
+        viewEmptyPastOrders = rootView.findViewById(R.id.view_emptyPastOrders);
+        llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
+
         rvPastOrders = rootView.findViewById(R.id.recyclerView_pastOrders);
+    }
+
+    private void componentEvents() {
+        llBrowseMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                triggerTabChangeListener.setTab(0);
+            }
+        });
+
     }
 
     private void setupRecyclerViewPastOrders() {
@@ -145,6 +178,16 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 //        return dateTime;
 //    }
 
+    private void showEmptyPastOrdersLayout() {
+        viewEmptyPastOrders.setVisibility(View.VISIBLE);
+        llPastOrdersLayout.setVisibility(View.GONE);
+    }
+
+    private void showPastOrdersList() {
+        viewEmptyPastOrders.setVisibility(View.GONE);
+        llPastOrdersLayout.setVisibility(View.VISIBLE);
+    }
+
     private ArrayList<OrderDetailsObject> formatPastOrderData() {
         ArrayList<OrderDetailsObject> listPastOrders = new ArrayList<>();
 
@@ -160,8 +203,14 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
                 if (orderNo == orderNoInList) {
                     DishObject dishObject = new DishObject();
+
+                    dishObject.setProductID(tempAllOrders.get(j).getProductID());
                     dishObject.setProductName(tempAllOrders.get(j).getProductName());
                     dishObject.setProductQuantity(tempAllOrders.get(j).getProductQuantity());
+                    dishObject.setPrice(tempAllOrders.get(j).getProductRate());
+                    dishObject.setCgst(tempAllOrders.get(j).getCgst());
+                    dishObject.setSgst(tempAllOrders.get(j).getSgst());
+                    dishObject.setTaxID(tempAllOrders.get(j).getTaxID());
 
                     listProducts.add(dishObject);
                     tempAllOrders.remove(j);
@@ -192,6 +241,14 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         OrderDetailsObject orderDetailsObject = listAllOrders.get(position);
         ArrayList<DishObject> listProducts = orderDetailsObject.getListProducts();
 
+//        adding restaurant details to application class
+        RestaurantObject restaurantObject = new RestaurantObject();
+        restaurantObject.setRestaurantID(orderDetailsObject.getClientID());
+        restaurantObject.setRestaurantName(orderDetailsObject.getRestaurantName());
+        restaurantObject.setIncludeTax(orderDetailsObject.getIsIncludeTax());
+        restaurantObject.setTaxable(orderDetailsObject.getIsTaxApplicable());
+        Application.restaurantObject = restaurantObject;
+
         addItemToCart(listProducts);
     }
 
@@ -214,62 +271,74 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                             listAllOrders = new ArrayList<>();
 //
                             JSONArray jsonArray = new JSONArray(responseString);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                double cgst = jsonObj.optDouble("CGST");
-                                int restaurantID = jsonObj.optInt("Clientid");
-                                String orderDate = jsonObj.optString("OrderDate");
-                                int orderID = jsonObj.optInt("OrderId");
-                                int orderMode = jsonObj.optInt("OrderMode");
-                                int orderNumber = jsonObj.optInt("OrderNumber");
-                                boolean orderPaid = jsonObj.optBoolean("OrderPaid");     // @@@@@@
-                                int orderStatus = jsonObj.optInt("OrderStatus");
-                                int orderType = jsonObj.optInt("OrderType");
-                                int paymentID = jsonObj.optInt("PaymentId");
-                                int dishID = jsonObj.optInt("ProductId");
-                                String dishName = jsonObj.optString("ProductName");
-                                int dishQuantity = jsonObj.optInt("ProductQnty");
-                                double dishRate = jsonObj.optDouble("ProductRate");
-                                String rejectReason = jsonObj.optString("RejectReason");
-                                String restaurantName = jsonObj.optString("RestaurantName");
-                                double sgst = jsonObj.optDouble("SGST");
-                                int taxID = jsonObj.optInt("TaxId");
-                                double taxableVal = jsonObj.optDouble("Taxableval");
-                                double totalAmount = jsonObj.optDouble("TotalAmount");
-                                String userAddress = jsonObj.optString("UserAddress");
-                                int userID = jsonObj.optInt("Userid");
+                            if (jsonArray != null && jsonArray.length() > 0) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
 
-                                String convertedOrderDate = Utils.convertJsonDate(orderDate);
+                                    double cgst = jsonObj.optDouble("CGST");
+                                    int restaurantID = jsonObj.optInt("Clientid");
+                                    String orderDate = jsonObj.optString("OrderDate");
+                                    int orderID = jsonObj.optInt("OrderId");
+                                    int orderMode = jsonObj.optInt("OrderMode");
+                                    int orderNumber = jsonObj.optInt("OrderNumber");
+                                    boolean orderPaid = jsonObj.optBoolean("OrderPaid");     // @@@@@@
+                                    int orderStatus = jsonObj.optInt("OrderStatus");
+                                    int orderType = jsonObj.optInt("OrderType");
+                                    int paymentID = jsonObj.optInt("PaymentId");
+                                    int dishID = jsonObj.optInt("ProductId");
+                                    String dishName = jsonObj.optString("ProductName");
+                                    int dishQuantity = jsonObj.optInt("ProductQnty");
+                                    double dishRate = jsonObj.optDouble("ProductRate");
+                                    String rejectReason = jsonObj.optString("RejectReason");
+                                    String restaurantName = jsonObj.optString("RestaurantName");
+                                    double sgst = jsonObj.optDouble("SGST");
+                                    int taxID = jsonObj.optInt("TaxId");
+                                    double taxableVal = jsonObj.optDouble("Taxableval");
+                                    double totalAmount = jsonObj.optDouble("TotalAmount");
+                                    String userAddress = jsonObj.optString("UserAddress");
+                                    int userID = jsonObj.optInt("Userid");
+                                    boolean isIncludeTax = jsonObj.getBoolean("IsIncludeTax");
+                                    boolean isTaxApplicable = jsonObj.getBoolean("IsTaxApplicable");
 
-                                OrderDetailsObject orderObj = new OrderDetailsObject();
-                                orderObj.setCgst(cgst);
-                                orderObj.setClientID(restaurantID);
-                                orderObj.setOrderDate(convertedOrderDate);
-                                orderObj.setOrderID(orderID);
-                                orderObj.setOrderMode(orderMode);
-                                orderObj.setOrderNumber(orderNumber);
-                                orderObj.setOrderStatus(orderStatus);
-                                orderObj.setOrderType(orderType);
-                                orderObj.setPaymentID(paymentID);
-                                orderObj.setProductID(dishID);
-                                orderObj.setProductName(dishName);
-                                orderObj.setProductQuantity(dishQuantity);
-                                orderObj.setProductRate(dishRate);
-                                orderObj.setRejectReason(rejectReason);
-                                orderObj.setRestaurantName(restaurantName);
-                                orderObj.setSgst(sgst);
-                                orderObj.setTaxID(taxID);
-                                orderObj.setTaxableVal(taxableVal);
-                                orderObj.setTotalAmount(totalAmount);
-                                orderObj.setUserAddress(userAddress);
-                                orderObj.setUserID(userID);
+                                    String convertedOrderDate = Utils.convertJsonDate(orderDate);
 
-                                listAllOrders.add(orderObj);
-                            }
+                                    OrderDetailsObject orderObj = new OrderDetailsObject();
+                                    orderObj.setCgst(cgst);
+                                    orderObj.setClientID(restaurantID);
+                                    orderObj.setOrderDate(convertedOrderDate);
+                                    orderObj.setOrderID(orderID);
+                                    orderObj.setOrderMode(orderMode);
+                                    orderObj.setOrderNumber(orderNumber);
+                                    orderObj.setOrderStatus(orderStatus);
+                                    orderObj.setOrderType(orderType);
+                                    orderObj.setPaymentID(paymentID);
+                                    orderObj.setProductID(dishID);
+                                    orderObj.setProductName(dishName);
+                                    orderObj.setProductQuantity(dishQuantity);
+                                    orderObj.setProductRate(dishRate);
+                                    orderObj.setRejectReason(rejectReason);
+                                    orderObj.setRestaurantName(restaurantName);
+                                    orderObj.setSgst(sgst);
+                                    orderObj.setTaxID(taxID);
+                                    orderObj.setTaxableVal(taxableVal);
+                                    orderObj.setTotalAmount(totalAmount);
+                                    orderObj.setUserAddress(userAddress);
+                                    orderObj.setUserID(userID);
+                                    orderObj.setIsIncludeTax(isIncludeTax);
+                                    orderObj.setIsTaxApplicable(isTaxApplicable);
+
+                                    listAllOrders.add(orderObj);
+                                }
 
 //                            getTESTPastOrdersData();
-                            setupRecyclerViewPastOrders();
+                                showPastOrdersList();
+                                setupRecyclerViewPastOrders();
+
+                            } else {
+                                showEmptyPastOrdersLayout();
+                            }
+
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -358,14 +427,9 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                                 String responseString = response.body().string();
 
                                 if (currentIndex == listProducts.size() - 1) {
-                                    Intent intent = new Intent();
-                                    intent.putExtra("MESSAGE", "VIEW_CART");
-                                    getActivity().setResult(getActivity().RESULT_OK, intent);
-                                }
-
-//                            if (onItemAddedToCart != null) {
-//                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
-//                            }
+                                    triggerTabChangeListener.setTab(1);
+//                                    triggerTabChangeListener.setTab(2);
+                            }
 
                             } else {
                                 showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
