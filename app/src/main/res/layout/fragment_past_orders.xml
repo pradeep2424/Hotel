@@ -5,13 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <include
+        android:id="@+id/view_emptyPastOrders"
+        layout="@layout/fragment_past_orders_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/ll_pastOrdersLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <!--            <include layout="@layout/food7_toolbar" />-->
@@ -19,8 +24,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_pastOrders"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clipToPadding="false" />
         </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>

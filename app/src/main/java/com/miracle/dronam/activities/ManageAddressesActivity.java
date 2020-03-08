@@ -126,7 +126,7 @@ public class ManageAddressesActivity extends AppCompatActivity implements OnRecy
             String mobileNo = Application.userDetails.getMobile();
 
             ApiInterface apiService = RetroClient.getApiService(this);
-            Call<ResponseBody> call = apiService.getUserAddress("9665175415");
+            Call<ResponseBody> call = apiService.getUserAddress(mobileNo);
 //            Call<ResponseBody> call = apiService.getUserAddress(mobileNumber);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

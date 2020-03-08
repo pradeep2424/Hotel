@@ -140,13 +140,21 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     }
 
     private void getProfileData() {
+//        String[] title = {getString(R.string.profile_payment_methods),
+//                getString(R.string.profile_reward_credits),
+//                getString(R.string.profile_settings),
+//                getString(R.string.profile_invite_friends)};
+//
+//        Integer[] icon = {R.mipmap.profile_payment_method, R.mipmap.profile_reward_credits,
+//                R.mipmap.profile_settings, R.mipmap.profile_invite_friends};
+
         String[] title = {getString(R.string.profile_payment_methods),
                 getString(R.string.profile_reward_credits),
-                getString(R.string.profile_settings),
                 getString(R.string.profile_invite_friends)};
 
         Integer[] icon = {R.mipmap.profile_payment_method, R.mipmap.profile_reward_credits,
-                R.mipmap.profile_settings, R.mipmap.profile_invite_friends};
+                 R.mipmap.profile_invite_friends};
+
 
         listProfile = new ArrayList<>();
         for (int i = 0; i < icon.length; i++) {

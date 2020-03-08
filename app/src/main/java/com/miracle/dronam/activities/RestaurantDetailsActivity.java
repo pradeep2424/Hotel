@@ -23,20 +23,24 @@ import com.miracle.dronam.adapter.RecycleAdapterRestaurantFoodPhotos;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
 import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
+import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.google.android.material.snackbar.Snackbar;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -44,6 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RestaurantDetailsActivity extends AppCompatActivity implements OnItemAddedToCart {
+    DialogLoadingIndicator progressIndicator;
     public RelativeLayout rlRootLayout;
 
     View viewToolbar;
@@ -55,7 +60,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
     private RecyclerView rvPhotos;
     private RecycleAdapterRestaurantFoodPhotos adapterRestaurantPhotos;
-    private ArrayList<DishObject> listPhotos;
+    private ArrayList<String> listPhotos;
 
     private RecyclerView rvMenu;
     private RecycleAdapterRestaurantMenu adapterRestaurantMenu;
@@ -76,8 +81,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
     RestaurantObject restaurantObject;
 
-    DialogLoadingIndicator progressIndicator;
-
 //    private FoodPagerAdapter loginPagerAdapter;
 //    private ViewPager viewPager;
 //    private CircleIndicator indicator;
@@ -95,9 +98,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         initComponents();
         componentEvents();
         setupRestaurantDetails();
-        setupRecyclerViewPhotos();
+//        setupRecyclerViewPhotos();
 //        setupRecyclerViewMenu();
 
+        getProductsPhotoGallery();
         getProductDetailsData();
     }
 
@@ -177,7 +181,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     }
 
     private void setupRecyclerViewPhotos() {
-        getPhotosData();
+//        getPhotosData();
 
         adapterRestaurantPhotos = new RecycleAdapterRestaurantFoodPhotos(this, listPhotos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -186,20 +190,20 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         rvPhotos.setAdapter(adapterRestaurantPhotos);
     }
 
-    private void getPhotosData() {
-        listPhotos = new ArrayList<>();
-
-        for (int i = 0; i < foodImage.length; i++) {
-            DishObject dishObject = new DishObject();
-            dishObject.setProductImage(String.valueOf(foodImage[i]));
-            listPhotos.add(dishObject);
-        }
-
+//    private void getPhotosData() {
+//        listPhotos = new ArrayList<>();
+//
 //        for (int i = 0; i < foodImage.length; i++) {
-//            DishObject dishObject = new DishObject(foodImage[i], "", "", "");
+//            DishObject dishObject = new DishObject();
+//            dishObject.setProductImage(String.valueOf(foodImage[i]));
 //            listPhotos.add(dishObject);
 //        }
-    }
+//
+////        for (int i = 0; i < foodImage.length; i++) {
+////            DishObject dishObject = new DishObject(foodImage[i], "", "", "");
+////            listPhotos.add(dishObject);
+////        }
+//    }
 
     private void setupRecyclerViewProducts() {
         adapterRestaurantMenu = new RecycleAdapterRestaurantMenu(this, listDishProducts);
@@ -295,10 +299,41 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 //        calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
         calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
         updateViewCartStrip();
+
+        String mobileNo = Application.userDetails.getMobile();
+        if (mobileNo == null) {
+            addItemToLocal(dishObject, quantity);
+        }
+
+    }
+
+    private void addItemToLocal(DishObject dishObject, int quantity) {
+        CartObject cartObject = new CartObject();
+        cartObject.setCgst(dishObject.getCgst());
+        cartObject.setRestaurantID(restaurantObject.getRestaurantID());
+        cartObject.setDeliveryCharge(30);
+        cartObject.setRestaurantName(restaurantObject.getRestaurantName());
+        cartObject.setIsIncludeTax(restaurantObject.getIncludeTax());
+        cartObject.setIsTaxApplicable(restaurantObject.getTaxable());
+        cartObject.setProductAmount(dishObject.getPrice());
+        cartObject.setProductID(dishObject.getProductID());
+        cartObject.setProductName(dishObject.getProductName());
+        cartObject.setProductQuantity(quantity);
+        cartObject.setProductRate(dishObject.getPrice());
+        cartObject.setProductSize("Regular");
+        cartObject.setSgst(dishObject.getSgst());
+        cartObject.setTaxID(dishObject.getTaxID());
+        cartObject.setTaxableVal(dishObject.getPrice());
+        cartObject.setTotalAmount(dishObject.getPrice());
+        cartObject.setUserID(Application.userDetails.getUserID());
+        cartObject.setCartID(Application.listCartItems.size());
+
+        Application.listCartItems.add(cartObject);
     }
 
     private void getProductDetailsData() {
         if (InternetConnection.checkConnection(this)) {
+            showDialog();
 
             int userTypeID = Application.userDetails.getUserID();
             int restaurantID = restaurantObject.getRestaurantID();
@@ -374,11 +409,14 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -402,7 +440,73 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                     .show();
         }
     }
-//
+
+    private void getProductsPhotoGallery() {
+        if (InternetConnection.checkConnection(this)) {
+            int restaurantID = restaurantObject.getRestaurantID();
+
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getSlidingPhotoDetails(restaurantID, ConstantValues.SLIDER_BANNER);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+                            listPhotos = new ArrayList<>();
+
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                                String photoURL = jsonObj.optString("PhotoData");
+                                String title = jsonObj.optString("Text");
+
+                                listPhotos.add(photoURL);
+                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                        setupRecyclerViewPhotos();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getProductsPhotoGallery();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+
 //    private JsonObject createJsonCart(DishObject dishObject, int quantity) {
 //        double totalPrice;
 //

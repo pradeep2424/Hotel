@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
+import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -68,13 +69,9 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
             @Override
             public void onClick(View v) {
 //                viewHolderClickedItem = holder;
+
                 if (onItemAddedToCart != null) {
-
-//                    int quantity = holder.numberPickerItemQuantity.getValue();
-//                    DishObject dishObject = modelArrayList.get(position);
-                    addItemToCart(holder, 1, position, ActionEnum.INCREMENT.toString());
-
-//                    onItemAddedToCart.onItemChangedInCart(quantity, position, ActionEnum.INCREMENT.toString());
+                    addItemOrUpdateQuantity(holder, 1, position, ActionEnum.INCREMENT.toString());
                 }
             }
         });
@@ -87,29 +84,11 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                         ActionEnum.INCREMENT.toString() : ActionEnum.DECREMENT.toString());
                 String message = String.format("NumberPicker is %s to %d", actionText, value);
 
-//                if (value == 0) {
-//                    showAddItemButton(holder);
-//
-//                } else {
-//                    hideAddItemButton(holder);
-//                }
+                addItemOrUpdateQuantity(holder, value, position, actionText);
 
-
-//                    onItemAddedToCart.onItemChangedInCart(1, position, actionText);
-
-//                    int quantity = holder.numberPickerItemQuantity.getValue();
-//                    DishObject dishObject = modelArrayList.get(position);
-                addItemToCart(holder, value, position, actionText);
-
-//                    onItemAddedToCart.onItemChangedInCart(value, position);
             }
         });
 
-//        if (dishObject.getQuantity() > 0) {
-//            showItemQuantityPicker(holder);
-//        } else {
-//            showAddItemButton(holder);
-//        }
     }
 
 //    public void showHideQuantityAndAddItemButton(ViewHolder holder, int quantity) {
@@ -149,6 +128,25 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 //        viewHolderClickedItem.numberPickerItemQuantity.setVisibility(View.VISIBLE);
 //        viewHolderClickedItem.llAddItem.setVisibility(View.GONE);
 //    }
+
+    private void addItemOrUpdateQuantity(ViewHolder holder, final int quantity, final int position, final String incrementOrDecrement) {
+        holder.numberPickerItemQuantity.setValue(quantity);
+        if (quantity == 0) {
+            showAddItemButton(holder);
+
+        } else {
+            hideAddItemButton(holder);
+        }
+
+        String mobileNo = Application.userDetails.getMobile();
+        if (mobileNo != null) {
+            final DishObject dishObject = modelArrayList.get(position);
+            addItemToCart(dishObject, quantity, position, incrementOrDecrement);
+
+        } else {
+            successOnAddToCart(quantity, position, incrementOrDecrement);
+        }
+    }
 
     private JsonObject createJsonCart(DishObject dishObject, int quantity) {
         double totalPrice;
@@ -191,18 +189,19 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         return postParam;
     }
 
-    public void addItemToCart(final ViewHolder holder, final int quantity, final int position, final String incrementOrDecrement) {
+    public void addItemToCart(final DishObject dishObject, final int quantity, final int position, final String incrementOrDecrement) {
         if (InternetConnection.checkConnection(activity)) {
 
-            holder.numberPickerItemQuantity.setValue(quantity);
-            if (quantity == 0) {
-                showAddItemButton(holder);
+//            holder.numberPickerItemQuantity.setValue(quantity);
+//            if (quantity == 0) {
+//                showAddItemButton(holder);
+//
+//            } else {
+//                hideAddItemButton(holder);
+//            }
+//
+//            final DishObject dishObject = modelArrayList.get(position);
 
-            } else {
-                hideAddItemButton(holder);
-            }
-
-            final DishObject dishObject = modelArrayList.get(position);
 
             ApiInterface apiService = RetroClient.getApiService(activity);
             Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject, quantity));
@@ -216,15 +215,11 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-//                            showHideQuantityAndAddItemButton(holder, quantity);
+                            successOnAddToCart(quantity, position, incrementOrDecrement);
 
-                            if (onItemAddedToCart != null) {
-                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
-                            }
-
-//                            calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
-//                            updateViewCartStrip();
-
+//                            if (onItemAddedToCart != null) {
+//                                onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
+//                            }
 
                         } else {
                             activity.showSnackbarErrorMsg(activity.getResources().getString(R.string.something_went_wrong));
@@ -255,7 +250,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            addItemToCart(holder, quantity, position, incrementOrDecrement);
+                            addItemToCart(dishObject, quantity, position, incrementOrDecrement);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -263,6 +258,11 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         }
     }
 
+    private void successOnAddToCart(final int quantity, final int position, final String incrementOrDecrement) {
+        if (onItemAddedToCart != null) {
+            onItemAddedToCart.onItemChangedInCart(quantity, position, incrementOrDecrement);
+        }
+    }
 
     @Override
     public int getItemCount() {

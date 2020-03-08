@@ -35,8 +35,12 @@ import com.miracle.dronam.adapter.PagerAdapterBanner;
 import com.miracle.dronam.adapter.RecycleAdapterCuisine;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
+import com.miracle.dronam.listeners.OnCuisineClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
+import com.miracle.dronam.listeners.OnUserMayLikedClickListener;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
+import com.miracle.dronam.model.BannerDetailsObject;
 import com.miracle.dronam.model.CuisineObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
@@ -62,8 +66,10 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment implements OnRecyclerViewClickListener,
+        OnUserMayLikedClickListener, OnCuisineClickListener,
         BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
+    private DialogLoadingIndicator progressIndicator;
     View rootView;
 
     View viewToolbarLocation;
@@ -103,6 +109,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
             R.mipmap.temp_img4, R.mipmap.temp_img5, R.mipmap.temp_img6, R.mipmap.temp_img7};
 
     private ViewPager viewPager;
+    private ArrayList<BannerDetailsObject> listBannerDetails;
+    private HashMap<String, String> mapBannerDetails;
     private PagerAdapterBanner pagerAdapterForBanner;
 
     TriggerTabChangeListener triggerTabChangeListener;
@@ -113,6 +121,10 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private final int REQUEST_CODE_SEE_MORE_RESTAURANT = 102;
     private final int REQUEST_CODE_RESTAURANT_DETAILS = 103;
 
+    int userID;
+    int restaurantID;
+    int zipCode;
+    double referralPoints;
 
     @Override
     public void onAttach(Context context) {
@@ -130,6 +142,11 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        restaurantID = Application.restaurantObject.getRestaurantID();
+        userID = Application.userDetails.getUserID();
+        zipCode = Application.userDetails.getZipCode();
+        referralPoints = Application.userDetails.getTotalReferralPoints();
     }
 
     @Override
@@ -139,19 +156,21 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         initComponents();
         componentEvents();
         setToolbarDetails();
-        setupSlidingImages();
         setupRecyclerViewUserLikeDish();
         setupRecyclerViewCuisine();
 //        setupRecyclerViewRestaurant();
-        setupViewPagerBanner();
+//        setupSlidingImages();
+//        setupViewPagerBanner();
 
+        getSliderDetails();
+//        getUserLikeTopItems();
         getRestaurantData();
-
 
         return rootView;
     }
 
     private void initComponents() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
         viewToolbarLocation = rootView.findViewById(R.id.view_toolbarLocation);
 
         llToolbarLocation = viewToolbarLocation.findViewById(R.id.ll_toolbarLocation);
@@ -209,6 +228,42 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         });
     }
 
+//    private void setupSlidingImages() {
+////        HashMap<String,String> url_maps = new HashMap<String, String>();
+////        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+////        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+////        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
+////        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+//
+//        HashMap<String, Integer> url_maps = new HashMap<String, Integer>();
+//        url_maps.put("Hannibal", R.mipmap.temp_img1);
+//        url_maps.put("Big Bang Theory", R.mipmap.temp_img2);
+//        url_maps.put("House of Cards", R.mipmap.temp_img3);
+//        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
+//
+//        for (String name : url_maps.keySet()) {
+//            TextSliderView textSliderView = new TextSliderView(getActivity());
+//            // initialize a SliderLayout
+//            textSliderView
+//                    .description(name)
+//                    .image(url_maps.get(name))
+//                    .setScaleType(BaseSliderView.ScaleType.Fit)
+//                    .setOnSliderClickListener(this);
+//
+//            //add your extra information
+//            textSliderView.bundle(new Bundle());
+//            textSliderView.getBundle()
+//                    .putString("extra", name);
+//
+//            imageSliderLayout.addSlider(textSliderView);
+//        }
+//        imageSliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+//        imageSliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+//        imageSliderLayout.setCustomAnimation(new DescriptionAnimation());
+//        imageSliderLayout.setDuration(4000);
+//        imageSliderLayout.addOnPageChangeListener(this);
+//    }
+
     private void setupSlidingImages() {
 //        HashMap<String,String> url_maps = new HashMap<String, String>();
 //        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
@@ -216,11 +271,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
 //        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
 
-        HashMap<String, Integer> url_maps = new HashMap<String, Integer>();
-        url_maps.put("Hannibal", R.mipmap.temp_img1);
-        url_maps.put("Big Bang Theory", R.mipmap.temp_img2);
-        url_maps.put("House of Cards", R.mipmap.temp_img3);
-        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
+        HashMap<String, String> url_maps = new HashMap<String, String>();
+        url_maps.putAll(mapBannerDetails);
 
         for (String name : url_maps.keySet()) {
             TextSliderView textSliderView = new TextSliderView(getActivity());
@@ -306,10 +358,11 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //        }
 //    }
 
-    private void setupViewPagerBanner() {
-        pagerAdapterForBanner = new PagerAdapterBanner(getFragmentManager());
-        viewPager.setAdapter(pagerAdapterForBanner);
-    }
+
+//    private void setupViewPagerBanner() {
+//        pagerAdapterForBanner = new PagerAdapterBanner(getFragmentManager());
+//        viewPager.setAdapter(pagerAdapterForBanner);
+//    }
 
     private void setToolbarDetails() {
         if (Application.locationAddressData != null) {
@@ -318,8 +371,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
             tvToolbarTitle.setText(getString(R.string.set_location));
         }
 
-        if (Application.userDetails != null) {
-            double referralPoints = Application.userDetails.getTotalReferralPoints();
+        if (referralPoints > 0) {
+//            double referralPoints = Application.userDetails.getTotalReferralPoints();
             String formattedPoints = getFormattedNumberDouble(referralPoints)
                     .concat(" ")
                     .concat(getString(R.string.rupees));
@@ -330,16 +383,6 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                     .concat(" ")
                     .concat(getString(R.string.rupees)));
         }
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-        RestaurantObject restaurantObject = listRestaurantObject.get(position);
-        Application.restaurantObject = restaurantObject;
-
-        Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
-        intent.putExtra("RestaurantObject", restaurantObject);
-        startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
     }
 
     public void showSnackbarErrorMsg(String erroMsg) {
@@ -355,10 +398,13 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     private void getRestaurantData() {
         if (InternetConnection.checkConnection(getActivity())) {
+            showDialog();
+
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
 //            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
             Call<ResponseBody> call = apiService.getRestaurantDetails("416004");
+//            Call<ResponseBody> call = apiService.getRestaurantDetails(String.valueOf(zipCode));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -425,11 +471,14 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -454,12 +503,194 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         }
     }
 
+    private void getSliderDetails() {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.getSlidingPhotoDetails(0, ConstantValues.SLIDER_BANNER);   // 0 for sliding photos
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+                            mapBannerDetails = new HashMap<>();
+
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                                String photoURL = jsonObj.optString("PhotoData");
+                                String title = jsonObj.optString("Text");
+
+//                                BannerDetailsObject bannerDetails = new BannerDetailsObject();
+//                                bannerDetails.setPhotoURL(photoURL);
+//                                bannerDetails.setTitle(title);
+
+                                mapBannerDetails.put(title, photoURL);
+                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                        setupSlidingImages();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getSliderDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    private void getUserLikeTopItems() {
+        if (InternetConnection.checkConnection(getActivity())) {
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.getUserLikeTopItems();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+
+                        if (response.isSuccessful()) {
+                            String responseString = response.body().string();
+                            mapBannerDetails = new HashMap<>();
+
+                            JSONArray jsonArray = new JSONArray(responseString);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+                                String photoURL = jsonObj.optString("PhotoData");
+                                String title = jsonObj.optString("Text");
+
+                                for (int ii = 0; i < image.length; i++) {
+//            DishObject dishObject = new DishObject(image[i], dish_name[i], dish_type[i], price[i]);
+                                    DishObject dishObject = new DishObject();
+                                    dishObject.setProductName(dish_name[i]);
+                                    dishObject.setProductImage(String.valueOf(image[i]));
+                                    dishObject.setCategoryName(dish_type[i]);
+                                    listDishObject.add(dishObject);
+                                }
+
+                                mapBannerDetails.put(title, photoURL);
+                            }
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                        setupRecyclerViewUserLikeDish();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getSliderDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
     private String getFormattedNumber(int amount) {
         return NumberFormat.getNumberInstance(Locale.US).format(amount);
     }
 
     private String getFormattedNumberDouble(double amount) {
         return NumberFormat.getNumberInstance(Locale.US).format(amount);
+    }
+
+    public void showDialog() {
+        progressIndicator.showProgress(getActivity());
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
+    }
+
+    @Override
+    public void onCuisineClick(View view, int position) {
+        if (listRestaurantObject.size() > 0) {
+            RestaurantObject restaurantObject = listRestaurantObject.get(0);
+            Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
+            intent.putExtra("RestaurantObject", restaurantObject);
+            startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
+        }
+    }
+
+    @Override
+    public void onUserMayLikedClick(View view, int position) {
+        if (listRestaurantObject.size() > 0) {
+            RestaurantObject restaurantObject = listRestaurantObject.get(0);
+            Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
+            intent.putExtra("RestaurantObject", restaurantObject);
+            startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
+        }
+    }
+
+
+    @Override
+    public void onClick(View view, int position) {
+        RestaurantObject restaurantObject = listRestaurantObject.get(position);
+        Application.restaurantObject = restaurantObject;
+
+        Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
+        intent.putExtra("RestaurantObject", restaurantObject);
+        startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
     }
 
     @Override
@@ -503,7 +734,8 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
                 String flag = data.getExtras().getString("MESSAGE");
                 if (flag.equalsIgnoreCase("VIEW_CART")) {
-                    triggerTabChangeListener.setTab(2);
+                    triggerTabChangeListener.setTab(1);
+//                    triggerTabChangeListener.setTab(2);
 
                 } else if (flag.equalsIgnoreCase("UPDATE_CART_COUNT")) {
                     int noOfItems = data.getExtras().getInt("CART_ITEM_COUNT");

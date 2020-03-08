@@ -55,7 +55,13 @@ public class MainActivity extends AppCompatActivity implements TriggerTabChangeL
 
         init();
         componentEvents();
-        getCartItems();
+
+//        getCartItems();
+
+        String mobileNo = Application.userDetails.getMobile();
+        if (mobileNo != null) {  // first time showing cart count after app kill
+            getCartItems();
+        }
     }
 
     private void init() {
@@ -78,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements TriggerTabChangeL
                         replaceFragment(new HomeFragment());
                         break;
 
-                    case R.id.tab_search:
-                        replaceFragment(new SearchFragment());
-                        break;
+//                    case R.id.tab_search:
+//                        replaceFragment(new SearchFragment());
+//                        break;
 
                     case R.id.tab_cart:
                         replaceFragment(new CartFragment());
@@ -126,64 +132,6 @@ public class MainActivity extends AppCompatActivity implements TriggerTabChangeL
 
                             int noOfCartItems = jsonArray.length();
                             setCartItemsBadgeCount(noOfCartItems);
-
-//                            if (jsonArray != null && jsonArray.length() > 0) {
-//                                for (int i = 0; i < jsonArray.length(); i++) {
-//                                    JSONObject jsonObj = jsonArray.getJSONObject(i);
-//
-//                                    double cgst = jsonObj.optDouble("CGST");
-//                                    int restaurantID = jsonObj.optInt("Clientid");
-//                                    double deliveryCharge = jsonObj.optDouble("DeliveryCharge");
-//                                    String restaurantName = jsonObj.optString("HotelName");
-//                                    boolean isIncludeTax = jsonObj.optBoolean("IsIncludeTax");
-//                                    boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
-//                                    double productAmount = jsonObj.optDouble("ProductAmount");
-//                                    int productID = jsonObj.optInt("ProductId");
-//                                    String productName = jsonObj.optString("ProductName");
-//                                    int productQuantity = jsonObj.optInt("ProductQnty");
-//                                    double productRate = jsonObj.optDouble("ProductRate");
-//                                    String productSize = jsonObj.optString("ProductSize");
-//                                    double sgst = jsonObj.optDouble("SGST");
-//                                    int taxID = jsonObj.optInt("TaxId");
-//                                    double taxableVal = jsonObj.optDouble("Taxableval");
-//                                    double totalAmount = jsonObj.optDouble("TotalAmount");
-//                                    int userID = jsonObj.optInt("Userid");
-//                                    int cartID = jsonObj.optInt("cartId");
-//
-//
-//                                    CartObject cartObject = new CartObject();
-//                                    cartObject.setCgst(cgst);
-//                                    cartObject.setRestaurantID(restaurantID);
-//                                    cartObject.setDeliveryCharge(deliveryCharge);
-//                                    cartObject.setRestaurantName(restaurantName);
-//                                    cartObject.setIsIncludeTax(isIncludeTax);
-//                                    cartObject.setIsTaxApplicable(isTaxApplicable);
-//                                    cartObject.setProductAmount(productAmount);
-//                                    cartObject.setProductID(productID);
-//                                    cartObject.setProductName(productName);
-//                                    cartObject.setProductQuantity(productQuantity);
-//                                    cartObject.setProductRate(productRate);
-//                                    cartObject.setProductSize(productSize);
-//                                    cartObject.setSgst(sgst);
-//                                    cartObject.setTaxID(taxID);
-//                                    cartObject.setTaxableVal(taxableVal);
-//                                    cartObject.setTotalAmount(totalAmount);
-//                                    cartObject.setUserID(userID);
-//                                    cartObject.setCartID(cartID);
-//
-//
-//                                    listCartDish.add(cartObject);
-//                                }
-//
-//                                Application.listCartItems = SerializationUtils.clone(listCartDish);
-//
-//                                showCartItemDetails();
-//                                setupRecyclerViewOrderedItems();
-//                                setupBillingDetails();
-//
-//                            } else {
-//                                showEmptyCart();
-//                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));

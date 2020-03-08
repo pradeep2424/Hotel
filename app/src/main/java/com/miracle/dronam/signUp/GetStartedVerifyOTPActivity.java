@@ -71,14 +71,20 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     private String generatedOTP = "";
     private String enteredOTP = "";
 
-    private PrefManagerConfig prefManagerConfig;
+    String flagCalledFrom;
 
+    private PrefManagerConfig prefManagerConfig;
     private final int REQUEST_PERMISSION_READ_SMS = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_verify_otp);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            flagCalledFrom = bundle.getString("CalledFrom");
+        }
 
         SMSListener.bindListener(this);
 
@@ -385,12 +391,12 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                             prefManagerConfig.setIsUserLoggedIn(true);
                             prefManagerConfig.setMobileNo(mobileNumber);
 
-                            getUserDetails();
-
                             String referralCode = prefManagerConfig.getReferralCode();
                             if (referralCode != null && !referralCode.equalsIgnoreCase(prefManagerConfig.SP_DEFAULT_VALUE)) {
                                 addReferral(referralCode);
                             }
+
+                            getUserDetails();
 
 //                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
 //                            startActivity(intent);
@@ -570,57 +576,18 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 //                            smsGatewayObject.setSenderID(senderID);
 //                            Application.smsGatewayObject = smsGatewayObject;
 
-                            Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
-                            intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_ACTION_OTP);
-                            startActivity(intent);
-                            finish();
+                            if (flagCalledFrom != null && flagCalledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_CART_ACTION_PLACE_ORDER)) {
+                                Intent intent = new Intent();
+                                intent.putExtra("MESSAGE", "MOBILE_VERIFIED");
+                                setResult(RESULT_OK, intent);
+                                finish();
 
-//                            if (status.equalsIgnoreCase("Success")) {
-//                                FirebaseUser user = mAuth.getCurrentUser();
-//
-//                                String accessToken = jsonObj.getString("AccessToken");
-//                                int accountType = jsonObj.getInt("AccountType");
-//                                String mainCorpNo = jsonObj.getString("MainCorpNo");
-//                                String corpID = jsonObj.getString("CorpID");
-//                                String emailID = jsonObj.getString("EmailID");
-//                                String firstName = jsonObj.getString("FirstName");
-//                                String lastName = jsonObj.getString("LastName");
-//
-//                                String hibernate = jsonObj.getString("Hibernate");
-//                                boolean isGracePeriod = jsonObj.getBoolean("IsGracePeriod");
-//                                boolean isTrial = jsonObj.getBoolean("IsTrial");
-//                                msgHeader = jsonObj.getString("MessageHeader");
-//                                message = jsonObj.getString("Message");
-//
-//                                int maxQuestionsAllowed = jsonObj.getInt("MaxQuestionsAllowed");
-//                                int maxSurveysAllowed = jsonObj.getInt("MaxSurveysAllowed");
-//
-//                            } else if (status.equalsIgnoreCase("LoginFailed")) {
-//
-//                                String msg = jsonObj.getString("Message");
-//                                String msgHeader = jsonObj.getString("MessageHeader");
-//
-//                                prefs.edit().clear().apply();
-//                                signOutFirebaseAccounts();
-//
-//
-//                                if (msgHeader.trim().equalsIgnoreCase("")) {
-//                                    showSnackbarErrorMsg(msg);
-//                                    callSignUpPage();
-//                                } else {
-//                                    accountBlockedDialog(msgHeader, msg);
-//                                }
-//
-//                            } else if (status.equalsIgnoreCase("Invalid AccessToken")) {
-//                                showSnackbarErrorMsg(getResources().getString(R.string.invalid_access_token));
-//
-//                            } else if (status.equalsIgnoreCase("Error")) {
-//                                String msg = jsonObj.getString("Message");
-//                                showSnackbarErrorMsg(msg);
-//
-//                            } else {
-//                                showSnackbarErrorMsg("Unmatched response, Please try again.");
-//                            }
+                            } else {
+                                Intent intent = new Intent(GetStartedVerifyOTPActivity.this, LocationGoogleMapActivity.class);
+                                intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_ACTION_OTP);
+                                startActivity(intent);
+                                finish();
+                            }
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -819,6 +786,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 //        super.onBackPressed();
 
         Intent it = new Intent(this, GetStartedMobileNumberActivity.class);
+        it.putExtra("CalledFrom", flagCalledFrom);
         startActivity(it);
         finish();
     }

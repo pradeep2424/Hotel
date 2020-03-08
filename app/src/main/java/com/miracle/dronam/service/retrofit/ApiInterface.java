@@ -129,10 +129,16 @@ public interface ApiInterface {
     Call<ResponseBody> setReferrelPoint(@Path("UserID") int userID,
                                         @Path("amount") double amount);
 
-
     @GET("getReferralDetails/{UserID}")
     Call<ResponseBody> getReferralDetails(@Path("UserID") int userID);
 
+
+    @GET("getPhotoGallary/{HotelID}/{Type}")
+    Call<ResponseBody> getSlidingPhotoDetails(@Path("HotelID") int hotelID,
+                                              @Path("Type") String type);
+
+    @GET("getTopItem")
+    Call<ResponseBody> getUserLikeTopItems();
 
 //    @Multipart
 //    @POST("UploadFile")

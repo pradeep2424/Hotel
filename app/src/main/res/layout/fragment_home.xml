@@ -310,16 +310,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="188dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:clipToPadding="false"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp" />
+<!--            <androidx.viewpager.widget.ViewPager-->
+<!--                android:id="@+id/viewpager"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="188dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="30dp"-->
+<!--                android:layout_marginBottom="30dp"-->
+<!--                android:clipToPadding="false"-->
+<!--                android:paddingLeft="24dp"-->
+<!--                android:paddingRight="24dp"-->
+<!--                android:visibility="gone"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -339,7 +340,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="30dp"
                     android:text="@string/powered_by_hotel"
                     android:textSize="17sp"
                     android:textStyle="bold" />

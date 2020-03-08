@@ -1,5 +1,6 @@
 package com.miracle.dronam.signUp;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -21,8 +22,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
+import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 
 public class GetStartedMobileNumberActivity extends AppCompatActivity {
     //    View view;
@@ -34,12 +37,19 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
     EditText etFName;
     EditText etLName;
 
-    final int RESOLVE_HINT = 100;
+    final int RESOLVE_PHONE_HINT = 100;
+    private final int REQUEST_CODE_MOBILE_OTP_ACTIVITY = 101;
+    String flagCalledFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_mobile_number);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            flagCalledFrom = bundle.getString("CalledFrom");
+        }
 
         init();
         componentEvents();
@@ -72,9 +82,17 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
 
 //                Intent intent = new Intent(GetStartedMobileNumberActivity.this, LocationGoogleMapActivity.class);
                 Intent intent = new Intent(GetStartedMobileNumberActivity.this, GetStartedVerifyOTPActivity.class);
-//                intent.putExtra("Mobile", etMobileNumber.getText().toString().trim());
-                startActivity(intent);
-                finish();
+                intent.putExtra("CalledFrom", flagCalledFrom);
+
+                if (flagCalledFrom != null && flagCalledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_CART_ACTION_PLACE_ORDER)) {
+                    startActivityForResult(intent, REQUEST_CODE_MOBILE_OTP_ACTIVITY);
+
+                } else {
+                    startActivity(intent);
+                    finish();
+                }
+
+
             }
         });
 
@@ -98,7 +116,7 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
         PendingIntent intent = Credentials.getClient(this).getHintPickerIntent(hintRequest);
 
         try {
-            startIntentSenderForResult(intent.getIntentSender(), RESOLVE_HINT, null, 0, 0, 0);
+            startIntentSenderForResult(intent.getIntentSender(), RESOLVE_PHONE_HINT, null, 0, 0, 0);
 
         } catch (IntentSender.SendIntentException e) {
             e.printStackTrace();
@@ -135,22 +153,39 @@ public class GetStartedMobileNumberActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESOLVE_HINT) {
-                if (resultCode == RESULT_OK) {
+        if (requestCode == RESOLVE_PHONE_HINT) {
+            if (resultCode == RESULT_OK) {
                 Credential cred = data.getParcelableExtra(Credential.EXTRA_KEY);
                 String phoneNumber = cred.getId().substring(3);
                 etMobileNumber.setText(phoneNumber);
             }
+        } else if (requestCode == REQUEST_CODE_MOBILE_OTP_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                String flag = data.getExtras().getString("MESSAGE");
+                Intent intent = new Intent();
+                intent.putExtra("MESSAGE", flag);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
         }
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+        if (flagCalledFrom != null && flagCalledFrom.equalsIgnoreCase(ConstantValues.ACTIVITY_CART_ACTION_PLACE_ORDER)) {
+            Intent intent = new Intent();
+            intent.putExtra("MESSAGE", "MOBILE_NOT_VERIFIED");
+            setResult(RESULT_CANCELED, intent);
+            finish();
+        } else {
+            Intent it = new Intent(this, GetStartedActivity.class);
+            startActivity(it);
+            finish();
+        }
 
-        Intent it = new Intent(this, GetStartedActivity.class);
-        startActivity(it);
-        finish();
 
     }
 }

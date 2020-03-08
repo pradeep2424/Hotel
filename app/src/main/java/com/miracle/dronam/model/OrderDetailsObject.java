@@ -27,6 +27,8 @@ public class OrderDetailsObject implements Serializable {
     int taxID;
     boolean orderPaid;
     String rejectReason;
+    boolean isIncludeTax;
+    boolean isTaxApplicable;
 
     ArrayList<DishObject> listProducts;
 
@@ -40,6 +42,23 @@ public class OrderDetailsObject implements Serializable {
 //    double deliveryCharge;
 //    boolean isIncludeTax;
 //    boolean isTaxApplicable;
+
+    public boolean getIsIncludeTax() {
+        return isIncludeTax;
+    }
+
+    public void setIsIncludeTax(boolean includeTax) {
+        isIncludeTax = includeTax;
+    }
+
+    public boolean getIsTaxApplicable() {
+        return isTaxApplicable;
+    }
+
+    public void setIsTaxApplicable(boolean taxApplicable) {
+        isTaxApplicable = taxApplicable;
+    }
+
 
     public String getRestaurantName() {
         return restaurantName;

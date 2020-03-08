@@ -8,13 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.miracle.dronam.R;
+import com.miracle.dronam.listeners.OnCuisineClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.model.CuisineObject;
 import java.util.List;
 
 public class RecycleAdapterCuisine extends RecyclerView.Adapter<RecycleAdapterCuisine.MyViewHolder> {
     Context context;
-    private OnRecyclerViewClickListener clickListener;
+    private OnCuisineClickListener clickListener;
 
     private List<CuisineObject> listCuisine;
 
@@ -23,7 +24,7 @@ public class RecycleAdapterCuisine extends RecyclerView.Adapter<RecycleAdapterCu
         this.context = context;
     }
 
-    public void setClickListener(OnRecyclerViewClickListener clickListener) {
+    public void setClickListener(OnCuisineClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -47,7 +48,7 @@ public class RecycleAdapterCuisine extends RecyclerView.Adapter<RecycleAdapterCu
         @Override
         public void onClick(View view) {
             if (clickListener != null) {
-                clickListener.onClick(view, getAdapterPosition());
+                clickListener.onCuisineClick(view, getAdapterPosition());
             }
         }
     }

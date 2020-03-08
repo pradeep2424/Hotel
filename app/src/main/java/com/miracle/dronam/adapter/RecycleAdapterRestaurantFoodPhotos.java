@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.miracle.dronam.R;
 import com.miracle.dronam.model.DishObject;
 
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 public class RecycleAdapterRestaurantFoodPhotos extends RecyclerView.Adapter<RecycleAdapterRestaurantFoodPhotos.ViewHolder> {
 
     Context context;
-    private ArrayList<DishObject> modelArrayList;
+    private ArrayList<String> modelArrayList;
 
-    public RecycleAdapterRestaurantFoodPhotos(Context context, ArrayList<DishObject> modelArrayList) {
+    public RecycleAdapterRestaurantFoodPhotos(Context context, ArrayList<String> modelArrayList) {
         this.context = context;
         this.modelArrayList = modelArrayList;
     }
@@ -31,8 +32,11 @@ public class RecycleAdapterRestaurantFoodPhotos extends RecyclerView.Adapter<Rec
 
     @Override
     public void onBindViewHolder(RecycleAdapterRestaurantFoodPhotos.ViewHolder holder, int position) {
-        DishObject dishObject = modelArrayList.get(position);
-        holder.ivFood.setImageResource(Integer.parseInt(dishObject.getProductImage()));
+//        DishObject dishObject = modelArrayList.get(position);
+//        holder.ivFood.setImageResource(Integer.parseInt(dishObject.getProductImage()));
+
+        String photoURL = modelArrayList.get(position);
+        Glide.with(context).load(photoURL).into(holder.ivFood);
     }
 
     @Override

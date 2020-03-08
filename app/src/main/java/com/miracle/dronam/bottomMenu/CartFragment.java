@@ -1,6 +1,8 @@
 package com.miracle.dronam.bottomMenu;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +19,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
+import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
@@ -29,7 +33,9 @@ import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
+import com.miracle.dronam.signUp.GetStartedMobileNumberActivity;
 import com.miracle.dronam.utils.Application;
+import com.miracle.dronam.utils.ConstantValues;
 import com.miracle.dronam.utils.InternetConnection;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
 import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
@@ -80,16 +86,18 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private RecycleAdapterOrderedItem adapterOrderedItems;
 
     TriggerTabChangeListener triggerTabChangeListener;
-    private ArrayList<CartObject> listCartDish;
+    private ArrayList<CartObject> listCartDish = new ArrayList<>();
 
     double appliedReferralPoints;
     double totalPayment;
+    String mobileNo;
     int userID;
     double referralPoints;
     int restaurantID;
     int orderNumber;
 
-    private final int MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 200;
+    private final int REQUEST_CODE_MOBILE_NO_ACTIVITY = 100;
+    private final int MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 350;
 
     @Override
     public void onAttach(Context context) {
@@ -103,6 +111,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         super.onCreate(savedInstanceState);
 
         userID = Application.userDetails.getUserID();
+        mobileNo = Application.userDetails.getMobile();
         restaurantID = Application.restaurantObject.getRestaurantID();
         referralPoints = Application.userDetails.getTotalReferralPoints();
     }
@@ -116,7 +125,21 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //        setupReferralPointsLayout();
 
         getOrderNumber();
-        getCartItems();
+//        getCartItems();
+
+        if (mobileNo != null) {
+            getCartItems();
+
+        } else {
+
+            if (Application.listCartItems.size() > 0) {
+                listCartDish.addAll(Application.listCartItems);
+                successOnGetCartItems();
+
+            } else {
+                showEmptyCart();
+            }
+        }
 
 //        referralPoints = 500;
 
@@ -172,7 +195,14 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         tvPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                if (mobileNo != null) {
+                    placeOrder();
+
+                } else {
+                    Intent intent = new Intent(getActivity(), GetStartedMobileNumberActivity.class);
+                    intent.putExtra("CalledFrom", ConstantValues.ACTIVITY_CART_ACTION_PLACE_ORDER);
+                    startActivityForResult(intent, REQUEST_CODE_MOBILE_NO_ACTIVITY);
+                }
             }
         });
     }
@@ -200,6 +230,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     private void setupRecyclerViewOrderedItems() {
         adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(), listCartDish);
+//        adapterOrderedItems = new RecycleAdapterOrderedItem(getActivity(),  Application.listCartItems);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rvOrderedItems.setLayoutManager(layoutManager);
         rvOrderedItems.setItemAnimator(new DefaultItemAnimator());
@@ -330,7 +361,16 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     @Override
     public void onItemChangedInCart(int quantity, int position, String incrementOrDecrement) {
-        updateItemQuantityInCart(quantity, position);
+        final CartObject cartObjectUpdated = SerializationUtils.clone(listCartDish.get(position));
+        cartObjectUpdated.setProductQuantity(quantity);
+
+        if (mobileNo != null) {
+            updateItemQuantityInCart(quantity, position, cartObjectUpdated);
+
+        } else {
+            successOnCartUpdate(quantity, position, cartObjectUpdated);
+        }
+
 
 //        if (quantity == 0) {
 //            deleteCartItem(quantity, position);
@@ -424,7 +464,6 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
-                            listCartDish = new ArrayList<>();
 
                             JSONArray jsonArray = new JSONArray(responseString);
 
@@ -451,7 +490,6 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     int userID = jsonObj.optInt("Userid");
                                     int cartID = jsonObj.optInt("cartId");
 
-
                                     CartObject cartObject = new CartObject();
                                     cartObject.setCgst(cgst);
                                     cartObject.setRestaurantID(restaurantID);
@@ -472,19 +510,21 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     cartObject.setUserID(userID);
                                     cartObject.setCartID(cartID);
 
-
                                     listCartDish.add(cartObject);
                                 }
 
                                 Application.listCartItems = SerializationUtils.clone(listCartDish);
-                                int noOfCartItems = Application.listCartItems.size();
-                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
+                                successOnGetCartItems();
 
-                                showCartItemDetails();
-                                setupRecyclerViewOrderedItems();
-
-                                setupReferralPointsLayout();
-                                setupBillingDetails();
+//                                Application.listCartItems = SerializationUtils.clone(listCartDish);
+//                                int noOfCartItems = Application.listCartItems.size();
+//                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
+//
+//                                showCartItemDetails();
+//                                setupRecyclerViewOrderedItems();
+//
+//                                setupReferralPointsLayout();
+//                                setupBillingDetails();
 
                             } else {
                                 showEmptyCart();
@@ -526,6 +566,17 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
                     .show();
         }
+    }
+
+    private void successOnGetCartItems() {
+        int noOfCartItems = Application.listCartItems.size();
+        triggerTabChangeListener.setBadgeCount(noOfCartItems);
+
+        showCartItemDetails();
+        setupRecyclerViewOrderedItems();
+
+        setupReferralPointsLayout();
+        setupBillingDetails();
     }
 
     private JsonObject createJsonCart(CartObject cartObject) {
@@ -570,12 +621,11 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
 
-    public void updateItemQuantityInCart(final int quantity, final int position) {
+    public void updateItemQuantityInCart(final int quantity, final int position, final CartObject cartObjectUpdated) {
         if (InternetConnection.checkConnection(getActivity())) {
 
-//            final CartObject cartObjectOld = SerializationUtils.clone(listCartDish.get(position));
-            final CartObject cartObjectUpdated = SerializationUtils.clone(listCartDish.get(position));
-            cartObjectUpdated.setProductQuantity(quantity);
+//            final CartObject cartObjectUpdated = SerializationUtils.clone(listCartDish.get(position));
+//            cartObjectUpdated.setProductQuantity(quantity);
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
             Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(cartObjectUpdated));
@@ -589,53 +639,31 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                         if (response.isSuccessful()) {
                             String responseString = response.body().string();
 
-                            if (quantity != 0) {
-                                double price = getUpdateItemPrice(cartObjectUpdated);
+                            successOnCartUpdate(quantity, position, cartObjectUpdated);
 
-                                adapterOrderedItems.updateCartItemQuantity(quantity);
-                                adapterOrderedItems.updateCartItemPrice(price);
-                                showCartItemDetails();
-
-                                Application.listCartItems.set(position, cartObjectUpdated);
-//                                Application.listCartItems.add(cartObject);
-
-                            } else {
-                                adapterOrderedItems.removeAt(position);
-                                Application.listCartItems.remove(position);
-
-                                int noOfCartItems = Application.listCartItems.size();
-                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
-
-                                if (Application.listCartItems != null && Application.listCartItems.size() == 0) {
-                                    showEmptyCart();
-                                }
-                            }
-
-                            setupBillingDetails();
-
-//                            listCartDish = new ArrayList<>();
-
-//                            ada
-
-//                            JSONArray jsonArray = new JSONArray(responseString);
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject jsonObj = jsonArray.getJSONObject(i);
+//                            if (quantity != 0) {
+//                                double price = getUpdateItemPrice(cartObjectUpdated);
 //
-//                                String dishID = jsonObj.optString("ProductId");
-//                                String dishName = jsonObj.optString("ProductName");
-//                                String dishDescription = jsonObj.optString("ProductDesc");
-//                                String dishImage = jsonObj.optString("ProductImage");
-//                                String dishPrice = jsonObj.optString("Price");
+//                                adapterOrderedItems.updateCartItemQuantity(quantity);
+//                                adapterOrderedItems.updateCartItemPrice(price);
+//                                showCartItemDetails();
 //
-//                                DishObject dishObject = new DishObject();
-//                                dishObject.setDishID(dishID);
-//                                dishObject.setDishName(dishName);
-//                                dishObject.setDishDescription(dishDescription);
-//                                dishObject.setDishImage(dishImage);
-//                                dishObject.setDishPrice(dishPrice);
+//                                Application.listCartItems.set(position, cartObjectUpdated);
+////                                Application.listCartItems.add(cartObject);
 //
-//                                listCartDish.add(dishObject);
+//                            } else {
+//                                adapterOrderedItems.removeAt(position);
+//                                Application.listCartItems.remove(position);
+//
+//                                int noOfCartItems = Application.listCartItems.size();
+//                                triggerTabChangeListener.setBadgeCount(noOfCartItems);
+//
+//                                if (Application.listCartItems != null && Application.listCartItems.size() == 0) {
+//                                    showEmptyCart();
+//                                }
 //                            }
+//
+//                            setupBillingDetails();
 
                         } else {
                             showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -666,12 +694,38 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            updateItemQuantityInCart(quantity, position);
+                            updateItemQuantityInCart(quantity, position, cartObjectUpdated);
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
                     .show();
         }
+    }
+
+    private void successOnCartUpdate(final int quantity, final int position, final CartObject cartObjectUpdated) {
+        if (quantity != 0) {
+            double price = getUpdateItemPrice(cartObjectUpdated);
+
+            adapterOrderedItems.updateCartItemQuantity(quantity);
+            adapterOrderedItems.updateCartItemPrice(price);
+            showCartItemDetails();
+
+            Application.listCartItems.set(position, cartObjectUpdated);
+//                                Application.listCartItems.add(cartObject);
+
+        } else {
+            adapterOrderedItems.removeAt(position);
+            Application.listCartItems.remove(position);
+
+            int noOfCartItems = Application.listCartItems.size();
+            triggerTabChangeListener.setBadgeCount(noOfCartItems);
+
+            if (Application.listCartItems != null && Application.listCartItems.size() == 0) {
+                showEmptyCart();
+            }
+        }
+
+        setupBillingDetails();
     }
 
     public void deleteCartItem() {
@@ -916,7 +970,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     .setAction("RETRY", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            getCartItems();
+                            placeOrder();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
@@ -1280,5 +1334,28 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         });
         snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
         snackbar.show();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_MOBILE_NO_ACTIVITY:
+                if (resultCode == Activity.RESULT_OK) {
+
+                    String flag = data.getExtras().getString("MESSAGE");
+                    if (flag.equalsIgnoreCase("MOBILE_VERIFIED")) {
+                        userID = Application.userDetails.getUserID();
+                        mobileNo = Application.userDetails.getMobile();
+                    }
+                }
+
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 }

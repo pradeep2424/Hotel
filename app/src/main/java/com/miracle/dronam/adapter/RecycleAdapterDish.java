@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.miracle.dronam.R;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
+import com.miracle.dronam.listeners.OnUserMayLikedClickListener;
 import com.miracle.dronam.model.DishObject;
 
 import java.util.List;
 
 public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.MyViewHolder> {
     Context context;
-    private OnRecyclerViewClickListener clickListener;
+    private OnUserMayLikedClickListener clickListener;
 
     private List<DishObject> listDish;
 
@@ -26,7 +27,7 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
         this.context = context;
     }
 
-    public void setClickListener(OnRecyclerViewClickListener clickListener) {
+    public void setClickListener(OnUserMayLikedClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -50,7 +51,7 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
         @Override
         public void onClick(View view) {
             if (clickListener != null) {
-                clickListener.onClick(view, getAdapterPosition());
+                clickListener.onUserMayLikedClick(view, getAdapterPosition());
             }
         }
     }
