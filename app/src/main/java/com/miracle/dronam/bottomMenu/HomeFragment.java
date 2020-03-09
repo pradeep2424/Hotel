@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
             R.drawable.temp_paratha, R.drawable.temp_paneer};
     String dish_name[] = {"Paratha", "Cheese Butter", "Paneer Handi", "Paneer Kopta", "Chiken"};
     String dish_type[] = {"Punjabi", "Maxican", "Punjabi", "Punjabi", "Non Veg"};
-    String price[] = {"Rs 500 / person (app.)", "Rs 800 / person (app.)", "Rs 400 / person (app.)", "Rs 200 / person (app.)", "Rs 500 / person (app.)"};
+    double price[] = {250, 150, 200, 220, 350};
 
     private ArrayList<CuisineObject> listCuisineObject;
     //    private TextView tvSeeMoreCuisines;
@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     private RecycleAdapterCuisine adapterCuisine;
     Integer image1[] = {R.drawable.temp_kesar, R.drawable.temp_ice_cream, R.drawable.temp_kesar,
             R.drawable.temp_ice_cream, R.drawable.temp_kesar};
-    String price1[] = {"Rs 350", "Rs 200", "Rs 550", "Rs 400", "Rs 250"};
+    String price1[] = {"₹ 150", "₹ 180", "₹ 250", "₹ 200", "₹ 150"};
     String cuisineName[] = {"Thai Cusine", "Maxican", "Desert", "South Indian", "Italian"};
     String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
@@ -265,10 +265,16 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     private void setupSlidingImages() {
 //        HashMap<String,String> url_maps = new HashMap<String, String>();
-//        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+//        url_maps.put("Best Offer", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
 //        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
 //        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
 //        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+
+//        HashMap<String, Integer> url_maps = new HashMap<String, Integer>();
+//        url_maps.put("Free delivery above 250", R.mipmap.temp_img1);
+//        url_maps.put("Free delivery above 250", R.mipmap.temp_img2);
+//        url_maps.put("House of Cards", R.mipmap.temp_img3);
+//        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
 
         HashMap<String, String> url_maps = new HashMap<String, String>();
         url_maps.putAll(mapBannerDetails);
@@ -315,6 +321,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
             dishObject.setProductName(dish_name[i]);
             dishObject.setProductImage(String.valueOf(image[i]));
             dishObject.setCategoryName(dish_type[i]);
+            dishObject.setPrice(price[i]);
             listDishObject.add(dishObject);
         }
     }

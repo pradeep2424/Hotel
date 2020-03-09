@@ -342,7 +342,7 @@
                     android:layout_marginTop="17dp"
                     android:layout_marginRight="5.4dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/temp_men"
+                    android:src="@drawable/ic_user"
                     app:riv_corner_radius="30dip"
                     app:riv_oval="true" />
 
@@ -362,7 +362,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Ellen McLaughlin"
+                            android:text="Rahul Patil"
                             android:textColor="#4a4a4a"
                             android:textSize="14.4sp" />
 
@@ -391,7 +391,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="13.5dp"
-                        android:text="So we needed up ordering the deep fried salmon roll with Chinese hot mustard and wasabi noodles with salmon."
+                        android:text="@string/restaurant_review1"
                         android:textColor="#4a4a4a"
                         android:textSize="14.4sp" />
 
@@ -434,7 +434,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Vincent King"
+                            android:text="Pradeep Jadhav"
                             android:textColor="#4a4a4a"
                             android:textSize="14.4sp" />
 
@@ -444,7 +444,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="18.2dp"
                             android:progressTint="#f05421"
-                            android:rating="4" />
+                            android:rating="5" />
 
                     </LinearLayout>
 
@@ -464,7 +464,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="13.5dp"
                         android:layout_marginBottom="10dp"
-                        android:text="So we needed up ordering the deep fried salmon roll with Chinese hot mustard and wasabi noodles with salmon."
+                        android:text="@string/restaurant_review2"
                         android:textColor="#4a4a4a"
                         android:textSize="14.4sp" />
 
