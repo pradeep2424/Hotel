@@ -271,7 +271,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
 
 //        HashMap<String, Integer> url_maps = new HashMap<String, Integer>();
-//        url_maps.put("Free delivery above 250", R.mipmap.temp_img1);
+//        url_maps.put("50% off on Lunch", R.mipmap.temp_img1);
 //        url_maps.put("Free delivery above 250", R.mipmap.temp_img2);
 //        url_maps.put("House of Cards", R.mipmap.temp_img3);
 //        url_maps.put("Game of Thrones", R.mipmap.temp_img4);
