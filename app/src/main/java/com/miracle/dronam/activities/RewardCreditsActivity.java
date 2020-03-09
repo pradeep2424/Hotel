@@ -109,17 +109,37 @@ public class RewardCreditsActivity extends AppCompatActivity {
     private void getDummyReferralData() {
         listReferralDetails = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
-            Random random = new Random();
-            int amount = random.nextInt(900) + 100;
+        ReferralDetails referralDetails1 = new ReferralDetails();
+        referralDetails1.setFirstName("Pradeep");
+        referralDetails1.setLastName("Jadhav");
+        referralDetails1.setTotalAmount(80);
 
-            ReferralDetails referralDetails = new ReferralDetails();
-            referralDetails.setFirstName("FName");
-            referralDetails.setLastName("LName");
-            referralDetails.setTotalAmount(amount);
+        ReferralDetails referralDetails2 = new ReferralDetails();
+        referralDetails2.setFirstName("Rahul");
+        referralDetails2.setLastName("Patil");
+        referralDetails2.setTotalAmount(50);
 
-            listReferralDetails.add(referralDetails);
-        }
+        ReferralDetails referralDetails3 = new ReferralDetails();
+        referralDetails3.setFirstName("Tushar");
+        referralDetails3.setLastName("Dalvi");
+        referralDetails3.setTotalAmount(70);
+
+        listReferralDetails.add(referralDetails1);
+        listReferralDetails.add(referralDetails2);
+        listReferralDetails.add(referralDetails3);
+
+
+//        for (int i = 0; i < 10; i++) {
+//            Random random = new Random();
+//            int amount = random.nextInt(900) + 100;
+//
+//            ReferralDetails referralDetails = new ReferralDetails();
+//            referralDetails.setFirstName("FName");
+//            referralDetails.setLastName("LName");
+//            referralDetails.setTotalAmount(amount);
+//
+//            listReferralDetails.add(referralDetails);
+//        }
     }
 
     private String getFormattedNumberDouble(double amount) {
