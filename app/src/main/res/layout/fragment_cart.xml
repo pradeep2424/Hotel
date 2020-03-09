@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="v">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -420,34 +420,34 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:weightSum="2">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            android:gravity="center"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="2">-->
 
-                            <com.miracle.dronam.custom.MyTextView
-                                android:id="@+id/tv_restaurantChargesTitle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Taxes and Charges"
-                                android:textColor="@color/main_text"
-                                android:textSize="14sp" />
+<!--                            <com.miracle.dronam.custom.MyTextView-->
+<!--                                android:id="@+id/tv_restaurantChargesTitle"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:text="Taxes and Charges"-->
+<!--                                android:textColor="@color/main_text"-->
+<!--                                android:textSize="14sp" />-->
 
-                            <com.miracle.dronam.custom.MyTextView
-                                android:id="@+id/tv_restaurantChargesText"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:text="₹ 60"
-                                android:textColor="@color/main_text"
-                                android:textSize="14sp" />
+<!--                            <com.miracle.dronam.custom.MyTextView-->
+<!--                                android:id="@+id/tv_restaurantChargesText"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:gravity="right"-->
+<!--                                android:text="₹ 60"-->
+<!--                                android:textColor="@color/main_text"-->
+<!--                                android:textSize="14sp" />-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
                         <View
                             android:layout_width="match_parent"

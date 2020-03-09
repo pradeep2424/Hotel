@@ -78,7 +78,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     private TextView tvAddReferralMoneyTotalPay;
 
     private TextView tvItemTotal;
-    private TextView tvRestaurantCharges;
+//    private TextView tvRestaurantCharges;
     private TextView tvDeliveryFee;
     private TextView tvDeliveryFreeText;
     private TextView tvTotalPaymentAmount;
@@ -168,7 +168,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         tvAddReferralMoneyTotalPay = rootView.findViewById(R.id.tv_addReferralMoneyTotalPay);
 
         tvItemTotal = rootView.findViewById(R.id.tv_itemTotalText);
-        tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
+//        tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
         tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
         tvDeliveryFreeText = rootView.findViewById(R.id.tv_deliveryFeeTextFree);
         tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
@@ -248,45 +248,104 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
 //    private void setupBillingDetails() {
-//        CartObject cartObject = Application.listCartItems.get(0);
-//        double itemTotal = getUpdateItemPrice(cartObject);
-//        double deliveryCharges = cartObject.getDeliveryCharge();
+//        double itemTotal = 0;
+//        double remainingItemTotal;
+//        double deliveryCharges = 0;
+//        double sgst = 0;
+//        double cgst = 0;
 //
-//        double sgst = cartObject.getSgst();
-//        double cgst = cartObject.getCgst();
+//        for (int i = 0; i < Application.listCartItems.size(); i++) {
+//            CartObject cartObject = SerializationUtils.clone(Application.listCartItems.get(i));
+//
+//            itemTotal = itemTotal + getUpdateItemPrice(cartObject);
+//            deliveryCharges = cartObject.getDeliveryCharge();
+//            sgst = cartObject.getSgst();
+//            cgst = cartObject.getCgst();
+//        }
+//        remainingItemTotal = itemTotal;
+//
 //        sgst = itemTotal * (sgst / 100);
 //        cgst = itemTotal * (cgst / 100);
 //        double totalGST = sgst + cgst;
 //
-//        double totalPayment = itemTotal + totalGST + deliveryCharges;
+////       logic for calculating referral points
+//        if (referralPoints != 0 && switchButtonApplyPoints.isChecked()) {
+//            double remainingReferralPoints;
 //
-//        tvItemTotal.setText("₹ " + itemTotal);
-//        tvRestaurantCharges.setText("₹ " + totalGST);
-//        tvDeliveryFee.setText("₹ " + deliveryCharges);
-//        tvTotalPaymentAmount.setText("₹ " + totalPayment);
-//        tvPaymentButtonAmount.setText("₹ " + totalPayment);
+//            if (referralPoints >= itemTotal) {
+//                remainingReferralPoints = referralPoints - itemTotal;
+//                appliedReferralPoints = itemTotal;
+//                remainingItemTotal = 0;
+//
+//            } else {
+//                remainingReferralPoints = 0;
+//                appliedReferralPoints = referralPoints;
+//                remainingItemTotal = itemTotal - referralPoints;
+//            }
+//
+////            itemTotal = remainingItemTotal;
+//
+////            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
+////            formattedTotalPayment = getFormattedNumberDouble(totalPayment);
+//
+//            rlAddReferralBalBillDetails.setVisibility(View.VISIBLE);
+//            rlAddReferralBalTotalPay.setVisibility(View.VISIBLE);
+//
+//            String formattedAppliedPoints = getFormattedNumberDouble(appliedReferralPoints);
+//            tvAddReferralMoneyBillDetails.setText(formattedAppliedPoints);
+//            tvAddReferralMoneyTotalPay.setText(formattedAppliedPoints);
+//
+//        } else {
+//            rlAddReferralBalBillDetails.setVisibility(View.GONE);
+//            rlAddReferralBalTotalPay.setVisibility(View.GONE);
+//        }
+//
+//        // 200 rupees minimum delivery charge
+//        if (itemTotal > MINIMUM_AMOUNT_FOR_FREE_DELIVERY) {
+//            totalPayment = remainingItemTotal + totalGST;
+//
+//            tvDeliveryFreeText.setVisibility(View.VISIBLE);
+//            tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//
+//        } else {
+//            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
+//
+//            tvDeliveryFreeText.setVisibility(View.GONE);
+//            tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//        }
+//
+//        String formattedItemTotal = getFormattedNumberDouble(remainingItemTotal);
+//        String formattedTotalGST = getFormattedNumberDouble(totalGST);
+//        String formattedDeliveryCharges = getFormattedNumberDouble(deliveryCharges);
+//        String formattedTotalPayment = getFormattedNumberDouble(totalPayment);
+//
+//        tvItemTotal.setText("₹ " + formattedItemTotal);
+//        tvRestaurantCharges.setText("₹ " + formattedTotalGST);
+//        tvDeliveryFee.setText("₹ " + formattedDeliveryCharges);
+//        tvTotalPaymentAmount.setText("₹ " + formattedTotalPayment);
+//        tvPaymentButtonAmount.setText("₹ " + formattedTotalPayment);
 //    }
 
     private void setupBillingDetails() {
         double itemTotal = 0;
         double remainingItemTotal;
         double deliveryCharges = 0;
-        double sgst = 0;
-        double cgst = 0;
+//        double sgst = 0;
+//        double cgst = 0;
 
         for (int i = 0; i < Application.listCartItems.size(); i++) {
             CartObject cartObject = SerializationUtils.clone(Application.listCartItems.get(i));
 
             itemTotal = itemTotal + getUpdateItemPrice(cartObject);
             deliveryCharges = cartObject.getDeliveryCharge();
-            sgst = cartObject.getSgst();
-            cgst = cartObject.getCgst();
+//            sgst = cartObject.getSgst();
+//            cgst = cartObject.getCgst();
         }
         remainingItemTotal = itemTotal;
 
-        sgst = itemTotal * (sgst / 100);
-        cgst = itemTotal * (cgst / 100);
-        double totalGST = sgst + cgst;
+//        sgst = itemTotal * (sgst / 100);
+//        cgst = itemTotal * (cgst / 100);
+//        double totalGST = sgst + cgst;
 
 //       logic for calculating referral points
         if (referralPoints != 0 && switchButtonApplyPoints.isChecked()) {
@@ -322,29 +381,32 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
         // 200 rupees minimum delivery charge
         if (itemTotal > MINIMUM_AMOUNT_FOR_FREE_DELIVERY) {
-            totalPayment = remainingItemTotal + totalGST;
+            totalPayment = remainingItemTotal;
+//            totalPayment = remainingItemTotal + totalGST;
 
             tvDeliveryFreeText.setVisibility(View.VISIBLE);
             tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         } else {
-            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
+            totalPayment = remainingItemTotal + deliveryCharges;
+//            totalPayment = remainingItemTotal + totalGST + deliveryCharges;
 
             tvDeliveryFreeText.setVisibility(View.GONE);
             tvDeliveryFee.setPaintFlags(tvDeliveryFee.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
         String formattedItemTotal = getFormattedNumberDouble(remainingItemTotal);
-        String formattedTotalGST = getFormattedNumberDouble(totalGST);
+//        String formattedTotalGST = getFormattedNumberDouble(totalGST);
         String formattedDeliveryCharges = getFormattedNumberDouble(deliveryCharges);
         String formattedTotalPayment = getFormattedNumberDouble(totalPayment);
 
         tvItemTotal.setText("₹ " + formattedItemTotal);
-        tvRestaurantCharges.setText("₹ " + formattedTotalGST);
+//        tvRestaurantCharges.setText("₹ " + formattedTotalGST);
         tvDeliveryFee.setText("₹ " + formattedDeliveryCharges);
         tvTotalPaymentAmount.setText("₹ " + formattedTotalPayment);
         tvPaymentButtonAmount.setText("₹ " + formattedTotalPayment);
     }
+
 
     private double getUpdateItemPrice(CartObject cartObject) {
         double updatedPrice = cartObject.getProductRate() * cartObject.getProductQuantity();
