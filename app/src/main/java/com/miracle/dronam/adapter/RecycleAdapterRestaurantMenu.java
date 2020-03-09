@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
@@ -34,6 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAdapterRestaurantMenu.ViewHolder> {
+    DialogLoadingIndicator progressIndicator;
 
     RestaurantDetailsActivity activity;
     private ArrayList<DishObject> modelArrayList;
@@ -45,10 +47,31 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     public RecycleAdapterRestaurantMenu(RestaurantDetailsActivity activity, ArrayList<DishObject> modelArrayList) {
         this.activity = activity;
         this.modelArrayList = modelArrayList;
+
+        progressIndicator = DialogLoadingIndicator.getInstance();
     }
 
     public void setOnItemAddedToCart(OnItemAddedToCart onItemAddedToCart) {
         this.onItemAddedToCart = onItemAddedToCart;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvFoodName;
+        TextView tvFoodCategory;
+        TextView tvFoodPrice;
+
+        LinearLayout llAddItem;
+        NumberPicker numberPickerItemQuantity;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvFoodName = itemView.findViewById(R.id.tv_foodName);
+            tvFoodCategory = itemView.findViewById(R.id.tv_foodCategory);
+            tvFoodPrice = itemView.findViewById(R.id.tv_foodPrice);
+
+            llAddItem = itemView.findViewById(R.id.ll_addButton);
+            numberPickerItemQuantity = itemView.findViewById(R.id.numberPicker_quantity);
+        }
     }
 
     @Override
@@ -191,6 +214,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 
     public void addItemToCart(final DishObject dishObject, final int quantity, final int position, final String incrementOrDecrement) {
         if (InternetConnection.checkConnection(activity)) {
+            showDialog();
 
 //            holder.numberPickerItemQuantity.setValue(quantity);
 //            if (quantity == 0) {
@@ -225,15 +249,17 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
                             activity.showSnackbarErrorMsg(activity.getResources().getString(R.string.something_went_wrong));
                         }
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         activity.showSnackbarErrorMsg(activity.getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -269,22 +295,13 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
         return modelArrayList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvFoodName;
-        TextView tvFoodCategory;
-        TextView tvFoodPrice;
+    public void showDialog() {
+        progressIndicator.showProgress(activity);
+    }
 
-        LinearLayout llAddItem;
-        NumberPicker numberPickerItemQuantity;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvFoodName = itemView.findViewById(R.id.tv_foodName);
-            tvFoodCategory = itemView.findViewById(R.id.tv_foodCategory);
-            tvFoodPrice = itemView.findViewById(R.id.tv_foodPrice);
-
-            llAddItem = itemView.findViewById(R.id.ll_addButton);
-            numberPickerItemQuantity = itemView.findViewById(R.id.numberPicker_quantity);
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
         }
     }
 }

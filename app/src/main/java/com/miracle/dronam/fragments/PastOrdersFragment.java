@@ -21,8 +21,10 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
+import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.adapter.RecycleAdapterPastOrders;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.listeners.OnPastOrderOptionsClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
@@ -56,6 +58,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsClickListener {
+    DialogLoadingIndicator progressIndicator;
     View rootView;
 
     View viewEmptyPastOrders;
@@ -102,6 +105,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     }
 
     private void initComponents() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
         rlPastOrdersLayout = rootView.findViewById(R.id.rl_pastOrdersLayout);
         viewEmptyPastOrders = rootView.findViewById(R.id.view_emptyPastOrders);
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
@@ -263,6 +267,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
     private void getPastOrderDetails() {
         if (InternetConnection.checkConnection(getActivity())) {
+            showDialog();
 
             int userTypeID = Application.userDetails.getUserID();
 
@@ -356,11 +361,14 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -418,10 +426,11 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
     public void addItemToCart(final ArrayList<DishObject> listProducts) {
         if (InternetConnection.checkConnection(getActivity())) {
+            showDialog();
 
             for (int i = 0; i < listProducts.size(); i++) {
                 final int currentIndex = i;
-                DishObject dishObject = listProducts.get(i);
+                final DishObject dishObject = listProducts.get(i);
 
                 ApiInterface apiService = RetroClient.getApiService(getActivity());
                 Call<ResponseBody> call = apiService.addItemToCart(createJsonCart(dishObject));
@@ -454,6 +463,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         try {
+                            dismissDialog();
                             showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                             Log.e("Error onFailure : ", t.toString());
                             t.printStackTrace();
@@ -513,6 +523,8 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     private void successOnAddToCart(int currentIndex, ArrayList<DishObject> listProducts) {
         if (currentIndex == listProducts.size() - 1) {
             triggerTabChangeListener.setTab(1);
+            dismissDialog();
+
 //                                    triggerTabChangeListener.setTab(2);
         }
     }
@@ -524,6 +536,16 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                 .findViewById(R.id.snackbar_text);
         snackTextView.setMaxLines(4);
         snackbar.show();
+    }
+
+    public void showDialog() {
+        progressIndicator.showProgress(getActivity());
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
     }
 }
 

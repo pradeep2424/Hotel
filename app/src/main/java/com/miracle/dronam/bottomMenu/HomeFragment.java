@@ -30,7 +30,6 @@ import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.activities.RewardCreditsActivity;
-import com.miracle.dronam.activities.SeeMoreActivity;
 import com.miracle.dronam.adapter.PagerAdapterBanner;
 import com.miracle.dronam.adapter.RecycleAdapterCuisine;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
@@ -163,7 +162,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 //        setupViewPagerBanner();
 
         getSliderDetails();
-//        getUserLikeTopItems();
+        getUserLikeTopItems();
         getRestaurantData();
 
         return rootView;
@@ -400,9 +399,11 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         if (InternetConnection.checkConnection(getActivity())) {
             showDialog();
 
+            String strZipCode = String.valueOf(zipCode);
+
             ApiInterface apiService = RetroClient.getApiService(getActivity());
 //            Call<ResponseBody> call = apiService.getRestaurantDetails("416004");
-            Call<ResponseBody> call = apiService.getRestaurantDetails(String.valueOf(zipCode));
+            Call<ResponseBody> call = apiService.getRestaurantDetails(strZipCode);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

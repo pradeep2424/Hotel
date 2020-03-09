@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.adapter.RecycleAdapterOrderedItem;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.listeners.OnItemAddedToCart;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.CartObject;
@@ -58,6 +59,7 @@ import retrofit2.Response;
 
 
 public class CartFragment extends Fragment implements OnItemAddedToCart {
+    DialogLoadingIndicator progressIndicator;
     View rootView;
     LinearLayout llBrowseMenu;
     TextView tvPaymentButton;
@@ -147,6 +149,8 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     }
 
     private void init() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
+
         rlCartItemDetails = rootView.findViewById(R.id.rl_cartItemLayout);
         viewEmptyCart = rootView.findViewById(R.id.view_emptyCart);
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
@@ -449,6 +453,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     private void getCartItems() {
         if (InternetConnection.checkConnection(getActivity())) {
+            showDialog();
 
 //            String userTypeID = "0";
 //            String restaurantID = "1";
@@ -527,6 +532,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //                                setupBillingDetails();
 
                             } else {
+//                                triggerTabChangeListener.setBadgeCount(0);
                                 showEmptyCart();
                             }
 
@@ -539,11 +545,14 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -623,6 +632,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 
     public void updateItemQuantityInCart(final int quantity, final int position, final CartObject cartObjectUpdated) {
         if (InternetConnection.checkConnection(getActivity())) {
+            showDialog();
 
 //            final CartObject cartObjectUpdated = SerializationUtils.clone(listCartDish.get(position));
 //            cartObjectUpdated.setProductQuantity(quantity);
@@ -673,11 +683,14 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -982,7 +995,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         if (InternetConnection.checkConnection(getActivity())) {
 
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-            Call<ResponseBody> call = apiService.setReferrelPoint(userID, referralPoints);
+            Call<ResponseBody> call = apiService.setReferralPoint(userID, referralPoints);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1336,6 +1349,15 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         snackbar.show();
     }
 
+    public void showDialog() {
+        progressIndicator.showProgress(getActivity());
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

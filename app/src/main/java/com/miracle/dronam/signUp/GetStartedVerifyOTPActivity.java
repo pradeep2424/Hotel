@@ -35,7 +35,9 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
+import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.broadcastReceiver.SMSListener;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.listeners.OTPListener;
 import com.miracle.dronam.main.MainActivity;
 import com.miracle.dronam.main.SplashActivity;
@@ -67,6 +69,7 @@ import retrofit2.Response;
 
 
 public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OTPListener {
+    DialogLoadingIndicator progressIndicator;
     RelativeLayout rlRootLayout;
     View viewToolbar;
     ImageView ivBack;
@@ -114,6 +117,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
     }
 
     private void init() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
         prefManagerConfig = new PrefManagerConfig(this);
 
         rlRootLayout = findViewById(R.id.rl_rootLayout);
@@ -340,6 +344,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
 
     private void insertUserDetails() {
         if (InternetConnection.checkConnection(this)) {
+            showDialog();
 
             ApiInterface apiService = RetroClient.getApiService(this);
             Call<ResponseBody> call = apiService.insertUserDetails(createJsonUserDetails());
@@ -380,6 +385,7 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -562,11 +568,14 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    dismissDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     try {
+                        dismissDialog();
                         showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
                         Log.e("Error onFailure : ", t.toString());
                         t.printStackTrace();
@@ -627,6 +636,16 @@ public class GetStartedVerifyOTPActivity extends AppCompatActivity implements OT
         Random random = new Random();
         String otp = String.format("%06d", random.nextInt(999999));
         return otp;
+    }
+
+    public void showDialog() {
+        progressIndicator.showProgress(GetStartedVerifyOTPActivity.this);
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
     }
 
 //    private boolean requestSMSPermission() {

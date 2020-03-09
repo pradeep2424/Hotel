@@ -126,7 +126,7 @@ public interface ApiInterface {
                                       @Path("ReferedMobNo") String referredMobNo);
 
     @POST("setReferrelPoint/{UserID}/{amount}")
-    Call<ResponseBody> setReferrelPoint(@Path("UserID") int userID,
+    Call<ResponseBody> setReferralPoint(@Path("UserID") int userID,
                                         @Path("amount") double amount);
 
     @GET("getReferralDetails/{UserID}")

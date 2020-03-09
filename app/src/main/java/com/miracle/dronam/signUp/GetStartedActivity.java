@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.miracle.dronam.R;
 import com.miracle.dronam.activities.LocationGoogleMapActivity;
+import com.miracle.dronam.dialog.DialogLoadingIndicator;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.utils.Application;
 import com.miracle.dronam.utils.ConstantValues;
@@ -49,6 +50,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class GetStartedActivity extends AppCompatActivity {
+    DialogLoadingIndicator progressIndicator;
     RelativeLayout rlRootLayout;
     LinearLayout llConnectWithMobileNo;
     LinearLayout llSkip;
@@ -80,6 +82,7 @@ public class GetStartedActivity extends AppCompatActivity {
     }
 
     private void init() {
+        progressIndicator = DialogLoadingIndicator.getInstance();
         rlRootLayout = findViewById(R.id.rl_rootLayout);
         llConnectWithMobileNo = findViewById(R.id.ll_connectWithMobileNo);
         llSkip = findViewById(R.id.ll_skip);
@@ -239,8 +242,9 @@ public class GetStartedActivity extends AppCompatActivity {
     }
 
     private void handleGoogleSignIn(GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        showDialog();
 
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -267,16 +271,19 @@ public class GetStartedActivity extends AppCompatActivity {
                                 userProfile.setUserPhoto(photoURL);
                                 Application.userDetails = userProfile;
 
+                                dismissDialog();
                                 loadMobileNumberActivity();
 
 //                                signUp(socialMediaEmailId, ConstantValues.mediaTypeGoogle, firstname, lastname);
 
                             } else {
+                                dismissDialog();
                                 signOutFirebaseAccounts();
                                 llGoogle.setClickable(true);
                             }
 
                         } else {
+                            dismissDialog();
                             signOutFirebaseAccounts();
                             llGoogle.setClickable(true);
                             Log.w("ERROR : ", "signInWithCredential:failure", task.getException());
@@ -331,6 +338,8 @@ public class GetStartedActivity extends AppCompatActivity {
 //    }
 
     private void handleFacebookSignIn(LoginResult loginResult) {
+        showDialog();
+
         GraphRequest data_request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -354,13 +363,14 @@ public class GetStartedActivity extends AppCompatActivity {
                             userProfile.setUserPhoto(url);
                             Application.userDetails = userProfile;
 
+                            dismissDialog();
                             loadMobileNumberActivity();
 //
 //                            signUp(socialMediaEmailId, ConstantValues.mediaTypeFB, firstname, lastname);
 
                         } catch (Exception e) {
                             e.printStackTrace();
-//                            dismissDialog();
+                            dismissDialog();
                             signOutFirebaseAccounts();
                             llFacebook.setClickable(true);
                         }
@@ -378,6 +388,16 @@ public class GetStartedActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
 //        LoginManager.getInstance().logOut();
         mGoogleSignInClient.signOut();
+    }
+
+    public void showDialog() {
+        progressIndicator.showProgress(GetStartedActivity.this);
+    }
+
+    public void dismissDialog() {
+        if (progressIndicator != null) {
+            progressIndicator.hideProgress();
+        }
     }
 
     @Override
