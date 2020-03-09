@@ -1,5 +1,6 @@
 package com.miracle.dronam.bottomMenu;
 
+import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,7 +29,10 @@ import com.miracle.dronam.activities.RewardCreditsActivity;
 import com.miracle.dronam.adapter.RecycleAdapterProfile;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.main.MainActivity;
+import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.ProfileObject;
+import com.miracle.dronam.model.RestaurantObject;
+import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.sharedPreference.PrefManagerConfig;
 import com.miracle.dronam.signUp.GetStartedActivity;
 import com.miracle.dronam.utils.Application;
@@ -95,6 +99,10 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
             @Override
             public void onClick(View v) {
                 prefManagerConfig.clearPrefOnLogout();
+                Application.userDetails = new UserDetails();
+                Application.restaurantObject = new RestaurantObject();
+                Application.dishObject = new DishObject();
+                Application.listCartItems.clear();
 
                 Intent intent = new Intent(getActivity(), GetStartedActivity.class);
                 startActivity(intent);

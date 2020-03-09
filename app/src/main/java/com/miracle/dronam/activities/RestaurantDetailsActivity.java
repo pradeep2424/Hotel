@@ -294,20 +294,22 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         DishObject dishObject = listDishProducts.get(position);
         Application.dishObject = dishObject;
 
-//        addItemToCart(quantity, dishObject, incrementOrDecrement);
-
-//        calculateViewCartDetails(quantity, dishObject.getPrice(), incrementOrDecrement);
-        calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
-        updateViewCartStrip();
+//        calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
+//        updateViewCartStrip();
 
         String mobileNo = Application.userDetails.getMobile();
-        if (mobileNo == null) {
-            addItemToLocal(dishObject, quantity);
+        if (mobileNo != null) {
+            calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
+            updateViewCartStrip();
+
+        } else {
+            addItemToLocal(dishObject, quantity, incrementOrDecrement);
         }
+
 
     }
 
-    private void addItemToLocal(DishObject dishObject, int quantity) {
+    private void addItemToLocal(DishObject dishObject, int quantity, String incrementOrDecrement) {
         CartObject cartObject = new CartObject();
         cartObject.setCgst(dishObject.getCgst());
         cartObject.setRestaurantID(restaurantObject.getRestaurantID());
@@ -328,7 +330,25 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         cartObject.setUserID(Application.userDetails.getUserID());
         cartObject.setCartID(Application.listCartItems.size());
 
+        boolean isItemAlreadyExist = false;
+        int newAddedProductID = dishObject.getProductID();
+        for (int i = 0; i < Application.listCartItems.size(); i++) {
+            int cartProductID = Application.listCartItems.get(i).getProductID();
+            if (cartProductID == newAddedProductID) {
+                isItemAlreadyExist = true;
+                Application.listCartItems.remove(i);
+//                Application.listCartItems.set(i, cartObject);
+            }
+        }
+
         Application.listCartItems.add(cartObject);
+
+//        if (!isItemAlreadyExist) {
+//            Application.listCartItems.add(cartObject);
+//        }
+
+        calculateViewCartDetails(dishObject.getPrice(), incrementOrDecrement);
+        updateViewCartStrip();
     }
 
     private void getProductDetailsData() {

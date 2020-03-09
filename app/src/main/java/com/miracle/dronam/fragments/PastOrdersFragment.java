@@ -26,6 +26,7 @@ import com.miracle.dronam.adapter.RecycleAdapterRestaurantMenu;
 import com.miracle.dronam.listeners.OnPastOrderOptionsClickListener;
 import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
+import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
@@ -58,7 +59,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     View rootView;
 
     View viewEmptyPastOrders;
-    LinearLayout llPastOrdersLayout;
+    RelativeLayout rlPastOrdersLayout;
     LinearLayout llBrowseMenu;
 
 
@@ -74,6 +75,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     private RecyclerView rvPastOrders;
     private RecycleAdapterPastOrders adapterPastOrders;
     private ArrayList<OrderDetailsObject> listAllOrders;
+    ArrayList<OrderDetailsObject> listFormattedPastOrders;
 
     @Override
     public void onAttach(Context context) {
@@ -100,7 +102,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
     }
 
     private void initComponents() {
-        llPastOrdersLayout = rootView.findViewById(R.id.ll_pastOrdersLayout);
+        rlPastOrdersLayout = rootView.findViewById(R.id.rl_pastOrdersLayout);
         viewEmptyPastOrders = rootView.findViewById(R.id.view_emptyPastOrders);
         llBrowseMenu = rootView.findViewById(R.id.ll_browseMenu);
 
@@ -119,9 +121,10 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
     private void setupRecyclerViewPastOrders() {
 //        getTESTPastOrdersData();
-        ArrayList<OrderDetailsObject> listPastOrders = formatPastOrderData();
+        listFormattedPastOrders = new ArrayList<>();
+        listFormattedPastOrders = formatPastOrderData();
 
-        Collections.sort(listPastOrders, new Comparator<OrderDetailsObject>() {
+        Collections.sort(listFormattedPastOrders, new Comparator<OrderDetailsObject>() {
             public int compare(OrderDetailsObject o1, OrderDetailsObject o2) {
                 if (o1.getOrderDate() == null || o2.getOrderDate() == null)
                     return 0;
@@ -129,7 +132,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
             }
         });
 
-        adapterPastOrders = new RecycleAdapterPastOrders(getActivity(), listPastOrders);
+        adapterPastOrders = new RecycleAdapterPastOrders(getActivity(), listFormattedPastOrders);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rvPastOrders.setLayoutManager(layoutManager);
         rvPastOrders.setItemAnimator(new DefaultItemAnimator());
@@ -180,12 +183,12 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
     private void showEmptyPastOrdersLayout() {
         viewEmptyPastOrders.setVisibility(View.VISIBLE);
-        llPastOrdersLayout.setVisibility(View.GONE);
+        rlPastOrdersLayout.setVisibility(View.GONE);
     }
 
     private void showPastOrdersList() {
         viewEmptyPastOrders.setVisibility(View.GONE);
-        llPastOrdersLayout.setVisibility(View.VISIBLE);
+        rlPastOrdersLayout.setVisibility(View.VISIBLE);
     }
 
     private ArrayList<OrderDetailsObject> formatPastOrderData() {
@@ -238,7 +241,7 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
 
     @Override
     public void onClickReorder(View view, int position) {
-        OrderDetailsObject orderDetailsObject = listAllOrders.get(position);
+        OrderDetailsObject orderDetailsObject = listFormattedPastOrders.get(position);
         ArrayList<DishObject> listProducts = orderDetailsObject.getListProducts();
 
 //        adding restaurant details to application class
@@ -249,8 +252,14 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         restaurantObject.setTaxable(orderDetailsObject.getIsTaxApplicable());
         Application.restaurantObject = restaurantObject;
 
-        addItemToCart(listProducts);
+        String mobileNo = Application.userDetails.getMobile();
+        if (mobileNo != null) {
+            addItemToCart(listProducts);
+        } else {
+            addItemToLocal(listProducts);
+        }
     }
+
 
     private void getPastOrderDetails() {
         if (InternetConnection.checkConnection(getActivity())) {
@@ -426,10 +435,12 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
                             if (response.isSuccessful()) {
                                 String responseString = response.body().string();
 
-                                if (currentIndex == listProducts.size() - 1) {
-                                    triggerTabChangeListener.setTab(1);
-//                                    triggerTabChangeListener.setTab(2);
-                            }
+                                successOnAddToCart(currentIndex, listProducts);
+
+//                                if (currentIndex == listProducts.size() - 1) {
+//                                    triggerTabChangeListener.setTab(1);
+////                                    triggerTabChangeListener.setTab(2);
+//                                }
 
                             } else {
                                 showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
@@ -468,6 +479,43 @@ public class PastOrdersFragment extends Fragment implements OnPastOrderOptionsCl
         }
     }
 
+    private void addItemToLocal(final ArrayList<DishObject> listProducts) {
+        for (int i = 0; i < listProducts.size(); i++) {
+            final int currentIndex = i;
+            DishObject dishObject = listProducts.get(i);
+
+            CartObject cartObject = new CartObject();
+            cartObject.setCgst(dishObject.getCgst());
+            cartObject.setRestaurantID(Application.restaurantObject.getRestaurantID());
+            cartObject.setDeliveryCharge(30);
+            cartObject.setRestaurantName(Application.restaurantObject.getRestaurantName());
+            cartObject.setIsIncludeTax(Application.restaurantObject.getIncludeTax());
+            cartObject.setIsTaxApplicable(Application.restaurantObject.getTaxable());
+            cartObject.setProductAmount(dishObject.getPrice());
+            cartObject.setProductID(dishObject.getProductID());
+            cartObject.setProductName(dishObject.getProductName());
+            cartObject.setProductQuantity(dishObject.getProductQuantity());
+            cartObject.setProductRate(dishObject.getPrice());
+            cartObject.setProductSize("Regular");
+            cartObject.setSgst(dishObject.getSgst());
+            cartObject.setTaxID(dishObject.getTaxID());
+            cartObject.setTaxableVal(dishObject.getPrice());
+            cartObject.setTotalAmount(dishObject.getPrice());
+            cartObject.setUserID(Application.userDetails.getUserID());
+            cartObject.setCartID(Application.listCartItems.size());
+            Application.listCartItems.add(cartObject);
+
+            successOnAddToCart(currentIndex, listProducts);
+        }
+    }
+
+
+    private void successOnAddToCart(int currentIndex, ArrayList<DishObject> listProducts) {
+        if (currentIndex == listProducts.size() - 1) {
+            triggerTabChangeListener.setTab(1);
+//                                    triggerTabChangeListener.setTab(2);
+        }
+    }
 
     public void showSnackbarErrorMsg(String erroMsg) {
         Snackbar snackbar = Snackbar.make(rootView, erroMsg, Snackbar.LENGTH_LONG);

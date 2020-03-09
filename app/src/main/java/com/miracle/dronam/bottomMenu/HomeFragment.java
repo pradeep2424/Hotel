@@ -400,11 +400,9 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         if (InternetConnection.checkConnection(getActivity())) {
             showDialog();
 
-
             ApiInterface apiService = RetroClient.getApiService(getActivity());
-//            Call<ResponseBody> call = apiService.getUserDetails(createJsonUserDetails());
-            Call<ResponseBody> call = apiService.getRestaurantDetails("416004");
-//            Call<ResponseBody> call = apiService.getRestaurantDetails(String.valueOf(zipCode));
+//            Call<ResponseBody> call = apiService.getRestaurantDetails("416004");
+            Call<ResponseBody> call = apiService.getRestaurantDetails(String.valueOf(zipCode));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

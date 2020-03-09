@@ -12,8 +12,8 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/ll_pastOrdersLayout"
+        <RelativeLayout
+            android:id="@+id/rl_pastOrdersLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
@@ -26,5 +26,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false" />
-        </LinearLayout>
+        </RelativeLayout>
 </RelativeLayout>
