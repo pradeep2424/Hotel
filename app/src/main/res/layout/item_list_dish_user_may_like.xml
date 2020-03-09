@@ -22,7 +22,7 @@
                 android:id="@+id/image"
                 android:layout_width="205dp"
                 android:layout_height="140dp"
-                android:src="@drawable/food1" />
+                android:src="@drawable/temp_paneer" />
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_dishName"

@@ -24,7 +24,7 @@
                 android:layout_width="130dp"
                 android:layout_height="175dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/food1" />
+                android:src="@drawable/temp_ice_cream" />
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_cuisine_name"
