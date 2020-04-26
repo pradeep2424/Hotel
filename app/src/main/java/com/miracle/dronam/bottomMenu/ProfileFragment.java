@@ -156,11 +156,10 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
 //        Integer[] icon = {R.mipmap.profile_payment_method, R.mipmap.profile_reward_credits,
 //                R.mipmap.profile_settings, R.mipmap.profile_invite_friends};
 
-        String[] title = {getString(R.string.profile_payment_methods),
-                getString(R.string.profile_reward_credits),
+        String[] title = {getString(R.string.profile_reward_credits),
                 getString(R.string.profile_invite_friends)};
 
-        Integer[] icon = {R.mipmap.profile_payment_method, R.mipmap.profile_reward_credits,
+        Integer[] icon = {R.mipmap.profile_reward_credits,
                  R.mipmap.profile_invite_friends};
 
 
@@ -253,17 +252,17 @@ public class ProfileFragment extends Fragment implements OnRecyclerViewClickList
     @Override
     public void onClick(View view, int position) {
         switch (position) {
-            case 0:
-                Intent intent0 = new Intent(getActivity(), PaymentMethodsActivity.class);
-                startActivity(intent0);
-                break;
+//            case 0:
+//                Intent intent0 = new Intent(getActivity(), PaymentMethodsActivity.class);
+//                startActivity(intent0);
+//                break;
 
-            case 1:
+            case 0:
                 Intent intent1 = new Intent(getActivity(), RewardCreditsActivity.class);
                 startActivity(intent1);
                 break;
 
-            case 3:
+            case 1:
                 shareApp();
                 break;
         }

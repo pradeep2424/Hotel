@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-//        printHashKey();8
+//        printHashKey();
 
         init();
         getCurrentLocation();
@@ -83,22 +83,22 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-//    public void printHashKey() {
-//        try {
-//            PackageInfo info = getApplicationContext().getPackageManager().getPackageInfo(
-//                    getApplicationContext().getPackageName(), PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String hashKey = new String(Base64.encode(md.digest(), 0));
-//                Log.i("*****", "printHashKey() Hash Key : " + hashKey);
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            Log.e("*****", "printHashKey()", e);
-//        } catch (Exception e) {
-//            Log.e("*****", "printHashKey()", e);
-//        }
-//    }
+    public void printHashKey() {
+        try {
+            PackageInfo info = getApplicationContext().getPackageManager().getPackageInfo(
+                    getApplicationContext().getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i("*****", "printHashKey() Hash Key : " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("*****", "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e("*****", "printHashKey()", e);
+        }
+    }
 
     private void init() {
         prefManagerConfig = new PrefManagerConfig(this);
@@ -434,6 +434,70 @@ public class SplashActivity extends AppCompatActivity {
                             smsGatewayObject.setSenderID(senderID);
                             Application.smsGatewayObject = smsGatewayObject;
 
+                            getAppSettings();
+//                            loadNextPage();
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rlRootLayout, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getSmsDetails();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    private void getAppSettings() {
+        if (InternetConnection.checkConnection(this)) {
+            ApiInterface apiService = RetroClient.getApiService(this);
+            Call<ResponseBody> call = apiService.getAppSetting();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                            String responseString = response.body().string();
+
+                            JSONObject jsonObj = new JSONObject(responseString);
+
+                            int id = jsonObj.optInt("ID");
+                            int maxDiscount = jsonObj.optInt("MaxDiscount");
+                            int minimumAmountForFreeDelivery = jsonObj.optInt("MinAmtForFreeDel");
+                            int referralPercent = jsonObj.optInt("ReferrelPercent");
+                            String contactEmail = jsonObj.optString("ContactEmail");
+                            String contactNo = jsonObj.optString("ContactNo");
+
+                            Application.MINIMUM_FREE_DELIVERY_AMOUNT = minimumAmountForFreeDelivery;
+
                             loadNextPage();
 
                         } else {
@@ -471,6 +535,7 @@ public class SplashActivity extends AppCompatActivity {
                     .show();
         }
     }
+
 
 //    private void getAreaDetails() {
 //        if (InternetConnection.checkConnection(this)) {

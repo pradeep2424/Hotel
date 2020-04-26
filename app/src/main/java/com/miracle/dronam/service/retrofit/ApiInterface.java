@@ -41,6 +41,8 @@ public interface ApiInterface {
     @GET("getSMSDetails")
     Call<ResponseBody> getSMSDetails();
 
+    @GET("getSetting")
+    Call<ResponseBody> getAppSetting();
 
     @POST("insUserAddress")
     Call<ResponseBody> insertUserAddress(@Body JsonObject jsonObj);

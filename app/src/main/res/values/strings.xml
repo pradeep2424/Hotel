@@ -123,11 +123,15 @@
     <string name="order_placed_message">You order is placed successfully.
         Delivery master will reach to you soon. Please provide exact change.</string>
 
+    <string name="order_place_sms">Order Placed. \nOur delivery executive is on the way to your location to delivery your product.
+    \nPlease provide exact change.</string>
+
     <string name="view_cart">View Cart</string>
     <string name="item">Item</string>
     <string name="items">Items</string>
     <string name="free">( Free )</string>
     <string name="free_delivery_for_orders_above_200">Now get free delivery for order above ₹ 200.</string>
+    <string name="free_delivery_for_orders_above">Now get free delivery for order above ₹</string>
     <string name="contact_not_found">Contact number not found.</string>
     <string name="no_intent_available">No application available to handle this action.</string>
 

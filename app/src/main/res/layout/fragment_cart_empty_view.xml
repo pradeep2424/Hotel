@@ -23,9 +23,9 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_gravity="center"
-            android:src="@mipmap/empty_cart3" />
+            android:src="@drawable/empty_cart3" />
 
         <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"

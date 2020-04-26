@@ -31,6 +31,7 @@ import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.CartObject;
 import com.miracle.dronam.model.OrderDetailsObject;
 import com.miracle.dronam.model.RestaurantObject;
+import com.miracle.dronam.model.SMSGatewayObject;
 import com.miracle.dronam.model.UserDetails;
 import com.miracle.dronam.service.retrofit.ApiInterface;
 import com.miracle.dronam.service.retrofit.RetroClient;
@@ -81,6 +82,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //    private TextView tvRestaurantCharges;
     private TextView tvDeliveryFee;
     private TextView tvDeliveryFreeText;
+    private TextView tvDeliveryFreeMessageText;
     private TextView tvTotalPaymentAmount;
     private TextView tvPaymentButtonAmount;
 
@@ -99,7 +101,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
     int orderNumber;
 
     private final int REQUEST_CODE_MOBILE_NO_ACTIVITY = 100;
-    private final int MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 350;
+    private  int MINIMUM_AMOUNT_FOR_FREE_DELIVERY;
 
     @Override
     public void onAttach(Context context) {
@@ -116,6 +118,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
         mobileNo = Application.userDetails.getMobile();
         restaurantID = Application.restaurantObject.getRestaurantID();
         referralPoints = Application.userDetails.getTotalReferralPoints();
+        MINIMUM_AMOUNT_FOR_FREE_DELIVERY = Application.MINIMUM_FREE_DELIVERY_AMOUNT;
     }
 
     @Override
@@ -171,8 +174,13 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
 //        tvRestaurantCharges = rootView.findViewById(R.id.tv_restaurantChargesText);
         tvDeliveryFee = rootView.findViewById(R.id.tv_deliveryFeeText);
         tvDeliveryFreeText = rootView.findViewById(R.id.tv_deliveryFeeTextFree);
+        tvDeliveryFreeMessageText = rootView.findViewById(R.id.tv_deliveryFeeMessageText);
         tvTotalPaymentAmount = rootView.findViewById(R.id.tv_totalPayText);
         tvPaymentButtonAmount = rootView.findViewById(R.id.tv_paymentButtonAmount);
+
+        String freeDeliveryMsg = getString(R.string.free_delivery_for_orders_above) + " "
+                + MINIMUM_AMOUNT_FOR_FREE_DELIVERY;
+        tvDeliveryFreeMessageText.setText(freeDeliveryMsg);
     }
 
     private void componentEvents() {
@@ -1007,6 +1015,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                         triggerTabChangeListener.setBadgeCount(0);
                                         deleteCartItem();
                                         showSuccessOrderMsg();
+                                        sendOrderPlacedSMS();
                                     }
 
                                 } else {
@@ -1097,6 +1106,71 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                         @Override
                         public void onClick(View view) {
                             deleteCartItem();
+                        }
+                    })
+//                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))
+                    .show();
+        }
+    }
+
+    private void sendOrderPlacedSMS() {
+        if (InternetConnection.checkConnection(getActivity())) {
+            SMSGatewayObject smsGatewayObject = Application.smsGatewayObject;
+            String smsURL = smsGatewayObject.getUrl();
+            String smsUsername = smsGatewayObject.getSmsUsername();
+            String smsPass = smsGatewayObject.getSmsPass();
+            String channel = smsGatewayObject.getChannel();
+            String senderID = smsGatewayObject.getSenderID();
+
+            String successMsg = getString(R.string.order_place_sms);
+
+            String url = smsURL + "user=" + smsUsername + "&pass=" + smsPass
+                    + "&channel=" + channel + "&number=" + mobileNo + "&message=" + successMsg
+                    + "&SenderID=" + senderID + "&Campaign=";
+
+            ApiInterface apiService = RetroClient.getApiService(getActivity());
+            Call<ResponseBody> call = apiService.getOtpSMS(url);
+
+//            Call<ResponseBody> call = apiService.getOtpSMS(smsUsername, smsPass, channel,
+//                    mobileNumber, senderID, otpAndMessage, "" );
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    try {
+                        int statusCode = response.code();
+                        if (response.isSuccessful()) {
+
+                        } else {
+                            showSnackbarErrorMsg(getResources().getString(R.string.something_went_wrong));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    try {
+                        showSnackbarErrorMsg(getResources().getString(R.string.server_conn_lost));
+                        Log.e("Error onFailure : ", t.toString());
+                        t.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+//            signOutFirebaseAccounts();
+
+            Snackbar.make(rootView, getResources().getString(R.string.no_internet),
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendOrderPlacedSMS();
                         }
                     })
 //                    .setActionTextColor(getResources().getColor(R.color.colorSnackbarButtonText))

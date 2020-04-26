@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.miracle.dronam.listeners.OnUserMayLikedClickListener;
 import com.miracle.dronam.model.DishObject;
 
 import java.util.List;
+import java.util.Random;
 
 public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.MyViewHolder> {
     Context context;
@@ -37,14 +39,20 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
         TextView dish_type;
         TextView price;
 
+        TextView tvTotalReviews;
+        RatingBar ratingBar;
+
 
         public MyViewHolder(View view) {
             super(view);
 
-            image = (ImageView) view.findViewById(R.id.image);
-            dish_name = (TextView) view.findViewById(R.id.tv_dishName);
-            dish_type = (TextView) view.findViewById(R.id.tv_dishType);
-            price = (TextView) view.findViewById(R.id.tv_price);
+            image =  view.findViewById(R.id.image);
+            dish_name =  view.findViewById(R.id.tv_dishName);
+            dish_type =  view.findViewById(R.id.tv_dishType);
+            price =  view.findViewById(R.id.tv_price);
+
+            tvTotalReviews =  view.findViewById(R.id.tv_review);
+            ratingBar =  view.findViewById(R.id.ratingBar);
             itemView.setOnClickListener(this);
         }
 
@@ -73,6 +81,14 @@ public class RecycleAdapterDish extends RecyclerView.Adapter<RecycleAdapterDish.
         holder.dish_type.setText(movie.getCategoryName());
         holder.price.setText("₹ " + movie.getPrice());
         holder.image.setImageResource(Integer.parseInt(movie.getProductImage()));
+
+         int totalReviews = new Random().nextInt((250 - 49) + 1) + 49;
+        float rating = 3.5f + new Random().nextFloat() * (5 - 3.5f);
+
+        holder.ratingBar.setRating(rating);
+        holder.tvTotalReviews.setText(totalReviews + " Reviews");
+
+
 
 //        Glide.with(context)
 //                .load(R.drawable.resource_id)

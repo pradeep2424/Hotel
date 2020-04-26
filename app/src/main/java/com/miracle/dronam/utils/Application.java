@@ -34,6 +34,7 @@ public class Application extends android.app.Application {
 //    public static AddressDetails addressDetails = new AddressDetails();
     public static SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
     public static AddressData locationAddressData;
+    public static int MINIMUM_FREE_DELIVERY_AMOUNT;
 
     public static HashMap<String, String> mapBannerDetails = new HashMap<>();
 

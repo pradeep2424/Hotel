@@ -23,10 +23,10 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
-            android:src="@mipmap/empty_past_orders" />
+            android:src="@drawable/empty_past_orders" />
 
         <com.miracle.dronam.custom.MyTextView
             android:layout_width="wrap_content"

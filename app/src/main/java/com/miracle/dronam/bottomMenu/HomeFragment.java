@@ -15,9 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +29,6 @@ import com.miracle.dronam.activities.LocationGoogleMapActivity;
 import com.miracle.dronam.activities.RestaurantDetailsActivity;
 import com.miracle.dronam.activities.RewardCreditsActivity;
 import com.miracle.dronam.adapter.PagerAdapterBanner;
-import com.miracle.dronam.adapter.RecycleAdapterCuisine;
 import com.miracle.dronam.adapter.RecycleAdapterDish;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurant;
 import com.miracle.dronam.dialog.DialogLoadingIndicator;
@@ -40,7 +37,6 @@ import com.miracle.dronam.listeners.OnRecyclerViewClickListener;
 import com.miracle.dronam.listeners.OnUserMayLikedClickListener;
 import com.miracle.dronam.listeners.TriggerTabChangeListener;
 import com.miracle.dronam.model.BannerDetailsObject;
-import com.miracle.dronam.model.CuisineObject;
 import com.miracle.dronam.model.DishObject;
 import com.miracle.dronam.model.RestaurantObject;
 import com.miracle.dronam.service.retrofit.ApiInterface;
@@ -65,8 +61,10 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment implements OnRecyclerViewClickListener,
-        OnUserMayLikedClickListener, OnCuisineClickListener,
-        BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+        OnUserMayLikedClickListener,
+        BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener
+//        OnCuisineClickListener,
+{
 
     private DialogLoadingIndicator progressIndicator;
     View rootView;
@@ -84,28 +82,27 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
     //    private TextView tvSeeMoreDish;
     private RecyclerView rvDishUserLikes;
     private RecycleAdapterDish adapterDish;
-    Integer image[] = {R.drawable.temp_paneer, R.drawable.temp_paratha, R.drawable.temp_paneer,
-            R.drawable.temp_paratha, R.drawable.temp_paneer};
-    String dish_name[] = {"Paratha", "Cheese Butter", "Paneer Handi", "Paneer Kopta", "Chiken"};
-    String dish_type[] = {"Punjabi", "Maxican", "Punjabi", "Punjabi", "Non Veg"};
-    double price[] = {250, 150, 200, 220, 350};
+    Integer image[] = {R.mipmap.temp_paneer_tikka, R.mipmap.temp_butter_chicken,
+            R.mipmap.temp_paneer_handi, R.mipmap.temp_kaju_korma};
+    String dish_name[] = {"Paneer Tikka Masala", "Butter Chicken", "Paneer Handi", "Kaju Korma"};
+    String dish_type[] = {"Veg", "Non Veg", "Veg", "Veg", "Veg"};
+    double price[] = {220, 270, 220, 245};
 
-    private ArrayList<CuisineObject> listCuisineObject;
-    //    private TextView tvSeeMoreCuisines;
-    private RecyclerView rvCuisines;
-    private RecycleAdapterCuisine adapterCuisine;
-    Integer image1[] = {R.drawable.temp_kesar, R.drawable.temp_ice_cream, R.drawable.temp_kesar,
-            R.drawable.temp_ice_cream, R.drawable.temp_kesar};
-    String price1[] = {"₹ 150", "₹ 180", "₹ 250", "₹ 200", "₹ 150"};
-    String cuisineName[] = {"Thai Cusine", "Maxican", "Desert", "South Indian", "Italian"};
-    String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
+//    private ArrayList<CuisineObject> listCuisineObject;
+//    private RecyclerView rvCuisines;
+//    private RecycleAdapterCuisine adapterCuisine;
+//    Integer image1[] = {R.drawable.temp_kesar, R.drawable.temp_ice_cream, R.drawable.temp_kesar,
+//            R.drawable.temp_ice_cream, R.drawable.temp_kesar};
+//    String price1[] = {"₹ 150", "₹ 180", "₹ 250", "₹ 200", "₹ 150"};
+//    String cuisineName[] = {"Thai Cusine", "Maxican", "Desert", "South Indian", "Italian"};
+//    String city[] = {"Chembur", "Thane", "Ghatkopar", "Bandra", "Dadar"};
 
     private ArrayList<RestaurantObject> listRestaurantObject;
     //    private TextView tvSeeMoreRestaurants;
     private RecyclerView rvRestaurants;
     private RecycleAdapterRestaurant adapterRestaurant;
-    Integer image2[] = {R.mipmap.temp_img1, R.mipmap.temp_img2, R.mipmap.temp_img3,
-            R.mipmap.temp_img4, R.mipmap.temp_img5, R.mipmap.temp_img6, R.mipmap.temp_img7};
+//    Integer image2[] = {R.mipmap.temp_img1, R.mipmap.temp_img2, R.mipmap.temp_img3,
+//            R.mipmap.temp_img4, R.mipmap.temp_img5, R.mipmap.temp_img6, R.mipmap.temp_img7};
 
     private ViewPager viewPager;
     private ArrayList<BannerDetailsObject> listBannerDetails;
@@ -156,10 +153,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         componentEvents();
         setToolbarDetails();
         setupRecyclerViewUserLikeDish();
-        setupRecyclerViewCuisine();
-//        setupRecyclerViewRestaurant();
-//        setupSlidingImages();
-//        setupViewPagerBanner();
+//        setupRecyclerViewCuisine();
 
         getSliderDetails();
         getUserLikeTopItems();
@@ -181,13 +175,9 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         imageSliderLayout = (SliderLayout) rootView.findViewById(R.id.slider);
 
         rvDishUserLikes = (RecyclerView) rootView.findViewById(R.id.recyclerView_dishUserLike);
-        rvCuisines = (RecyclerView) rootView.findViewById(R.id.recyclerView_cuisine);
+//        rvCuisines = (RecyclerView) rootView.findViewById(R.id.recyclerView_cuisine);
         rvRestaurants = (RecyclerView) rootView.findViewById(R.id.rv_restaurant);
         viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
-
-//        tvSeeMoreDish = (TextView) rootView.findViewById(R.id.tv_seeMoreDish);
-//        tvSeeMoreCuisines = (TextView) rootView.findViewById(R.id.tv_seeMoreCuisine);
-//        tvSeeMoreRestaurants = (TextView) rootView.findViewById(R.id.tv_seeMoreRestaurant);
     }
 
     private void componentEvents() {
@@ -326,24 +316,24 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         }
     }
 
-    private void setupRecyclerViewCuisine() {
-        getCuisineData();
-
-        adapterCuisine = new RecycleAdapterCuisine(getActivity(), listCuisineObject);
-        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        rvCuisines.setLayoutManager(mLayoutManager1);
-        rvCuisines.setItemAnimator(new DefaultItemAnimator());
-        rvCuisines.setAdapter(adapterCuisine);
-        adapterCuisine.setClickListener(this);
-    }
-
-    private void getCuisineData() {
-        listCuisineObject = new ArrayList<>();
-        for (int i = 0; i < image.length; i++) {
-            CuisineObject cuisineObject = new CuisineObject(image1[i], price1[i], cuisineName[i], city[i]);
-            listCuisineObject.add(cuisineObject);
-        }
-    }
+//    private void setupRecyclerViewCuisine() {
+//        getCuisineData();
+//
+//        adapterCuisine = new RecycleAdapterCuisine(getActivity(), listCuisineObject);
+//        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//        rvCuisines.setLayoutManager(mLayoutManager1);
+//        rvCuisines.setItemAnimator(new DefaultItemAnimator());
+//        rvCuisines.setAdapter(adapterCuisine);
+//        adapterCuisine.setClickListener(this);
+//    }
+//
+//    private void getCuisineData() {
+//        listCuisineObject = new ArrayList<>();
+//        for (int i = 0; i < image.length; i++) {
+//            CuisineObject cuisineObject = new CuisineObject(image1[i], price1[i], cuisineName[i], city[i]);
+//            listCuisineObject.add(cuisineObject);
+//        }
+//    }
 
     private void setupRecyclerViewRestaurant() {
 //        getRestaurantData();
@@ -668,20 +658,22 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
         }
     }
 
-    @Override
-    public void onCuisineClick(View view, int position) {
-        if (listRestaurantObject.size() > 0) {
-            RestaurantObject restaurantObject = listRestaurantObject.get(0);
-            Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
-            intent.putExtra("RestaurantObject", restaurantObject);
-            startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
-        }
-    }
+//    @Override
+//    public void onCuisineClick(View view, int position) {
+//        if (listRestaurantObject.size() > 0) {
+//            RestaurantObject restaurantObject = listRestaurantObject.get(0);
+//            Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
+//            intent.putExtra("RestaurantObject", restaurantObject);
+//            startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);
+//        }
+//    }
 
     @Override
     public void onUserMayLikedClick(View view, int position) {
         if (listRestaurantObject.size() > 0) {
             RestaurantObject restaurantObject = listRestaurantObject.get(0);
+            Application.restaurantObject = restaurantObject;
+
             Intent intent = new Intent(getActivity(), RestaurantDetailsActivity.class);
             intent.putExtra("RestaurantObject", restaurantObject);
             startActivityForResult(intent, REQUEST_CODE_RESTAURANT_DETAILS);

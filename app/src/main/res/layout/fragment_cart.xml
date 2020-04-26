@@ -515,7 +515,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="left"
-                                android:text="@string/free_delivery_for_orders_above_200"
                                 android:textColor="@color/light_green_700"
                                 android:textSize="14sp" />
 

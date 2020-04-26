@@ -26,7 +26,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
-                    android:background="@drawable/temp_white_img" />
+                    android:background="@mipmap/temp_white_img" />
 <!--                <include layout="@layout/toolbar_home_search" />-->
 
             </FrameLayout>

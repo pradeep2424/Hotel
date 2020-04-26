@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         app:auto_cycle="true"
-                        android:background="@drawable/temp_white_img"
+                        android:background="@mipmap/temp_white_img"
                         app:indicator_visibility="visible"
                         app:pager_animation="Accordion"
                         app:pager_animation_span="1100" />
@@ -208,57 +208,57 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_cuisine"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/ll_cuisine"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginRight="13dp"
-                    android:orientation="horizontal">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="24dp"-->
+<!--                    android:layout_marginTop="40dp"-->
+<!--                    android:layout_marginRight="13dp"-->
+<!--                    android:orientation="horizontal">-->
 
-                    <com.miracle.dronam.custom.MyTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/food"
-                        android:textColor="#373737"
-                        android:textSize="19sp" />
+<!--                    <com.miracle.dronam.custom.MyTextView-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:text="@string/food"-->
+<!--                        android:textColor="#373737"-->
+<!--                        android:textSize="19sp" />-->
 
-                    <com.miracle.dronam.custom.MyTextView
-                        android:id="@+id/tv_seeMoreCuisine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/see_more"
-                        android:visibility="gone"
-                        android:textColor="#a5a5a5"
-                        android:textSize="14sp" />
+<!--                    <com.miracle.dronam.custom.MyTextView-->
+<!--                        android:id="@+id/tv_seeMoreCuisine"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@string/see_more"-->
+<!--                        android:visibility="gone"-->
+<!--                        android:textColor="#a5a5a5"-->
+<!--                        android:textSize="14sp" />-->
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView_cuisine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:divider="#fff"
-                        android:dividerHeight="0dp"
-                        android:paddingLeft="15dp"
-                        android:paddingTop="10dp"
-                        android:scrollbars="none" />
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerView_cuisine"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:clipToPadding="false"-->
+<!--                        android:divider="#fff"-->
+<!--                        android:dividerHeight="0dp"-->
+<!--                        android:paddingLeft="15dp"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:scrollbars="none" />-->
 
-                </LinearLayout>
-            </LinearLayout>
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
 
 
             <LinearLayout
