@@ -1,2 +1,2 @@
 include ':app', ':vanillaplacepicker', ':placepicker'
-rootProject.name='Hotel'
+rootProject.name='HotelDronam'
