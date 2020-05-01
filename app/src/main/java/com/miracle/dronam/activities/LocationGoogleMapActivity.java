@@ -288,6 +288,7 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
             String fullAddress = address.getAddressLine(0);
             String zipCodeStr = address.getPostalCode();
             String cityName = address.getLocality();
+            String subLocality = address.getSubLocality();
             String area = address.getFeatureName();
 
 
@@ -299,6 +300,8 @@ public class LocationGoogleMapActivity extends AppCompatActivity implements Plac
 
             Application.userDetails.setAddress(fullAddress);
             Application.userDetails.setZipCode(zipCode);
+            Application.userDetails.setCityName(cityName);
+            Application.userDetails.setSubLocality(subLocality);
             Application.userDetails.setAddressType("Home");
 
         } catch (Exception e) {

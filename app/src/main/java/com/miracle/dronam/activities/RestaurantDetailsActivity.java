@@ -1,6 +1,7 @@
 package com.miracle.dronam.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.miracle.dronam.R;
 import com.miracle.dronam.adapter.RecycleAdapterRestaurantFoodPhotos;
@@ -70,6 +73,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     private TextView tvItemQuantity;
     private TextView tvTotalPrice;
 
+    private ImageView ivRestaurantImage;
     private TextView tvRestaurantName;
     private TextView tvRestaurantAddress;
     private TextView tvRestaurantReviews;
@@ -115,6 +119,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         rvPhotos = findViewById(R.id.recyclerView_photos);
         rvMenu = findViewById(R.id.recyclerView_menu);
 
+        ivRestaurantImage = findViewById(R.id.iv_restaurantImage);
         tvRestaurantName = findViewById(R.id.tv_restaurantName);
         tvRestaurantAddress = findViewById(R.id.tv_restaurantAddress);
         llRestaurantContactNo = findViewById(R.id.ll_restaurantContactNo);
@@ -175,6 +180,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         if (restaurantObject != null) {
             tvRestaurantName.setText(restaurantObject.getRestaurantName());
             tvRestaurantAddress.setText(restaurantObject.getRestaurantAddress());
+
+            Glide.with(this).load(restaurantObject.getRestaurantImage()).into(ivRestaurantImage);
+
 //            tvRestaurantReviews.setText(restaurantObject.ge());
 //            ratingBarReviews.setText(restaurantObject.getRestaurantName());
         }
@@ -185,9 +193,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
 
         adapterRestaurantPhotos = new RecycleAdapterRestaurantFoodPhotos(this, listPhotos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager.setAutoMeasureEnabled(false);
+
         rvPhotos.setLayoutManager(layoutManager);
         rvPhotos.setItemAnimator(new DefaultItemAnimator());
         rvPhotos.setAdapter(adapterRestaurantPhotos);
+
+        ViewCompat.setNestedScrollingEnabled(rvPhotos, false);
     }
 
 //    private void getPhotosData() {
@@ -208,9 +220,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
     private void setupRecyclerViewProducts() {
         adapterRestaurantMenu = new RecycleAdapterRestaurantMenu(this, listDishProducts);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setAutoMeasureEnabled(false);
+
         rvMenu.setLayoutManager(layoutManager);
         rvMenu.setItemAnimator(new DefaultItemAnimator());
         rvMenu.setAdapter(adapterRestaurantMenu);
+        ViewCompat.setNestedScrollingEnabled(rvPhotos, false);
 
         adapterRestaurantMenu.setOnItemAddedToCart(this);
     }
@@ -430,7 +445,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                         e.printStackTrace();
                     }
 
-                    dismissDialog();
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            dismissDialog();
+                        }
+                    }, 2000);
+
                 }
 
                 @Override

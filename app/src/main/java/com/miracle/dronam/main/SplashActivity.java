@@ -202,6 +202,26 @@ public class SplashActivity extends AppCompatActivity {
             AddressData addressData = new AddressData(latitude, longitude, addresses);
             Application.locationAddressData = addressData;
 
+            Address address = addressData.getAddressList().get(0);
+            String fullAddress = address.getAddressLine(0);
+            String zipCodeStr = address.getPostalCode();
+            String cityName = address.getLocality();
+            String subLocality = address.getSubLocality();
+            String area = address.getFeatureName();
+
+
+            int zipCode = 0;
+//        checking if zipCodeStr has integer values
+            if (zipCodeStr != null && zipCodeStr.matches("[0-9]+")) {
+                zipCode = Integer.parseInt(zipCodeStr);
+            }
+
+            Application.userDetails.setAddress(fullAddress);
+            Application.userDetails.setZipCode(zipCode);
+            Application.userDetails.setCityName(cityName);
+            Application.userDetails.setSubLocality(subLocality);
+            Application.userDetails.setAddressType("Home");
+
 //            Toast.makeText(myContext, "country: " + addresses.get(0).getCountryName(), Toast.LENGTH_LONG).show();
         }
     }
@@ -260,28 +280,28 @@ public class SplashActivity extends AppCompatActivity {
 
                             String fullName = fname.concat(" ").concat(lname);
 
-                            UserDetails userDetails = new UserDetails();
-                            userDetails.setFirstName(fname);
-                            userDetails.setLastName(lname);
-                            userDetails.setFullName(fullName);
-                            userDetails.setUserType(userType);
-                            userDetails.setEmail(email);
-                            userDetails.setMobile(mobile);
-                            userDetails.setGender(gender);
-                            userDetails.setTelephone(telephone);
-                            userDetails.setFacebookId(facebookId);
-                            userDetails.setUserID(userID);
-                            userDetails.setUsername(username);
-                            userDetails.setPassword(password);
-                            userDetails.setUserPhoto(userPhoto);
-                            userDetails.setUserRole(userRole);
-                            userDetails.setAddress(address);
-                            userDetails.setArea(area);
-                            userDetails.setCityName(cityName);
-                            userDetails.setStateName(stateName);
-                            userDetails.setZipCode(zipCode);
-                            userDetails.setTotalReferralPoints(totalPoints);
-                            Application.userDetails = userDetails;
+//                            UserDetails userDetails = new UserDetails();
+                            Application.userDetails.setFirstName(fname);
+                            Application.userDetails.setLastName(lname);
+                            Application.userDetails.setFullName(fullName);
+                            Application.userDetails.setUserType(userType);
+                            Application.userDetails.setEmail(email);
+                            Application.userDetails.setMobile(mobile);
+                            Application.userDetails.setGender(gender);
+                            Application.userDetails.setTelephone(telephone);
+                            Application.userDetails.setFacebookId(facebookId);
+                            Application.userDetails.setUserID(userID);
+                            Application.userDetails.setUsername(username);
+                            Application.userDetails.setPassword(password);
+                            Application.userDetails.setUserPhoto(userPhoto);
+                            Application.userDetails.setUserRole(userRole);
+                            Application.userDetails.setAddress(address);
+                            Application.userDetails.setArea(area);
+                            Application.userDetails.setCityName(cityName);
+                            Application.userDetails.setStateName(stateName);
+                            Application.userDetails.setZipCode(zipCode);
+                            Application.userDetails.setTotalReferralPoints(totalPoints);
+//                            Application.userDetails = userDetails;
 
 //                            SMSGatewayObject smsGatewayObject = new SMSGatewayObject();
 //                            smsGatewayObject.setUrl(url);

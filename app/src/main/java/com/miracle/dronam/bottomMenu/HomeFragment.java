@@ -141,8 +141,11 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
         restaurantID = Application.restaurantObject.getRestaurantID();
         userID = Application.userDetails.getUserID();
-        zipCode = Application.userDetails.getZipCode();
         referralPoints = Application.userDetails.getTotalReferralPoints();
+
+        if (Application.locationAddressData != null) {
+            zipCode = Integer.parseInt(Application.locationAddressData.getAddressList().get(0).getPostalCode());
+        }
     }
 
     @Override
@@ -362,7 +365,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
 
     private void setToolbarDetails() {
         if (Application.locationAddressData != null) {
-            tvToolbarTitle.setText(Application.locationAddressData.getAddressList().get(0).getSubLocality());
+            tvToolbarTitle.setText(Application.userDetails.getSubLocality());
         } else {
             tvToolbarTitle.setText(getString(R.string.set_location));
         }
@@ -431,6 +434,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                                 int foodTypeID = jsonObj.optInt("FoodTypeId");
                                 String foodTypeName = jsonObj.optString("FoodTypeName");
                                 String logo = jsonObj.optString("Logo");
+                                String photoPath = jsonObj.optString("PhotoPath");
                                 String taxID = jsonObj.optString("TaxId");
                                 boolean taxable = Boolean.parseBoolean(jsonObj.optString("Taxable"));
                                 boolean includeTax = Boolean.parseBoolean(jsonObj.optString("IncludeTax"));
@@ -451,6 +455,7 @@ public class HomeFragment extends Fragment implements OnRecyclerViewClickListene
                                 restaurantObject.setFoodTypeID(foodTypeID);
                                 restaurantObject.setFoodTypeName(foodTypeName);
                                 restaurantObject.setLogo(logo);
+                                restaurantObject.setRestaurantImage(photoPath);
                                 restaurantObject.setTaxID(taxID);
                                 restaurantObject.setTaxable(taxable);
                                 restaurantObject.setIncludeTax(includeTax);

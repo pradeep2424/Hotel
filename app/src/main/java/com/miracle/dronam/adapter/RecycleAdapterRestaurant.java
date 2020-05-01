@@ -81,7 +81,7 @@ public class RecycleAdapterRestaurant extends RecyclerView.Adapter<RecycleAdapte
         holder.tvRestaurantReviews.setText("238 reviews");
         holder.ratingBarReviews.setRating(4.5f);
 
-//        Glide.with(context).load(restaurantObj.getLogo()).into(holder.ivRestaurantImage);
+        Glide.with(context).load(restaurantObj.getRestaurantImage()).into(holder.ivRestaurantImage);
     }
 
     @Override

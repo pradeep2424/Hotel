@@ -34,7 +34,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/temp_img5" />
+                    android:src="@mipmap/temp_white_img" />
+
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/iv_restaurantImage"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:scaleType="centerCrop"-->
+                <!--                    android:src="@mipmap/temp_img5" />-->
 
                 <!--circleindicator used-->
 
@@ -198,9 +206,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:clipToPadding="false"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:nestedScrollingEnabled="false"
                     android:paddingLeft="13.3dp"
-                    android:paddingTop="10dp" />
+                    android:paddingTop="10dp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </LinearLayout>
 
@@ -280,7 +289,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_menu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </LinearLayout>
 
@@ -290,188 +301,188 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="12dp"
                 android:text="View more"
-                android:visibility="gone"
                 android:textColor="#c2c4ca"
-                android:textSize="14.4sp" />
+                android:textSize="14.4sp"
+                android:visibility="gone" />
 
 
             <!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:background="#f5f5f5"-->
-<!--                android:padding="6dp" />-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:background="#f5f5f5"-->
+            <!--                android:padding="6dp" />-->
 
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="13.4dp"-->
-<!--                android:paddingTop="25dp">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:paddingLeft="13.4dp"-->
+            <!--                android:paddingTop="25dp">-->
 
-<!--                <com.miracle.dronam.custom.MyTextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="REVIEWS"-->
-<!--                    android:textColor="#c2c4ca"-->
-<!--                    android:textSize="14.4sp" />-->
+            <!--                <com.miracle.dronam.custom.MyTextView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:text="REVIEWS"-->
+            <!--                    android:textColor="#c2c4ca"-->
+            <!--                    android:textSize="14.4sp" />-->
 
-<!--                <com.miracle.dronam.custom.MyTextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginRight="15dp"-->
-<!--                    android:text="See all reviews"-->
-<!--                    android:textColor="#d22532"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:textSize="14.4sp" />-->
-
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingTop="12dp"-->
-<!--                android:paddingBottom="12dp">-->
-
-<!--                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--                    android:layout_width="38.4dp"-->
-<!--                    android:layout_height="38.4dp"-->
-<!--                    android:layout_marginLeft="13.4dp"-->
-<!--                    android:layout_marginTop="17dp"-->
-<!--                    android:layout_marginRight="5.4dp"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:src="@drawable/ic_user"-->
-<!--                    app:riv_corner_radius="30dip"-->
-<!--                    app:riv_oval="true" />-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="15.4dp"-->
-<!--                    android:layout_marginTop="12.8dp"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="Rahul Patil"-->
-<!--                            android:textColor="#4a4a4a"-->
-<!--                            android:textSize="14.4sp" />-->
-
-<!--                        <RatingBar-->
-<!--                            style="?android:attr/ratingBarStyleSmall"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginRight="18.2dp"-->
-<!--                            android:progressTint="#f05421"-->
-<!--                            android:rating="4" />-->
-
-<!--                    </LinearLayout>-->
+            <!--                <com.miracle.dronam.custom.MyTextView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginRight="15dp"-->
+            <!--                    android:text="See all reviews"-->
+            <!--                    android:textColor="#d22532"-->
+            <!--                    android:visibility="gone"-->
+            <!--                    android:textSize="14.4sp" />-->
 
 
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:text="2 hours ago"-->
-<!--                        android:textColor="#9b9b9b"-->
-<!--                        android:textSize="14.4sp" />-->
+            <!--            </LinearLayout>-->
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:paddingTop="12dp"-->
+            <!--                android:paddingBottom="12dp">-->
+
+            <!--                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
+            <!--                    android:layout_width="38.4dp"-->
+            <!--                    android:layout_height="38.4dp"-->
+            <!--                    android:layout_marginLeft="13.4dp"-->
+            <!--                    android:layout_marginTop="17dp"-->
+            <!--                    android:layout_marginRight="5.4dp"-->
+            <!--                    android:scaleType="centerCrop"-->
+            <!--                    android:src="@drawable/ic_user"-->
+            <!--                    app:riv_corner_radius="30dip"-->
+            <!--                    app:riv_oval="true" />-->
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginLeft="15.4dp"-->
+            <!--                    android:layout_marginTop="12.8dp"-->
+            <!--                    android:orientation="vertical">-->
+
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:orientation="horizontal">-->
+
+            <!--                        <TextView-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_weight="1"-->
+            <!--                            android:text="Rahul Patil"-->
+            <!--                            android:textColor="#4a4a4a"-->
+            <!--                            android:textSize="14.4sp" />-->
+
+            <!--                        <RatingBar-->
+            <!--                            style="?android:attr/ratingBarStyleSmall"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginRight="18.2dp"-->
+            <!--                            android:progressTint="#f05421"-->
+            <!--                            android:rating="4" />-->
+
+            <!--                    </LinearLayout>-->
 
 
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:layout_marginTop="13.5dp"-->
-<!--                        android:text="@string/restaurant_review1"-->
-<!--                        android:textColor="#4a4a4a"-->
-<!--                        android:textSize="14.4sp" />-->
-
-<!--                </LinearLayout>-->
-
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingTop="12dp"-->
-<!--                android:paddingBottom="30dp">-->
-
-<!--                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--                    android:layout_width="38.4dp"-->
-<!--                    android:layout_height="38.4dp"-->
-<!--                    android:layout_marginLeft="13.4dp"-->
-<!--                    android:layout_marginTop="17dp"-->
-<!--                    android:layout_marginRight="5.4dp"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:src="@drawable/temp_men"-->
-<!--                    app:riv_corner_radius="30dip"-->
-<!--                    app:riv_oval="true" />-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="15.4dp"-->
-<!--                    android:layout_marginTop="12.8dp"-->
-<!--                    android:layout_marginBottom="10dp"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="Pradeep Jadhav"-->
-<!--                            android:textColor="#4a4a4a"-->
-<!--                            android:textSize="14.4sp" />-->
-
-<!--                        <RatingBar-->
-<!--                            style="?android:attr/ratingBarStyleSmall"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginRight="18.2dp"-->
-<!--                            android:progressTint="#f05421"-->
-<!--                            android:rating="5" />-->
-
-<!--                    </LinearLayout>-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginTop="5dp"-->
+            <!--                        android:text="2 hours ago"-->
+            <!--                        android:textColor="#9b9b9b"-->
+            <!--                        android:textSize="14.4sp" />-->
 
 
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:text="3 hours ago"-->
-<!--                        android:textColor="#9b9b9b"-->
-<!--                        android:textSize="14.4sp" />-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        android:layout_marginTop="13.5dp"-->
+            <!--                        android:text="@string/restaurant_review1"-->
+            <!--                        android:textColor="#4a4a4a"-->
+            <!--                        android:textSize="14.4sp" />-->
+
+            <!--                </LinearLayout>-->
+
+            <!--            </LinearLayout>-->
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:paddingTop="12dp"-->
+            <!--                android:paddingBottom="30dp">-->
+
+            <!--                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
+            <!--                    android:layout_width="38.4dp"-->
+            <!--                    android:layout_height="38.4dp"-->
+            <!--                    android:layout_marginLeft="13.4dp"-->
+            <!--                    android:layout_marginTop="17dp"-->
+            <!--                    android:layout_marginRight="5.4dp"-->
+            <!--                    android:scaleType="centerCrop"-->
+            <!--                    android:src="@drawable/temp_men"-->
+            <!--                    app:riv_corner_radius="30dip"-->
+            <!--                    app:riv_oval="true" />-->
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginLeft="15.4dp"-->
+            <!--                    android:layout_marginTop="12.8dp"-->
+            <!--                    android:layout_marginBottom="10dp"-->
+            <!--                    android:orientation="vertical">-->
+
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:orientation="horizontal">-->
+
+            <!--                        <TextView-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_weight="1"-->
+            <!--                            android:text="Pradeep Jadhav"-->
+            <!--                            android:textColor="#4a4a4a"-->
+            <!--                            android:textSize="14.4sp" />-->
+
+            <!--                        <RatingBar-->
+            <!--                            style="?android:attr/ratingBarStyleSmall"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_marginRight="18.2dp"-->
+            <!--                            android:progressTint="#f05421"-->
+            <!--                            android:rating="5" />-->
+
+            <!--                    </LinearLayout>-->
 
 
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:layout_marginTop="13.5dp"-->
-<!--                        android:layout_marginBottom="10dp"-->
-<!--                        android:text="@string/restaurant_review2"-->
-<!--                        android:textColor="#4a4a4a"-->
-<!--                        android:textSize="14.4sp" />-->
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginTop="5dp"-->
+            <!--                        android:text="3 hours ago"-->
+            <!--                        android:textColor="#9b9b9b"-->
+            <!--                        android:textSize="14.4sp" />-->
 
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
+
+            <!--                    <TextView-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        android:layout_marginTop="13.5dp"-->
+            <!--                        android:layout_marginBottom="10dp"-->
+            <!--                        android:text="@string/restaurant_review2"-->
+            <!--                        android:textColor="#4a4a4a"-->
+            <!--                        android:textSize="14.4sp" />-->
+
+            <!--                </LinearLayout>-->
+            <!--            </LinearLayout>-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

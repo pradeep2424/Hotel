@@ -21,6 +21,15 @@ public class RestaurantObject implements Serializable {
     String taxID ;
     boolean taxable ;
     boolean includeTax ;
+    String restaurantImage;
+
+    public String getRestaurantImage() {
+        return restaurantImage;
+    }
+
+    public void setRestaurantImage(String restaurantImage) {
+        this.restaurantImage = restaurantImage;
+    }
 
     public int getCategoryID() {
         return categoryID;

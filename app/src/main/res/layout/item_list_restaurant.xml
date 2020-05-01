@@ -25,7 +25,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/temp_img5" />
+                android:src="@mipmap/temp_white_img" />
+
+
+            <!--            <ImageView-->
+<!--                android:id="@+id/iv_restaurantImage"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@mipmap/temp_img5" />-->
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_restaurantName"
