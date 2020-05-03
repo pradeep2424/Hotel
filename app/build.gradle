@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 android {
     signingConfigs {
         releaseConfig {
-            storeFile file('D:\\ANDROID_DATA\\LIVE Projects\\Dronam\\KeyStore\\DronamFoodDeliveryKeyStore.jks')
+            storeFile file('D:\\ANDROID_DATA\\LIVE Projects\\CLIENT\\Dronam\\KeyStore\\DronamFoodDeliveryKeyStore.jks')
             storePassword 'DronamFoodDeliveryKeyStore'
             keyAlias = 'DronamFoodDeliveryKeyStore'
             keyPassword 'DronamFoodDeliveryKeyStore'

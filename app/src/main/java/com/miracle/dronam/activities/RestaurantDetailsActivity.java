@@ -225,7 +225,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
         rvMenu.setLayoutManager(layoutManager);
         rvMenu.setItemAnimator(new DefaultItemAnimator());
         rvMenu.setAdapter(adapterRestaurantMenu);
-        ViewCompat.setNestedScrollingEnabled(rvPhotos, false);
+        ViewCompat.setNestedScrollingEnabled(rvMenu, false);
 
         adapterRestaurantMenu.setOnItemAddedToCart(this);
     }
@@ -449,7 +449,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity implements OnIt
                         public void run() {
                             dismissDialog();
                         }
-                    }, 2000);
+                    }, 200);
 
                 }
 

@@ -12,6 +12,7 @@ public class CartObject implements Serializable {
     double productAmount;
     int productID;
     String productName;
+    String foodType;
     int productQuantity;
     double productRate;
     String productSize;
@@ -21,6 +22,14 @@ public class CartObject implements Serializable {
     double totalAmount;
     int userID;
     int cartID;
+
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
 
     public double getCgst() {
         return cgst;

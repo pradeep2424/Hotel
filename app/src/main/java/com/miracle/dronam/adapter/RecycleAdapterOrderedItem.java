@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,15 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         CartObject cartObject = modelArrayList.get(position);
+        String foodType = cartObject.getFoodType();
+
+        if (foodType != null && foodType.equalsIgnoreCase("Veg")) {
+            holder.ivFoodType.setImageResource(R.mipmap.ic_veg);
+
+        } else if(foodType != null && foodType.equalsIgnoreCase("NonVeg")) {
+            holder.ivFoodType.setImageResource(R.mipmap.ic_nonveg);
+        }
+
         holder.tvFoodName.setText(cartObject.getProductName());
         holder.numberPickerQuantity.setValue(cartObject.getProductQuantity());
 
@@ -100,12 +110,14 @@ public class RecycleAdapterOrderedItem extends RecyclerView.Adapter<RecycleAdapt
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivFoodType;
         TextView tvFoodName;
         TextView tvFoodPrice;
         NumberPicker numberPickerQuantity;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ivFoodType = itemView.findViewById(R.id.iv_foodType);
             tvFoodName = itemView.findViewById(R.id.tv_foodName);
             tvFoodPrice = itemView.findViewById(R.id.tv_foodPrice);
             numberPickerQuantity = itemView.findViewById(R.id.numberPicker_quantityLayout);

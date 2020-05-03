@@ -21,13 +21,12 @@
 <!--            app:riv_corner_radius="6dp" />-->
 
         <ImageView
-            android:id="@+id/iv_veg"
+            android:id="@+id/iv_foodType"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentLeft="true"
             android:layout_gravity="top"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/ic_veg" />
+            android:layout_centerVertical="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"

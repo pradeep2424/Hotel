@@ -18,12 +18,11 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/iv_veg"
+                android:id="@+id/iv_foodType"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_veg" />
+                android:layout_centerVertical="true" />
 
             <com.miracle.dronam.custom.MyTextView
                 android:id="@+id/tv_foodName"
@@ -32,9 +31,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toLeftOf="@+id/numberPicker_quantityLayout"
-                android:layout_toRightOf="@+id/iv_veg"
+                android:layout_toRightOf="@+id/iv_foodType"
                 android:maxLines="2"
-                android:text="Cocobolo Poolside Bar sdfsdf sdfsdfsd"
+                android:text="Cocobolo"
                 android:textColor="@color/main_dark_text"
                 android:textSize="14sp" />
 

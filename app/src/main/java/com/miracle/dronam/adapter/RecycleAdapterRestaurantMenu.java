@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivFoodType;
         TextView tvFoodName;
         TextView tvFoodCategory;
         TextView tvFoodPrice;
@@ -65,6 +67,7 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
 
         public ViewHolder(View itemView) {
             super(itemView);
+            ivFoodType = itemView.findViewById(R.id.iv_foodType);
             tvFoodName = itemView.findViewById(R.id.tv_foodName);
             tvFoodCategory = itemView.findViewById(R.id.tv_foodCategory);
             tvFoodPrice = itemView.findViewById(R.id.tv_foodPrice);
@@ -83,6 +86,14 @@ public class RecycleAdapterRestaurantMenu extends RecyclerView.Adapter<RecycleAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final DishObject dishObject = modelArrayList.get(position);
+        String foodType = dishObject.getFoodType();
+
+        if (foodType != null && foodType.equalsIgnoreCase("Veg")) {
+            holder.ivFoodType.setImageResource(R.mipmap.ic_veg);
+
+        } else if(foodType != null && foodType.equalsIgnoreCase("NonVeg")) {
+            holder.ivFoodType.setImageResource(R.mipmap.ic_nonveg);
+        }
 
         holder.tvFoodName.setText(dishObject.getProductName());
         holder.tvFoodCategory.setText(dishObject.getCategoryName());

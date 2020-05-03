@@ -554,6 +554,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     boolean isTaxApplicable = jsonObj.optBoolean("IsTaxApplicable");
                                     double productAmount = jsonObj.optDouble("ProductAmount");
                                     int productID = jsonObj.optInt("ProductId");
+                                    String foodType = jsonObj.optString("FoodType");
                                     String productName = jsonObj.optString("ProductName");
                                     int productQuantity = jsonObj.optInt("ProductQnty");
                                     double productRate = jsonObj.optDouble("ProductRate");
@@ -574,6 +575,7 @@ public class CartFragment extends Fragment implements OnItemAddedToCart {
                                     cartObject.setIsTaxApplicable(isTaxApplicable);
                                     cartObject.setProductAmount(productAmount);
                                     cartObject.setProductID(productID);
+                                    cartObject.setFoodType(foodType);
                                     cartObject.setProductName(productName);
                                     cartObject.setProductQuantity(productQuantity);
                                     cartObject.setProductRate(productRate);
